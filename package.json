@@ -1,0 +1,16 @@
+{
+  "name": "slm",
+  "version": "0.0.1",
+  "description": "Slim/Jade like templating engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/lab/bin/lab -v -t 90"
+  },
+  "keywords": [
+    "template",
+    "slim",
+    "jade"
+  ],
+  "author": "Yury Korolev",
+  "license": "ISC"
+}
