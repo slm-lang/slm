@@ -9,7 +9,7 @@ var assert  = Lab.assert
 
 suite("String generator", function() {
 
-  test("correct filename", function(done) {
+  test("#exec", function(done) {
 
     var sexps = [
       'multi',
