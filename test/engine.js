@@ -29,14 +29,12 @@ suite("Engine", function() {
   });
 
   test('it works!!', function(done) {
-    for (var i = 0; i < 100000; i++) {
-      engine.exec(
-        'doctype html\n' +
-        'html\n' +
-        '  head\n' +
-        '  body\n'
-      );
-    }
+    engine.exec(
+      'doctype html\n' +
+      'html\n' +
+      '  head\n' +
+      '  body\n'
+    );
     done();
   });
 });
