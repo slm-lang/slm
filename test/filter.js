@@ -10,46 +10,46 @@ var assert  = Lab.assert
 suite("Filter", function() {
 
   function FilterWithOnA() {};
-
   FilterWithOnA.prototype = new Filter;
+  (function() {
+    this.on_a = function() {
+      return ['a'];
+    };
 
-  FilterWithOnA.prototype.on_a = function() {
-    return ['a'];
-  };
-
-  FilterWithOnA.prototype.on_a_b = function(z, exp) {
-    return ['a', 'b', z];
-  };
+    this.on_a_b = function(z, exp) {
+      return ['a', 'b', z];
+    };
+  }).apply(FilterWithOnA.prototype);
 
   function TestFilter() {};
   TestFilter.prototype = new Filter;
+  (function() {
+    this.on_test = function(args) {
+      return ['on_test'].concat(args);
+    };
 
-  TestFilter.prototype.on_test = function(args) {
-    return ['on_test'].concat(args);
-  }
+    this.on_test_check = function(args) {
+      return ['on_check'].concat(args);
+    };
 
-  TestFilter.prototype.on_test_check = function(args) {
-    return ['on_check'].concat(args);
-  }
+    this.on_second_test = function(args) {
+      return ['on_second_test'].concat(args);
+    };
 
-  TestFilter.prototype.on_second_test = function(args) {
-    return ['on_second_test'].concat(args);
-  }
+    this.on_a_b = function(args) {
+      return ['on_ab'].concat(args);
+    };
 
-  TestFilter.prototype.on_a_b = function(args) {
-    return ['on_ab'].concat(args);
-  }
+    this.on_a_b_test = function(args) {
+      return ['on_ab_test'].concat(args);
+    };
 
-  TestFilter.prototype.on_a_b_test = function(args) {
-    return ['on_ab_test'].concat(args);
-  }
-
-  TestFilter.prototype.on_a_b_c_d_test = function(args) {
-    return ['on_abcd_test'].concat(args);
-  }
+    this.on_a_b_c_d_test = function(args) {
+      return ['on_abcd_test'].concat(args);
+    };
+  }).apply(TestFilter.prototype);
 
   function InheritedTestFilter() {};
-
   InheritedTestFilter.prototype = new TestFilter;
 
   InheritedTestFilter.prototype.on = function(args) {
@@ -60,7 +60,6 @@ suite("Filter", function() {
 
   before(function(done) {
     filter = new TestFilter;
-
     done();
   });
 
