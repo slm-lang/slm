@@ -115,7 +115,6 @@ suite("Filter", function() {
   });
 
   test('dispatch parent level', function(done) {
-    console.log(filter.dispatcher.toString());
     assert.deepEqual(filter.exec(['a', 42]), ['a', 42]);
     assert.deepEqual(filter.exec(['a', 'b', 42]), ['on_ab', 42]);
     assert.deepEqual(filter.exec(['a', 'b', 'test', 42]), ['on_ab_test', 42]);
