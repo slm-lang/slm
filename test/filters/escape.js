@@ -1,5 +1,5 @@
 var Lab = require('lab'),
-    EscapeFilter = require('../../lib/filters/escape_filter');
+    Escape = require('../../lib/filters/escape');
 
 var suite   = Lab.experiment;
 var before  = Lab.before;
@@ -7,12 +7,12 @@ var after   = Lab.after;
 var test    = Lab.test
 var assert  = Lab.assert
 
-suite("EscapeFilter", function() {
+suite("Escape", function() {
 
   var filter;
 
   before(function(done) {
-    filter = new EscapeFilter;
+    filter = new Escape;
     done();
   });
 
