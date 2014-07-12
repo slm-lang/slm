@@ -16,36 +16,38 @@ suite("Filter", function() {
       return ['a'];
     };
 
-    this.on_a_b = function(z, exp) {
-      return ['a', 'b', z];
+    this.on_a_b = function(exps) {
+      return ['a', 'b', exps[2]];
     };
   }).apply(FilterWithOnA.prototype);
 
   function TestFilter() {};
   TestFilter.prototype = new Filter;
   (function() {
-    this.on_test = function(args) {
-      return ['on_test'].concat(args);
+    this.on_test = function(exps) {
+      return ['on_test'].concat(exps[1]);
     };
 
-    this.on_test_check = function(args) {
-      return ['on_check'].concat(args);
+    this.on_test_check = function(exps) {
+      return ['on_check'].concat(exps[2]);
     };
 
-    this.on_second_test = function(args) {
-      return ['on_second_test'].concat(args);
+    this.on_second_test = function(exps) {
+      return ['on_second_test'].concat(exps[2]);
     };
 
-    this.on_a_b = function(args) {
-      return ['on_ab'].concat(args);
+    this.on_a_b = function(exps) {
+      exps.shift();
+      exps.shift();
+      return ['on_ab'].concat(exps);
     };
 
-    this.on_a_b_test = function(args) {
-      return ['on_ab_test'].concat(args);
+    this.on_a_b_test = function(exps) {
+      return ['on_ab_test'].concat(exps[3]);
     };
 
-    this.on_a_b_c_d_test = function(args) {
-      return ['on_abcd_test'].concat(args);
+    this.on_a_b_c_d_test = function(exps) {
+      return ['on_abcd_test'].concat(exps[5]);
     };
   }).apply(TestFilter.prototype);
 

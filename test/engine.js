@@ -20,7 +20,7 @@ suite("Engine", function() {
     engine = new Engine;
 
     engine.use(new Parser);
-    engine.use(new Interpolation);
+    // engine.use(new Interpolation);
     engine.use(new FastHtml);
     engine.use(new Escape);
     engine.use(new MultiFlattener);
@@ -31,12 +31,14 @@ suite("Engine", function() {
   });
 
   test('it works!!', function(done) {
-    engine.exec(
-      'doctype html\n' +
-      'html\n' +
-      '  head\n' +
-      '  body\n'
-    );
+    for (var i = 0; i < 100000; i++) {
+      engine.exec(
+        'doctype html\n' +
+        'html\n' +
+        '  head\n' +
+        '  body\n'
+      );
+    }
     done();
   });
 });
