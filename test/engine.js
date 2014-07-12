@@ -1,6 +1,7 @@
 var Lab = require('lab'),
     Engine = require('../lib/engine'),
     Parser = require('../lib/parser'),
+    // Interpolation = require('../lib/filters/interpolation'),
     FastHtml = require('../lib/html/fast'),
     Escape = require('../lib/filters/escape'),
     MultiFlattener = require('../lib/filters/multi_flattener'),
@@ -19,6 +20,7 @@ suite("Engine", function() {
     engine = new Engine;
 
     engine.use(new Parser);
+    engine.use(new Interpolation);
     engine.use(new FastHtml);
     engine.use(new Escape);
     engine.use(new MultiFlattener);
