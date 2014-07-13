@@ -30,7 +30,6 @@ suite("Engine", function() {
       '      . No projects\n' +
       '      - }\n'
     );
-    console.log(x);
     done();
   });
 });
