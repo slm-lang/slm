@@ -63,7 +63,6 @@ suite("Interpolation", function() {
     var src =
       'p \\${this.hello_world}\n' +
       'p text1 \\${this.hello_world} text2'
-
     assert.deepEqual(
       template.eval(src, {hello_world: 'Hello'}),
       '<p>${this.hello_world}</p><p>text1 ${this.hello_world} text2</p>');
