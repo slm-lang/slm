@@ -21,14 +21,12 @@ suite("Engine", function() {
       '    title =this.title\n' +
       '  body\n' +
       '    p =this.text\n' +
-      '    - for (var i = 0, p; p = this.projects[i]; i++) {\n' +
-      '      a href="${p.url}"\n' +
+      '    - for (var i = 0, p; p = this.projects[i]; i++) \n' +
+      '      a href=p.url\n' +
       '        = p.name\n' +
       '        p =p.description\n' +
-      '      - }\n' +
-      '    - if (!this.projects.length) {\n' +
-      '      . No projects\n' +
-      '      - }\n'
+      '    - if (!this.projects.length)\n' +
+      '      . No projects\n'
     );
     done();
   });
