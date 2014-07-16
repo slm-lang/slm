@@ -12,5 +12,8 @@
     "jade"
   ],
   "author": "Yury Korolev",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "lab": "^3.2.1"
+  }
 }
