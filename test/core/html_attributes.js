@@ -46,4 +46,11 @@ suite('HtmlAttribtues', function() {
     done();
   });
 
+  test('class attribute merging with empty static', function(done) {
+    var src = '.alpha class="beta" class="" class="gamma" Test it';
+
+    assert.equal(template.eval(src, {}), '<div class="alpha beta gamma">Test it</div>');
+    done();
+  });
+
 });
