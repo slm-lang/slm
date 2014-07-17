@@ -63,9 +63,10 @@ suite('HtmlAttribtues', function() {
   test('boolean attribute false', function(done) {
     var src = '- var cond = false\n' +
               'option selected=false Text\n' +
-              'option selected=cond Text2';
+              'option selected=undefined Text2\n' +
+              'option selected=cond Text3';
 
-    assert.equal(template.eval(src, {}), '<option>Text</option><option>Text2</option>');
+    assert.equal(template.eval(src, {}), '<option>Text</option><option>Text2</option><option>Text3</option>');
     done();
   });
 
