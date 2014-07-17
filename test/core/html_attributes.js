@@ -53,4 +53,11 @@ suite('HtmlAttribtues', function() {
     done();
   });
 
+  test('id attribute merging', function(done) {
+    var src = '#alpha id="beta" Test it';
+
+    assert.equal(template.eval(src, {}), '<div id="alpha_beta">Test it</div>');
+    done();
+  });
+
 });
