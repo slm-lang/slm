@@ -113,4 +113,17 @@ suite('HtmlAttribtues', function() {
     done();
   });
 
+  test('static empty attribute', function(done) {
+    var src = 'p(id="marvin" name="" class="" data-info="Illudium Q-36")= this.outputNumber';
+
+    assert.equal(template.eval(src, {outputNumber: 1337}), '<p data-info="Illudium Q-36" id="marvin" name="">1337</p>')
+    done();
+  });
+
+  test('dynamic empty attribute', function(done) {
+    var src = 'p(id="marvin" class=null nonempty=("".to_s) data-info="Illudium Q-36")= this.outputNumber';
+
+    assert.equal(template.eval(src, {outputNumber: 1337}), '<p data-info="Illudium Q-36" id="marvin" nonempty="">1337</p>')
+    done();
+  });
 });
