@@ -60,4 +60,13 @@ suite('HtmlAttribtues', function() {
     done();
   });
 
+  test('boolean attribute false', function(done) {
+    var src = '- var cond = false\n' +
+              'option selected=false Text\n' +
+              'option selected=cond Text2';
+
+    assert.equal(template.eval(src, {}), '<option>Text</option><option>Text2</option>');
+    done();
+  });
+
 });
