@@ -7,7 +7,7 @@ var after   = Lab.after;
 var test    = Lab.test
 var assert  = Lab.assert
 
-suite('HtmlAttribtues', function() {
+suite('Html attribtues', function() {
   var template;
   before(function(done) {
     template = new Template
