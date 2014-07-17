@@ -1,6 +1,5 @@
 var Lab = require('lab'),
-    Brackets = require('../../lib/filters/brackets'),
-    Parser = require('../../lib/parser');
+    Brackets = require('../../lib/filters/brackets');
 
 var suite   = Lab.experiment;
 var before  = Lab.before;
@@ -13,7 +12,6 @@ suite("Brackets", function() {
   var filter;
 
   before(function(done) {
-    parser = new Parser;
     filter = new Brackets;
     done();
   });
