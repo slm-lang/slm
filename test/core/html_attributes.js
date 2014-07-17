@@ -89,4 +89,28 @@ suite('HtmlAttribtues', function() {
     done();
   });
 
+  test('boolean attribute string2', function(done) {
+    var src = 'option selected="selected" Text';
+
+    assert.equal(template.eval(src, {}), '<option selected="selected">Text</option>');
+    done();
+  });
+
+  test('boolean attribute shortcut', function(done) {
+    var src = 'option(class="clazz" selected) Text\n' +
+              'option(selected class="clazz") Text\n';
+
+    assert.equal(template.eval(src, {}), '<option class="clazz" selected="">Text</option><option class="clazz" selected="">Text</option>');
+    done();
+  });
+
+
+  test('array attribute merging', function(done) {
+    var src = '.alpha class="beta" class=[[""], "gamma", null, "delta", [true, false]]\n' +
+              '.alpha class=["beta","gamma"]\n';
+
+    assert.equal(template.eval(src, {}), '<div class="alpha beta gamma delta true false"></div><div class="alpha beta gamma"></div>');
+    done();
+  });
+
 });
