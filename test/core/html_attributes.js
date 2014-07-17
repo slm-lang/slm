@@ -70,4 +70,23 @@ suite('HtmlAttribtues', function() {
     done();
   });
 
+  test('boolean attribute true', function(done) {
+    var src = '- var cond = true\n' +
+          'option selected=true Text\n' +
+          'option selected=1 Text2\n' +
+          'option selected=cond Text3';
+
+    assert.equal(template.eval(src, {}), '<option selected="">Text</option><option selected="1">Text2</option><option selected="">Text3</option>');
+    done();
+  });
+
+  test('boolean attribute null', function(done) {
+    var src = '- var cond = null\n' +
+          'option selected=null Text\n' +
+          'option selected=cond Text2';
+
+    assert.equal(template.eval(src, {}), '<option>Text</option><option>Text2</option>');
+    done();
+  });
+
 });
