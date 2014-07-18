@@ -7,7 +7,7 @@ var after   = Lab.after;
 var test    = Lab.test
 var assert  = Lab.assert
 
-suite("Fast", function() {
+suite('Fast', function() {
 
   var filter;
 
@@ -113,13 +113,13 @@ suite("Fast", function() {
         ['content']
       ]),
       ['multi',
-        ['static', "<div"],
+        ['static', '<div'],
         ['multi',
           ['multi', ['static', " id=\""], ['static', "test"], ['static', '"']],
           ['multi', ['static', " class=\""], ['dynamic', "block"], ['static', '"']]],
         ['static', ">"],
         ['content'],
-        ['static', "</div>"]
+        ['static', '</div>']
       ]);
     done();
   });
