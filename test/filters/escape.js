@@ -7,7 +7,7 @@ var after   = Lab.after;
 var test    = Lab.test
 var assert  = Lab.assert
 
-suite("Escape", function() {
+suite('Escape', function() {
 
   var filter;
 
