@@ -74,7 +74,6 @@ suite("Filter", function() {
         'on_if',
         'on_switch',
         'on_block',
-        'on_cond',
         'on_escape' ]
     );
 
@@ -89,7 +88,6 @@ suite("Filter", function() {
         'on_if',
         'on_switch',
         'on_block',
-        'on_cond',
         'on_escape' ]
     );
 
