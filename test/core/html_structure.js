@@ -112,7 +112,7 @@ suite('Html structure', function() {
     done();
   });
 
-   test('render with text block with subsequent markup', function(done) {
+  test('render with text block with subsequent markup', function(done) {
     var src = [
       'p',
       '  |',
@@ -124,5 +124,99 @@ suite('Html structure', function() {
     done();
   });
 
+  test('render with text block with trailing whitespace', function(done) {
+    var src = [
+      '. this is',
+      '  a link to',
+      'a href="link" page',
+    ].join('\n')
+
+    assert.equal(template.eval(src, {}), "this is\na link to <a href=\"link\">page</a>");
+    done();
+  });
+
+  test('render with text block with trailing whitespace', function(done) {
+    var src = [
+      'p',
+      ' |',
+      '  This is line one.',
+      '   This is line two.',
+      '    This is line three.',
+      '     This is line four.',
+      'p This is a new paragraph.'
+    ].join('\n')
+
+    assert.deepEqual(template.eval(src, {}), "<p>This is line one.\n This is line two.\n  This is line three.\n   This is line four.</p><p>This is a new paragraph.</p>");
+    done();
+  });
+
+  test('nested text with nested html one same line', function(done) {
+    var src = [
+      'p',
+      ' | This is line one.',
+      '    This is line two.',
+      ' span.bold This is a bold line in the paragraph.',
+      ' |  This is more content.'
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {}), "<p>This is line one.\n This is line two.<span class=\"bold\">This is a bold line in the paragraph.</span> This is more content.</p>");
+    done();
+  });
+
+  test('nested text with nested html one same line 2', function(done) {
+    var src = [
+      'p',
+      ' |This is line one.',
+      '   This is line two.',
+      ' span.bold This is a bold line in the paragraph.',
+      ' |  This is more content.'
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {}), "<p>This is line one.\n This is line two.<span class=\"bold\">This is a bold line in the paragraph.</span> This is more content.</p>");
+    done();
+  });
+
+  test('nested text with nested html', function(done) {
+    var src = [
+      'p',
+      ' |',
+      '  This is line one.',
+      '   This is line two.',
+      '    This is line three.',
+      '     This is line four.',
+      ' span.bold This is a bold line in the paragraph.',
+      ' |  This is more content.'
+    ].join('\n')
+
+    assert.deepEqual(template.eval(src, {}), "<p>This is line one.\n This is line two.\n  This is line three.\n   This is line four.<span class=\"bold\">This is a bold line in the paragraph.</span> This is more content.</p>");
+    done();
+  });
+
+  test('simple paragraph with padding', function(done) {
+    var src = 'p    There will be 3 spaces in front of this line.';
+
+    assert.deepEqual(template.eval(src, {}), '<p>   There will be 3 spaces in front of this line.</p>');
+    done();
+  });
+
+  test('paragraph with nested text', function(done) {
+    var src = [
+      'p This is line one.',
+      '   This is line two.'
+    ].join('\n')
+
+    assert.deepEqual(template.eval(src, {}), "<p>This is line one.\n This is line two.</p>");
+    done();
+  });
+
+  test('paragraph with padded nested text', function(done) {
+    var src = [
+      'p  This is line one.',
+      '   This is line two.'
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {}), "<p> This is line one.\n This is line two.</p>");
+    done();
+  });
 
 });
