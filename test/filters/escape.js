@@ -52,7 +52,7 @@ suite("Escape", function() {
     src.htmlSafe = true;
     assert.deepEqual(
       filter.exec(['escape', true, ['static', src]]),
-      ['static', src]
+      ['static', src + '']
     );
     done();
   });
