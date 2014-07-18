@@ -25,7 +25,7 @@ suite("Brackets", function() {
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
       ]),
-      ['multi', ['slm', 'control', 'if (this.x > 0) {',
+      ['multi', ['slm', 'control', 'if (this.x > 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
@@ -45,7 +45,7 @@ suite("Brackets", function() {
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
       ]),
-      ['multi', ['slm', 'control', 'if   (this.x > 0)   {',
+      ['multi', ['slm', 'control', 'if   (this.x > 0)  {',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
@@ -65,7 +65,7 @@ suite("Brackets", function() {
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
       ]),
-      ['multi', ['slm', 'control', 'if (this.x > 0) {',
+      ['multi', ['slm', 'control', 'if (this.x > 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
@@ -92,13 +92,13 @@ suite("Brackets", function() {
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text2']]]
                         ], ['newline']]]
       ]),
-      ['multi', ['slm', 'control', 'if (this.x > 0) {',
+      ['multi', ['slm', 'control', 'if (this.x > 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]],
-                ['slm', 'control', '} else if (this.x < 0) {',
+                ['slm', 'control', '} else if (this.x < 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
@@ -119,7 +119,7 @@ suite("Brackets", function() {
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
       ]),
-      ['multi', ['slm', 'control', 'for (i = 0; i < items.length; i++) {',
+      ['multi', ['slm', 'control', 'for (i = 0; i < items.length; i++){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
@@ -139,7 +139,7 @@ suite("Brackets", function() {
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
       ]),
-      ['multi', ['slm', 'control', 'while (i < 10) {',
+      ['multi', ['slm', 'control', 'while (i < 10){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
