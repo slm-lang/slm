@@ -219,4 +219,129 @@ suite('Html structure', function() {
     done();
   });
 
+  test('paragraph with attributes and nested text', function(done) {
+    var src = [
+      'p#test class="paragraph" This is line one.',
+      '                         This is line two.'
+    ].join('\n')
+
+    assert.deepEqual(template.eval(src, {}), "<p class=\"paragraph\" id=\"test\">This is line one.\nThis is line two.</p>");
+    done();
+  });
+
+  test('output_code_with_leading_spaces', function(done) {
+    var src = [
+      'p= this.helloWorld',
+      'p = this.helloWorld',
+      'p    = this.helloWorld'
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {helloWorld: 'Hello World from @env'}), '<p>Hello World from @env</p><p>Hello World from @env</p><p>Hello World from @env</p>');
+    done();
+  });
+
+  test('single quoted attributes', function(done) {
+    var src = "p class='underscored_class_name' = this.outputNumber";
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<p class="underscored_class_name">1337</p>');
+    done();
+  });
+
+  test('nonstandard shortcut attributes', function(done) {
+    var src = 'p#dashed-id.underscored_class_name = this.outputNumber';
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<p class="underscored_class_name" id="dashed-id">1337</p>');
+    done();
+  });
+
+  test('dashed attributes', function(done) {
+    var src = 'p data-info="Illudium Q-36" = this.outputNumber';
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<p data-info="Illudium Q-36">1337</p>');
+    done();
+  });
+
+  test('dashed attributes with shortcuts', function(done) {
+    var src = 'p#marvin.martian data-info="Illudium Q-36" = this.outputNumber';
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>');
+    done();
+  });
+
+  test('parens around attributes', function(done) {
+    var src = 'p(id="marvin" class="martian" data-info="Illudium Q-36") = this.outputNumber';
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>');
+    done();
+  });
+
+  test('square brackets around attributes', function(done) {
+    var src = 'p[id="marvin" class="martian" data-info="Illudium Q-36"] = this.outputNumber';
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>');
+    done();
+  });
+
+  test('parens around attributes with equal sign snug to right paren', function(done) {
+    var src = 'p(id="marvin" class="martian" data-info="Illudium Q-36")= this.outputNumber';
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>');
+    done();
+  });
+
+  test('closed tag', function(done) {
+    var src = 'closed/';
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<closed />');
+    done();
+  });
+
+  test('attributes with parens and spaces', function(done) {
+    var src = "label{ for='filter' }= this.helloWorld";
+
+    assert.deepEqual(template.eval(src, {helloWorld: 'Hello World from @env'}), '<label for="filter">Hello World from @env</label>');
+    done();
+  });
+
+  test('attributes with parens and spaces 2', function(done) {
+    var src = "label{ for='filter' } = this.helloWorld";
+
+    assert.deepEqual(template.eval(src, {helloWorld: 'Hello World from @env'}), '<label for="filter">Hello World from @env</label>');
+    done();
+  });
+
+  test('attributes with multiple spaces', function(done) {
+    var src = "label  for='filter'  class=\"test\" = this.helloWorld";
+
+    assert.deepEqual(template.eval(src, {helloWorld: 'Hello World from @env'}), '<label class="test" for="filter">Hello World from @env</label>');
+    done();
+  });
+
+  test('closed tag with attributes', function(done) {
+    var src = 'closed id="test" /';
+
+    assert.deepEqual(template.eval(src, {}), '<closed id="test" />');
+    done();
+  });
+
+  test('closed tag with attributes and parens', function(done) {
+    var src = 'closed(id="test")/';
+
+    assert.deepEqual(template.eval(src, {}), '<closed id="test" />');
+    done();
+  });
+
+  test('render with html comments', function(done) {
+    var src = [
+      'p Hello    ',
+      '/! This is a comment',
+      '',
+      '   Another comment',
+      'p World    '
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {}), '<p>Hello</p><!--This is a comment\n\nAnother comment--><p>World</p>');
+    done();
+  });
+
 });
