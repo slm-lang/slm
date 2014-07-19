@@ -333,11 +333,11 @@ suite('Html structure', function() {
 
   test('render with html comments', function(done) {
     var src = [
-      'p Hello    ',
+      'p Hello',
       '/! This is a comment',
       '',
       '   Another comment',
-      'p World    '
+      'p World'
     ].join('\n');
 
     assert.deepEqual(template.eval(src, {}), '<p>Hello</p><!--This is a comment\n\nAnother comment--><p>World</p>');
