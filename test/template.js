@@ -17,15 +17,14 @@ suite("Engine", function() {
   test('it works!!', function(done) {
     var x = template.exec([
       'html',
-      '  head',
-      '    title =this.title',
+      '  head: title =this.title',
       '  body',
       '    p =this.text',
-      '    - for (var i = 0, p; p = this.projects[i]; i++)',
+      '    - for var i = 0, p; p = this.projects[i]; i++',
       '      a href=p.url',
       '        = p.name',
       '        p =p.description',
-      '    - if (!this.projects.length)',
+      '    - if !this.projects.length',
       '      . No projects'
     ].join('\n'));
     done();
