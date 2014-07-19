@@ -354,4 +354,95 @@ suite('Html structure', function() {
     done();
   });
 
+  test('render with html conditional and method output', function(done) {
+    var src = [
+      "/[ if IE ]",
+      " = this.message('hello')"
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {message: function(v){return v}}), "<!--[if IE]>hello<![endif]-->");
+    done();
+  });
+
+  test('multiline attributes with method', function(done) {
+    var src = [
+      'p(id="marvin"',
+      'class="martian"',
+      ' data-info="Illudium Q-36") = this.outputNumber'
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {outputNumber: 1337}), '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>');
+    done();
+  });
+
+  test('multiline attributes with text on same line', function(done) {
+    var src = [
+      'p[id="marvin"',
+      '  class="martian"',
+      ' data-info="Illudium Q-36"] THE space modulator'
+    ].join('\n')
+
+    assert.deepEqual(template.eval(src, {}), '<p class="martian" data-info="Illudium Q-36" id="marvin">THE space modulator</p>');
+    done();
+  });
+
+  test('multiline attributes with nested text', function(done) {
+    var src = [
+      'p(id="marvin"',
+      '  class="martian"',
+      'data-info="Illudium Q-36")',
+      '  | THE space modulator'
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {}), '<p class="martian" data-info="Illudium Q-36" id="marvin">THE space modulator</p>');
+    done();
+  });
+
+  test('multiline attributes with dynamic attr', function(done) {
+    var src = [
+      'p{id=this.idHelper',
+      '  class="martian"',
+      '  data-info="Illudium Q-36"}',
+      '  | THE space modulator'
+    ].join('\n');
+    assert.deepEqual(template.eval(src, {idHelper: 'notice'}), '<p class="martian" data-info="Illudium Q-36" id="notice">THE space modulator</p>');
+    done();
+  });
+
+  test('multiline attributes with nested tag', function(done) {
+    var src = [
+      'p(id=this.idHelper',
+      '  class="martian"',
+      '  data-info="Illudium Q-36")',
+      '  span.emphasis THE',
+      '  |  space modulator'
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {idHelper: 'notice'}), '<p class="martian" data-info="Illudium Q-36" id="notice"><span class="emphasis">THE</span> space modulator</p>');
+    done();
+  });
+
+  test('multiline attributes with nested text and extra indentation', function(done) {
+    var src = [
+      'li( id="myid"',
+      '    class="myclass"',
+      'data-info="myinfo")',
+      '  a href="link" My Link'
+    ].join('\n')
+
+    assert.deepEqual(template.eval(src, {}), '<li class="myclass" data-info="myinfo" id="myid"><a href="link">My Link</a></li>');
+    done();
+  });
+
+  test('block expansion support', function(done) {
+    var src = [
+      "ul",
+      "  li.first: a href='a' foo",
+      "  li:       a href='b' bar",
+      "  li.last:  a href='c' baz"
+    ].join('\n');
+    assert.deepEqual(template.eval(src, {}), '<ul><li class=\"first\"><a href=\"a\">foo</a></li><li><a href=\"b\">bar</a></li><li class=\"last\"><a href=\"c\">baz</a></li></ul>');
+    done();
+  });
+
 });
