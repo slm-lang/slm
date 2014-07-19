@@ -112,5 +112,62 @@ suite('Code structure', function() {
     done();
   });
 
+  test('render with slim comments', function(done) {
+    var src = [
+      'p Hello',
+      '/ This is a comment',
+      '  Another comment',
+      'p World'
+    ].join('\n');
+
+    assert.equal(template.eval(src, {}), '<p>Hello</p><p>World</p>');
+    done();
+  });
+
+  test('render with try catch', function(done) {
+    var src = [
+      '- try',
+      '  p Try',
+      '- catch error',
+      '  p Catch',
+      'p After'
+    ].join('\n');
+
+    assert.equal(template.eval(src, {}), '<p>Try</p><p>After</p>');
+    done();
+  });
+
+  test('render with try catch exception', function(done) {
+    var src = [
+      '- try',
+      '  p Try',
+      '  - throw "Boom"',
+      '  p After Boom',
+      '- catch ex',
+      '  p = ex',
+      'p After'
+    ].join('\n');
+
+    assert.equal(template.eval(src, {}), '<p>Try</p><p>Boom</p><p>After</p>');
+    done();
+  });
+
+  test('render with try catch finally', function(done) {
+    var src = [
+      '- try',
+      '  p Try',
+      '  - throw "Boom"',
+      '  p After Boom',
+      '- catch ex',
+      '  p = ex',
+      '- finally',
+      '  p Finally',
+      'p After',
+    ].join('\n')
+
+    assert.equal(template.eval(src, {}), '<p>Try</p><p>Boom</p><p>Finally</p><p>After</p>');
+    done();
+  });
+
 
 });

@@ -331,46 +331,11 @@ module.exports = AttrRemove;
 var Slm = require('./slm');
 
 function Brackets() {
-  this.ifRe = /^(for|if|unless|else|elsif|when|rescue|ensure|while)\b|do\s*(\|[^\|]*\|)?\s*$/
-  this.blockRe = /(^(if|unless|else|elsif|when|begin|rescue|ensure|case)\b)|do\s*(\|[^\|]*\|\s*)?$/;
-  this.elseRe = /^(else|else\s+if|when|rescue|ensure)\s/
-  this.wrapCondRe = /^(for|while|if|}\s+else\s+if)\s+(?!\()((\S|\s\S)*)\s*$/
+  this.blockRe = /^(case|default)\b/;
+  this.wrapCondRe = /^(for|switch|catch|while|if|else\s+if)\s+(?!\()((\S|\s\S)*)\s*$/
 }
 
 var BracketsProto = Brackets.prototype = new Slm;
-
-BracketsProto.on_multi = function(exps) {
-  var res = ['multi'];
-  // This variable is true if the previous line was
-  // (1) a control code and (2) contained indented content.
-  var prevIndent = false;
-
-  for (var i = 1, l = exps.length; i < l; i++) {
-    var exp = exps[i];
-
-    if (exp[0] === 'slm' && exp[1] === 'control') {
-      // Two control code in a row. If this one is *not*
-      // an else block, we should close the previous one.
-      if (prevIndent && !this.elseRe.test(exp[2])) {
-        res.push(['code', '}']);
-      }
-
-      prevIndent = this.ifRe.test(exp[2]);
-      if (this.elseRe.test(exp[2])) {
-        exp[2] = '} ' + exp[2];
-      }
-    } else if (exp[0] !== 'newline' && prevIndent) {
-      prevIndent = false;
-    }
-    res.push(this.compile(exp));
-  }
-
-  if (prevIndent) {
-    res.push(['code', '}']);
-  }
-
-  return res;
-}
 
 BracketsProto.on_slm_control = function(exps) {
   var code = exps[2], content = exps[3], m;
@@ -379,16 +344,18 @@ BracketsProto.on_slm_control = function(exps) {
     code = code.replace(m[2], '(' + m[2] + ')');
   }
 
-  if (!this.isEmptyExp(content)) {
+  if (!this.isEmptyExp(content) && !this.blockRe.test(code)) {
     code += '{';
+    content.push(['code', '}']);
   }
   return ['slm', 'control', code, this.compile(content)]
 }
 
 BracketsProto.on_slm_output = function(exps) {
   var code = exps[3], content = exps[4];
-  if (!this.isEmptyExp(content)) {
+  if (!this.isEmptyExp(content) && !this.blockRe.test(code)) {
     code += '{';
+    content.push(['code', '}']);
   }
   return ['slm', 'output', exps[2], code, this.compile(content)];
 }
@@ -920,9 +887,9 @@ FastProto.on_html_comment = function(exps) {
 }
 
 FastProto.on_html_condcomment = function(exps) {
-  return this.on_html_comment([
+  return this.on_html_comment(['html', 'comment', [
     'multi',
-      ['static', '[' + exps[2] + ']>'], exps[3], ['static', '<![endif]']]);
+      ['static', '[' + exps[2] + ']>'], exps[3], ['static', '<![endif]']]]);
 }
 
 FastProto.on_html_tag = function(exps) {
@@ -1066,7 +1033,7 @@ function Parser() {
   };
 
   this.tagRe = /^(?:#|\.|\*(?=[^\s]+)|(\w+(?:\w+|:|-)*\w|\w+))/
-  this.attrShortcutRe = /^([\.#]+)((?:\w+|:|-)*)/;
+  this.attrShortcutRe = /^([\.#]+)((?:\w+|-)*)/;
 
   this.attrName = "^\\s*(\\w+(?:\\w+|:|-)*)";
   this.quotedAttrRe = new RegExp(this.attrName + '\\s*=(=?)\\s*("|\')');
@@ -1080,7 +1047,7 @@ function Parser() {
   this.htmlConditionalCommentRe = /^\/\[\s*(.*?)\s*\]\s*$/;
   this.blockExpressionRe = /^\s*:\s*/;
   this.doctypeRe = /^doctype\s+/i;
-  this.textBlockRe = /^([.|])(\s|$)/;
+  this.textBlockRe = /^((\.)(\s|$))|((\|)(\s?))/;
   this.outputBlockRe = /^=(=?)([.<>]*)/;
   this.outputCodeRe  = /^\s*=(=?)([.<>]*)/;
   this.embededRe = /^(\w+):\s*$/;
@@ -1204,13 +1171,13 @@ ParserProto.parseLineIndicators = function() {
     var m;
 
     // HTML comment
-    if (m = this.htmlCommentRe.test(this.line)) {
+    if (m = this.htmlCommentRe.exec(this.line)) {
       this.pushOnTop(['html', 'comment',
         [
           'slm',
           'text',
           this.parseTextBlock(this.line.slice(m[0].length),
-          this.indents.last() + m[0].length + 2)
+          this.indents.last() + m[1].length + 2)
         ]
       ]);
       break;
@@ -1234,13 +1201,21 @@ ParserProto.parseLineIndicators = function() {
 
     // Text block.
     if (m = this.textBlockRe.exec(this.line)) {
-      var trailingWS = m[1] === ".";
+      var char, space;
+      if (m[2] === undefined) {
+        char = m[5];
+        space = m[6];
+      } else {
+        char = m[2];
+        space = m[3];
+      }
+      var trailingWS = char === '.';
 
       this.pushOnTop([
         'slm',
         'text',
         this.parseTextBlock(this.line.slice(m[0].length),
-        this.indents.last() + m[1].length + 1)
+        this.indents.last() + space.length + 1)
       ]);
 
       if (trailingWS) {
@@ -1325,6 +1300,7 @@ ParserProto.parseTag = function(tag) {
     if (!this.attrShortcut[tag]) {
       this.line = this.line.slice(0, tag.length);
     }
+
     tag = this.tagShortcut[tag];
   }
 
@@ -1557,7 +1533,7 @@ ParserProto.parseTextBlock = function(firstLine, textIndent, inTag) {
 
       // The indentation of first line of the text block
       // determines the text base indentation.
-      this.textIndent = this.textIndent || indent;
+      textIndent = textIndent || indent;
     }
   }
 
