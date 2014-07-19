@@ -445,4 +445,43 @@ suite('Html structure', function() {
     done();
   });
 
+  test('block expansion class attributes', function(done) {
+    var src = '.a: .b: #c d'
+    assert.deepEqual(template.eval(src, {}), '<div class="a"><div class="b"><div id="c">d</div></div></div>');
+    done();
+  });
+
+  test('block expansion nesting', function(done) {
+    var src = [
+      'html: body: .content',
+      '  | Text'
+    ].join('\n');
+    assert.deepEqual(template.eval(src, {}), '<html><body><div class=\"content\">Text</div></body></html>');
+    done();
+  });
+
+  test('eval attributes once', function(done) {
+    var src = [
+      'input[value=++this.x]',
+      'input[value=++this.x]'
+    ].join('\n');
+    assert.deepEqual(template.eval(src, {x: 0}), '<input value="1" /><input value="2" />');
+    done();
+  });
+
+  test('html line indicator', function(done) {
+    var src = [
+      '<html>',
+      '  head',
+      '    meta name="keywords" content=this.helloWorld',
+      '  - if true',
+      '    <p>${this.helloWorld}</p>',
+      '      span = this.helloWorld',
+      '</html>'
+    ].join('\n')
+
+    assert.deepEqual(template.eval(src, {helloWorld: 'Hello World from @env'}), '<html><head><meta content="Hello World from @env" name="keywords" /></head><p>Hello World from @env</p><span>Hello World from @env</span></html>');
+    done();
+  });
+
 });
