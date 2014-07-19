@@ -17,9 +17,9 @@ suite("Engine", function() {
   test('it works!!', function(done) {
     var x = template.exec([
       'html',
-      '  head: title =this.title',
+      '  head: title = this.title',
       '  body',
-      '    p =this.text',
+      '    p = this.text',
       '    - for var i = 0, p; p = this.projects[i]; i++',
       '      a href=p.url',
       '        = p.name',

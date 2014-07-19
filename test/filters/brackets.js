@@ -19,18 +19,20 @@ suite("Brackets", function() {
   test('wraps if statement', function(done) {
     assert.deepEqual(
       filter.exec(['multi', ['slm', 'control', 'if this.x > 0',
-                      ['multi', ['newline'],
+                      ['multi',
+                        ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
-                        ], ['newline']]]
+                        ],
+                        ['newline']]]
       ]),
       ['multi', ['slm', 'control', 'if (this.x > 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
-                        ], ['newline']]], ['code', '}']
+                        ], ['newline'], ['code', '}']]]
       ]
     );
     done();
@@ -50,7 +52,7 @@ suite("Brackets", function() {
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
-                        ], ['newline']]], ['code', '}']
+                        ], ['newline'], ['code', '}']]],
       ]
     );
     done();
@@ -70,7 +72,7 @@ suite("Brackets", function() {
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
-                        ], ['newline']]], ['code', '}']
+                        ], ['newline'], ['code', '}']]]
       ]
     );
     done();
@@ -97,14 +99,13 @@ suite("Brackets", function() {
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
-                        ], ['newline']]],
-                ['slm', 'control', '} else if (this.x < 0){',
+                        ], ['newline'], ['code', '}']]],
+                ['slm', 'control', 'else if (this.x < 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text2']]]
-                        ], ['newline']]],
-                ['code', '}']
+                        ], ['newline'], ['code', '}']]]
       ]
     );
     done();
@@ -124,7 +125,7 @@ suite("Brackets", function() {
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
-                        ], ['newline']]], ['code', '}']
+                        ], ['newline'], ['code', '}']]]
       ]
     );
     done();
@@ -144,7 +145,7 @@ suite("Brackets", function() {
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
-                        ], ['newline']]], ['code', '}']
+                        ], ['newline'], ['code', '}']]]
       ]
     );
     done();
