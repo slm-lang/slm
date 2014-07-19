@@ -344,4 +344,14 @@ suite('Html structure', function() {
     done();
   });
 
+  test('render with html conditional and tag', function(done) {
+    var src = [
+      '/[ if IE ]',
+      ' p Get a better browser.'
+    ].join('\n');
+
+    assert.deepEqual(template.eval(src, {}), "<!--[if IE]><p>Get a better browser.</p><![endif]-->");
+    done();
+  });
+
 });
