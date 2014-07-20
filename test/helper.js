@@ -14,7 +14,10 @@ exports.assertHtml = function(template, src, result, callback) {
       return false;
     },
     x: 0,
-    message: function(v){return v}
+    message: function(v){return v},
+    helloBlock: function(callback) {
+      return this.helloWorld + ' ' + callback() + ' ' + this.helloWorld;
+    }
   };
   assert.deepEqual(template.eval(src, context), result);
   if (callback) {

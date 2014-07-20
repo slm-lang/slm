@@ -276,9 +276,9 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
         attrs[i] = ['html', 'attr', name, exp];
       } else {
         var captures = this.uniqueName();
-        exp.push(['code', 'var ' + captures + '=[];']);
+
         for (var j = 0, v; v = value[j]; j++) {
-          exp.push(['capture', captures + '[' + j + ']', v]);
+          exp.push(['capture', captures + '[' + j + ']', "''", v]);
         }
         exp.push(['dynamic', 'slm.rejectEmpty('+captures +').join("' + delimiter + '")']);
         attrs[i] = ['html', 'attr', name, exp];
@@ -794,9 +794,9 @@ StringGeneratorProto.postamble = function() {
 }
 
 StringGeneratorProto.on_capture = function(exps) {
-  var generator = new StringGenerator(exps[1], true);
+  var generator = new StringGenerator(exps[1], true, exps[2]);
   generator.dispatcher = this.dispatcher;
-  return generator.exec(exps[2]);
+  return generator.exec(exps[3]);
 }
 
 module.exports = StringGenerator;
