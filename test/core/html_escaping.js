@@ -44,12 +44,37 @@ suite('Html escaping', function() {
       done);
   });
 
-  test('html_nested_escaping', function(done) {
+  test('html nested escaping', function(done) {
     assertHtml(template, [
       '= this.helloBlock(function())',
       '  | escaped &',
       ],
       'Hello World from @env escaped &amp; Hello World from @env',
+      done);
+  });
+
+  test('html quoted attr escape', function(done) {
+    assertHtml(template, [
+      'p id="&" class=="&amp;"',
+      ],
+      '<p class="&amp;" id="&amp;"></p>',
+      done);
+  });
+
+  test('html quoted attr escape with interpolation', function(done) {
+    assertHtml(template, [
+      "p id=\"&${'\"'}\" class==\"&amp;${'\"'}\"",
+      "p id=\"&${='\"'}\" class==\"&amp;${='\"'}\"",
+      ],
+      '<p class="&amp;&quot;" id="&amp;&quot;"></p><p class="&amp;"" id="&amp;""></p>',
+      done);
+  });
+
+  test('html js attr escape', function(done) {
+    assertHtml(template, [
+      "p id=('&'.toString()) class==('&amp;'.toString())"
+      ],
+      '<p class="&amp;" id="&amp;"></p>',
       done);
   });
 });
