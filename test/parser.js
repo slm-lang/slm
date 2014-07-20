@@ -3,6 +3,7 @@ var Lab = require('lab'),
 
 var suite   = Lab.experiment;
 var before  = Lab.before;
+var expect  = Lab.expect;
 var after   = Lab.after;
 var test    = Lab.test
 var assert  = Lab.assert
@@ -172,4 +173,11 @@ suite("Parser", function() {
     done();
   });
 
+  test("#parseLine checks indent", function(done) {
+    var parser = new Parser;
+
+    expect(parser.exec.bind(parser, '  - var x = 3')).to.throw('Unexpected indentation line: 1');
+
+    done();
+  });
 });
