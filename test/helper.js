@@ -14,7 +14,13 @@ exports.assertHtml = function(template, src, result, options, callback) {
       return false;
     },
     x: 0,
-    message: function(v){return v},
+    message: function(m1, m2){
+      if (!m2) {
+        return m1;
+      } else {
+        return [m1, m2].join(' ')
+      }
+    },
     helloBlock: function(callback) {
       return this.helloWorld + ' ' + callback() + ' ' + this.helloWorld;
     },
