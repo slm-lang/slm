@@ -20,7 +20,7 @@ suite('Html escaping', function() {
       'p <Hello> World, meet "Slm".'
       ],
       '<p><Hello> World, meet "Slm".</p>',
-      done);
+      {}, done);
   });
 
   test('html with newline will not be escaped', function(done) {
@@ -31,7 +31,7 @@ suite('Html escaping', function() {
       '     meet "Slim".',
       ],
       '<p><Hello> World,\n meet "Slim".</p>',
-      done);
+      {}, done);
   });
 
   test('html with escaped interpolation', function(done) {
@@ -41,7 +41,7 @@ suite('Html escaping', function() {
       "p class=\"${x}\" test ${content}",
       ],
       '<p class="&quot;">test &lt;x&gt;</p>',
-      done);
+      {}, done);
   });
 
   test('html nested escaping', function(done) {
@@ -50,7 +50,7 @@ suite('Html escaping', function() {
       '  | escaped &',
       ],
       'Hello World from @env escaped &amp; Hello World from @env',
-      done);
+      {}, done);
   });
 
   test('html quoted attr escape', function(done) {
@@ -58,7 +58,7 @@ suite('Html escaping', function() {
       'p id="&" class=="&amp;"',
       ],
       '<p class="&amp;" id="&amp;"></p>',
-      done);
+      {}, done);
   });
 
   test('html quoted attr escape with interpolation', function(done) {
@@ -67,7 +67,7 @@ suite('Html escaping', function() {
       "p id=\"&${='\"'}\" class==\"&amp;${='\"'}\"",
       ],
       '<p class="&amp;&quot;" id="&amp;&quot;"></p><p class="&amp;"" id="&amp;""></p>',
-      done);
+      {}, done);
   });
 
   test('html js attr escape', function(done) {
@@ -75,6 +75,6 @@ suite('Html escaping', function() {
       "p id=('&'.toString()) class==('&amp;'.toString())"
       ],
       '<p class="&amp;" id="&amp;"></p>',
-      done);
+      {}, done);
   });
 });

@@ -172,12 +172,4 @@ suite("Parser", function() {
 
     done();
   });
-
-  test("#parseLine checks indent", function(done) {
-    var parser = new Parser;
-
-    expect(parser.exec.bind(parser, '  - var x = 3')).to.throw('Unexpected indentation line: 1');
-
-    done();
-  });
 });

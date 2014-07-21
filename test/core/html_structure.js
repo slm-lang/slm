@@ -24,7 +24,7 @@ suite('Html structure', function() {
       '    p Hello World, meet Slim.'
       ],
       '<html><head><title>Simple Test Title</title></head><body><p>Hello World, meet Slim.</p></body></html>',
-      done);
+      {}, done);
   });
 
   test('html tag with text and empty line', function(done) {
@@ -34,7 +34,7 @@ suite('Html structure', function() {
       'p World'
       ],
       '<p>Hello</p><p>World</p>',
-      done);
+      {}, done);
   });
 
   test('html namespaces', function(done) {
@@ -43,7 +43,7 @@ suite('Html structure', function() {
       '  html:p html:id="test" Text'
       ],
       '<html:body><html:p html:id="test">Text</html:p></html:body>',
-      done);
+      {}, done);
   });
 
   test('doctype', function(done) {
@@ -52,7 +52,7 @@ suite('Html structure', function() {
       'html'
       ],
       '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html></html>',
-      done);
+      {}, done);
   });
 
   test('doctype new syntax', function(done) {
@@ -61,7 +61,7 @@ suite('Html structure', function() {
       'html'
       ],
       '<!DOCTYPE html><html></html>',
-      done);
+      {}, done);
   });
 
   test('doctype new syntax html 5', function(done) {
@@ -70,7 +70,7 @@ suite('Html structure', function() {
       'html'
       ],
       '<!DOCTYPE html><html></html>',
-      done);
+      {}, done);
   });
 
   test('render with shortcut attributes', function(done) {
@@ -80,7 +80,7 @@ suite('Html structure', function() {
       '  = this.helloWorld'
       ],
       '<h1 id="title">This is my title</h1><div class="hello world" id="notice">Hello World from @env</div>',
-      done);
+      {}, done);
   });
 
   test('render with text block', function(done) {
@@ -90,7 +90,7 @@ suite('Html structure', function() {
       '   Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
       ],
       '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
-      done);
+      {}, done);
   });
 
    test('render with text block with subsequent markup', function(done) {
@@ -101,7 +101,7 @@ suite('Html structure', function() {
       'p Some more markup'
       ],
       '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p><p>Some more markup</p>',
-      done);
+      {}, done);
   });
 
   test('render with text block with subsequent markup', function(done) {
@@ -112,7 +112,7 @@ suite('Html structure', function() {
       'p Some more markup'
       ],
       '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p><p>Some more markup</p>',
-      done);
+      {}, done);
   });
 
   test('render with text block with trailing whitespace', function(done) {
@@ -122,7 +122,7 @@ suite('Html structure', function() {
       'a href="link" page',
       ],
       "this is\na link to <a href=\"link\">page</a>",
-      done);
+      {}, done);
   });
 
   test('render with text block with trailing whitespace', function(done) {
@@ -136,7 +136,7 @@ suite('Html structure', function() {
       'p This is a new paragraph.'
       ],
       "<p>This is line one.\n This is line two.\n  This is line three.\n   This is line four.</p><p>This is a new paragraph.</p>",
-      done);
+      {}, done);
   });
 
   test('nested text with nested html one same line', function(done) {
@@ -148,7 +148,7 @@ suite('Html structure', function() {
       ' |  This is more content.'
       ],
       "<p>This is line one.\n This is line two.<span class=\"bold\">This is a bold line in the paragraph.</span> This is more content.</p>",
-      done);
+      {}, done);
   });
 
   test('nested text with nested html one same line 2', function(done) {
@@ -160,7 +160,7 @@ suite('Html structure', function() {
       ' |  This is more content.'
       ],
       "<p>This is line one.\n This is line two.<span class=\"bold\">This is a bold line in the paragraph.</span> This is more content.</p>",
-      done);
+      {}, done);
   });
 
   test('nested text with nested html', function(done) {
@@ -175,7 +175,7 @@ suite('Html structure', function() {
       ' |  This is more content.'
       ],
       "<p>This is line one.\n This is line two.\n  This is line three.\n   This is line four.<span class=\"bold\">This is a bold line in the paragraph.</span> This is more content.</p>",
-      done);
+      {}, done);
   });
 
   test('simple paragraph with padding', function(done) {
@@ -183,7 +183,7 @@ suite('Html structure', function() {
       'p    There will be 3 spaces in front of this line.'
       ],
       '<p>   There will be 3 spaces in front of this line.</p>',
-      done);
+      {}, done);
   });
 
   test('paragraph with nested text', function(done) {
@@ -192,16 +192,16 @@ suite('Html structure', function() {
       '   This is line two.'
       ],
       "<p>This is line one.\n This is line two.</p>",
-      done);
+      {}, done);
   });
 
   test('paragraph with padded nested text', function(done) {
     assertHtml(template, [
       'p  This is line one.',
       '   This is line two.'
-    ],
-    "<p> This is line one.\n This is line two.</p>",
-    done);
+      ],
+      "<p> This is line one.\n This is line two.</p>",
+      {}, done);
   });
 
   test('paragraph with attributes and nested text', function(done) {
@@ -210,7 +210,7 @@ suite('Html structure', function() {
       '                         This is line two.'
       ],
       "<p class=\"paragraph\" id=\"test\">This is line one.\nThis is line two.</p>",
-      done);
+      {}, done);
   });
 
   test('output_code_with_leading_spaces', function(done) {
@@ -220,7 +220,7 @@ suite('Html structure', function() {
       'p    = this.helloWorld'
       ],
       '<p>Hello World from @env</p><p>Hello World from @env</p><p>Hello World from @env</p>',
-      done);
+      {}, done);
   });
 
   test('single quoted attributes', function(done) {
@@ -228,7 +228,7 @@ suite('Html structure', function() {
       "p class='underscored_class_name' = this.outputNumber"
       ],
       '<p class="underscored_class_name">1337</p>',
-      done);
+      {}, done);
   });
 
   test('nonstandard shortcut attributes', function(done) {
@@ -236,7 +236,7 @@ suite('Html structure', function() {
       'p#dashed-id.underscored_class_name = this.outputNumber'
       ],
       '<p class="underscored_class_name" id="dashed-id">1337</p>',
-      done);
+      {}, done);
   });
 
   test('dashed attributes', function(done) {
@@ -244,7 +244,7 @@ suite('Html structure', function() {
       'p data-info="Illudium Q-36" = this.outputNumber'
       ],
       '<p data-info="Illudium Q-36">1337</p>',
-      done);
+      {}, done);
   });
 
   test('dashed attributes with shortcuts', function(done) {
@@ -252,7 +252,7 @@ suite('Html structure', function() {
       'p#marvin.martian data-info="Illudium Q-36" = this.outputNumber'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>',
-      done);
+      {}, done);
   });
 
   test('parens around attributes', function(done) {
@@ -260,7 +260,7 @@ suite('Html structure', function() {
       'p(id="marvin" class="martian" data-info="Illudium Q-36") = this.outputNumber'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>',
-      done);
+      {}, done);
   });
 
   test('square brackets around attributes', function(done) {
@@ -268,7 +268,7 @@ suite('Html structure', function() {
       'p[id="marvin" class="martian" data-info="Illudium Q-36"] = this.outputNumber'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>',
-      done);
+      {}, done);
   });
 
   test('parens around attributes with equal sign snug to right paren', function(done) {
@@ -276,7 +276,7 @@ suite('Html structure', function() {
       'p(id="marvin" class="martian" data-info="Illudium Q-36")= this.outputNumber'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>',
-      done);
+      {}, done);
   });
 
   test('closed tag', function(done) {
@@ -284,7 +284,7 @@ suite('Html structure', function() {
       'closed/'
       ],
       '<closed />',
-      done);
+      {}, done);
   });
 
   test('attributes with parens and spaces', function(done) {
@@ -292,7 +292,7 @@ suite('Html structure', function() {
       "label{ for='filter' }= this.helloWorld"
       ],
       '<label for="filter">Hello World from @env</label>',
-      done);
+      {}, done);
   });
 
   test('attributes with parens and spaces 2', function(done) {
@@ -300,7 +300,7 @@ suite('Html structure', function() {
       "label{ for='filter' } = this.helloWorld"
       ],
       '<label for="filter">Hello World from @env</label>',
-      done);
+      {}, done);
   });
 
   test('attributes with multiple spaces', function(done) {
@@ -308,7 +308,7 @@ suite('Html structure', function() {
       "label  for='filter'  class=\"test\" = this.helloWorld"
       ],
       '<label class="test" for="filter">Hello World from @env</label>',
-      done);
+      {}, done);
   });
 
   test('closed tag with attributes', function(done) {
@@ -316,7 +316,7 @@ suite('Html structure', function() {
       'closed id="test" /'
       ],
       '<closed id="test" />',
-      done);
+      {}, done);
   });
 
   test('closed tag with attributes and parens', function(done) {
@@ -324,7 +324,7 @@ suite('Html structure', function() {
       'closed(id="test")/'
       ],
       '<closed id="test" />',
-      done);
+      {}, done);
   });
 
   test('render with html comments', function(done) {
@@ -336,7 +336,7 @@ suite('Html structure', function() {
       'p World'
       ],
       '<p>Hello</p><!--This is a comment\n\nAnother comment--><p>World</p>',
-      done);
+      {}, done);
   });
 
   test('render with html conditional and tag', function(done) {
@@ -345,7 +345,7 @@ suite('Html structure', function() {
       ' p Get a better browser.'
       ],
       '<!--[if IE]><p>Get a better browser.</p><![endif]-->',
-      done);
+      {}, done);
   });
 
   test('render with html conditional and method output', function(done) {
@@ -354,7 +354,7 @@ suite('Html structure', function() {
       " = this.message('hello')"
       ],
       '<!--[if IE]>hello<![endif]-->',
-      done);
+      {}, done);
   });
 
   test('multiline attributes with method', function(done) {
@@ -364,7 +364,7 @@ suite('Html structure', function() {
       ' data-info="Illudium Q-36") = this.outputNumber'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="marvin">1337</p>',
-      done);
+      {}, done);
   });
 
   test('multiline attributes with text on same line', function(done) {
@@ -374,7 +374,7 @@ suite('Html structure', function() {
       ' data-info="Illudium Q-36"] THE space modulator'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="marvin">THE space modulator</p>',
-      done);
+      {}, done);
   });
 
   test('multiline attributes with nested text', function(done) {
@@ -385,7 +385,7 @@ suite('Html structure', function() {
       '  | THE space modulator'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="marvin">THE space modulator</p>',
-      done);
+      {}, done);
   });
 
   test('multiline attributes with dynamic attr', function(done) {
@@ -396,7 +396,7 @@ suite('Html structure', function() {
       '  | THE space modulator'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="notice">THE space modulator</p>',
-      done);
+      {}, done);
   });
 
   test('multiline attributes with nested tag', function(done) {
@@ -408,7 +408,7 @@ suite('Html structure', function() {
       '  |  space modulator'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="notice"><span class="emphasis">THE</span> space modulator</p>',
-      done);
+      {}, done);
   });
 
   test('multiline attributes with nested text and extra indentation', function(done) {
@@ -419,7 +419,7 @@ suite('Html structure', function() {
       '  a href="link" My Link'
       ],
       '<li class="myclass" data-info="myinfo" id="myid"><a href="link">My Link</a></li>',
-      done);
+      {}, done);
   });
 
   test('block expansion support', function(done) {
@@ -430,7 +430,7 @@ suite('Html structure', function() {
       "  li.last:  a href='c' baz"
       ],
       '<ul><li class=\"first\"><a href=\"a\">foo</a></li><li><a href=\"b\">bar</a></li><li class=\"last\"><a href=\"c\">baz</a></li></ul>',
-      done);
+      {}, done);
   });
 
   test('block expansion class attributes', function(done) {
@@ -438,7 +438,7 @@ suite('Html structure', function() {
       '.a: .b: #c d'
       ],
       '<div class="a"><div class="b"><div id="c">d</div></div></div>',
-      done);
+      {}, done);
   });
 
   test('block expansion nesting', function(done) {
@@ -447,7 +447,7 @@ suite('Html structure', function() {
       '  | Text'
       ],
       '<html><body><div class=\"content\">Text</div></body></html>',
-      done);
+      {}, done);
   });
 
   test('eval attributes once', function(done) {
@@ -456,7 +456,7 @@ suite('Html structure', function() {
       'input[value=++this.x]'
       ],
       '<input value="1" /><input value="2" />',
-      done);
+      {}, done);
   });
 
   test('html line indicator', function(done) {
@@ -470,7 +470,7 @@ suite('Html structure', function() {
       '</html>'
     ],
     '<html><head><meta content="Hello World from @env" name="keywords" /></head><p>Hello World from @env</p><span>Hello World from @env</span></html>',
-    done);
+    {}, done);
   });
 
 });

@@ -24,7 +24,7 @@ suite('Code structure', function() {
       '      p The second paragraph'
       ],
       '<div><p>The second paragraph</p></div>',
-      done);
+      {}, done);
   });
 
 
@@ -37,7 +37,7 @@ suite('Code structure', function() {
       '      p The second paragraph'
       ],
       '<div><p>The first paragraph</p><p>The second paragraph</p></div>',
-      done);
+      {}, done);
   });
 
   test('render with when string in condition', function(done) {
@@ -49,7 +49,7 @@ suite('Code structure', function() {
       '  |  world'
       ],
       'Hello world',
-      done);
+      {}, done);
   });
 
   test('render with conditional and following nonconditonal', function(done) {
@@ -61,7 +61,7 @@ suite('Code structure', function() {
       '  = x',
       ],
       '<div><p>The first paragraph</p>42</div>',
-      done);
+      {}, done);
   });
 
   test('render with case', function(done) {
@@ -104,7 +104,7 @@ suite('Code structure', function() {
       '  |  is the answer',
       ],
       '<p>42 is the answer</p><p>41 is the answer</p><p>42 is the answer</p><p>41 is the answer</p>',
-      done);
+      {}, done);
   });
 
   test('render with slim comments', function(done) {
@@ -115,7 +115,7 @@ suite('Code structure', function() {
       'p World'
       ],
       '<p>Hello</p><p>World</p>',
-      done);
+      {}, done);
   });
 
   test('render with try catch', function(done) {
@@ -127,7 +127,7 @@ suite('Code structure', function() {
       'p After'
       ],
       '<p>Try</p><p>After</p>',
-      done);
+      {}, done);
   });
 
   test('render with try catch exception', function(done) {
@@ -141,7 +141,7 @@ suite('Code structure', function() {
       'p After'
       ],
       '<p>Try</p><p>Boom</p><p>After</p>',
-      done);
+      {}, done);
   });
 
   test('render with try catch finally', function(done) {
@@ -157,6 +157,6 @@ suite('Code structure', function() {
       'p After',
       ],
       '<p>Try</p><p>Boom</p><p>Finally</p><p>After</p>',
-      done);
+      {}, done);
   });
 });
