@@ -91,10 +91,10 @@ EngineProto.use = function(filter) {
   this.chain.push(filter);
 }
 
-EngineProto.exec = function(src) {
+EngineProto.exec = function(src, options) {
   var res = src;
   for (var i = 0, f; f = this.chain[i]; i++) {
-    res = f.exec(res);
+    res = f.exec(res, options);
   }
 
   return res;
@@ -136,18 +136,18 @@ function Template() {
   this.engine.use(new StringGenerator);
 }
 
-Template.prototype.render = function(src) {
+Template.prototype.render = function(src, options) {
   return 'function(context) {\n'
     + 'var slm = require("./runtime");'
-    + this.engine.exec(src) + '}';
+    + this.engine.exec(src, options) + '}';
 };
 
-Template.prototype.eval = function(src, context) {
-  return this.exec(src).call(context);
+Template.prototype.eval = function(src, context, options) {
+  return this.exec(src, options).call(context);
 };
 
-Template.prototype.exec = function(src) {
-  var code = this.render(src);
+Template.prototype.exec = function(src, options) {
+  var code = this.render(src, options);
   return eval('[' + code + ']')[0];
 };
 
@@ -194,7 +194,7 @@ FilterProto.on_multi = function(exps) {
 }
 
 FilterProto.on_capture = function(exps) {
-  return ['capture', exps[1], this.compile(exps[2])];
+  return ['capture', exps[1], exps[2], this.compile(exps[3])];
 }
 
 // Control Flow
@@ -276,9 +276,9 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
         attrs[i] = ['html', 'attr', name, exp];
       } else {
         var captures = this.uniqueName();
-
+        exp.push(['code', 'var ' + captures + '=[];']);
         for (var j = 0, v; v = value[j]; j++) {
-          exp.push(['capture', captures + '[' + j + ']', "''", v]);
+          exp.push(['capture', captures + '[' + j + ']', captures + '[' + j + ']' + "='';", v]);
         }
         exp.push(['dynamic', 'slm.rejectEmpty('+captures +').join("' + delimiter + '")']);
         attrs[i] = ['html', 'attr', name, exp];
@@ -316,8 +316,7 @@ AttrRemove.prototype.on_html_attr = function(exps) {
     var tmp = this.uniqueName();
     return [
       'multi',
-        ['code', 'var ' + tmp],
-        ['capture', tmp, this.compile(value)],
+        ['capture', tmp, "var " + tmp + "='';", this.compile(value)],
         ['if', tmp + '.length',
           ['html', 'attr', name, ['dynamic', tmp]]
         ]
@@ -333,6 +332,7 @@ var Slm = require('./slm');
 function Brackets() {
   this.blockRe = /^(case|default)\b/;
   this.wrapCondRe = /^(for|switch|catch|while|if|else\s+if)\s+(?!\()((\S|\s\S)*)\s*$/
+  this.callbackRe = /(function\s*\([^\)]*\)\s*)[^\{]/;
 }
 
 var BracketsProto = Brackets.prototype = new Slm;
@@ -344,7 +344,7 @@ BracketsProto.on_slm_control = function(exps) {
     code = code.replace(m[2], '(' + m[2] + ')');
   }
 
-  if (!this.isEmptyExp(content) && !this.blockRe.test(code)) {
+  if (!this.blockRe.test(code) && !this.isEmptyExp(content)) {
     code += '{';
     content.push(['code', '}']);
   }
@@ -353,9 +353,18 @@ BracketsProto.on_slm_control = function(exps) {
 
 BracketsProto.on_slm_output = function(exps) {
   var code = exps[3], content = exps[4];
-  if (!this.isEmptyExp(content) && !this.blockRe.test(code)) {
-    code += '{';
-    content.push(['code', '}']);
+  if (!this.blockRe.test(code) && !this.isEmptyExp(content)) {
+    var m;
+    if (m = this.callbackRe.exec(code)) {
+      var index = m.index + m[1].length;
+      var codePre = code.slice(0, index);
+      var codePost = code.slice(index);
+      code = codePre + '{';
+      content.push(['code', '}' + codePost])
+    } else {
+      code += '{';
+      content.push(['code', '}']);
+    }
   }
   return ['slm', 'output', exps[2], code, this.compile(content)];
 }
@@ -470,13 +479,18 @@ FlowProto.on_if = function(exps) {
   return result;
 }
 
+FlowProto.on_block = function(exps) {
+  var code = exps[1], exp = exps[2];
+  return ['multi', ['code', code], this.compile(exp)];
+}
+
 module.exports = ControlFlow;
 
 },{"./slm":14}],10:[function(require,module,exports){
 var Slm = require('./slm');
 
 function Control() {
-  this.ifRe = /^(if|unless)\b|do\s*(\|[^\|]*\|)?\s*$/;
+  this.ifRe = /^(if)\b|{\s*$/;
 }
 
 var ControlProto = Control.prototype = new Slm;
@@ -487,15 +501,16 @@ ControlProto.on_slm_control = function(exps) {
 
 ControlProto.on_slm_output = function(exps) {
   var escape = exps[2], code = exps[3], content = exps[4];
-
   if (this.ifRe.test(code)) {
-
     var tmp = this.uniqueName();
+    var tmp2 = this.uniqueName();
+    content = this.compile(content);
+    content.splice(content.length - 2, 0, ['code', 'return slm.safe(' + tmp2 + ');']);
     return ['multi',
       // Capture the result of the code in a variable. We can't do
       // `[:dynamic, code]` because it's probably not a complete
       // expression (which is a requirement for Temple).
-      ['block', tmp + '=' + code,
+      ['block', 'var ' + tmp + '=' + code,
 
         // Capture the content of a block in a separate buffer. This means
         // that `yield` will not output the content to the current buffer,
@@ -505,7 +520,7 @@ ControlProto.on_slm_output = function(exps) {
         // Output code in the block writes directly to the output buffer then.
         // Rails handles this by replacing the output buffer for helpers.
         // options[:disable_capture] ? compile(content) : [:capture, unique_name, compile(content)]],
-        ['capture', tmp, this.compile(content)]],
+        ['capture', tmp2, "var " + tmp2 + "='';", content]],
 
        // Output the content.
       ['escape', 'escape', ['dynamic', tmp]]
@@ -772,16 +787,21 @@ module.exports = Generator;
 },{"./dispatcher":1}],17:[function(require,module,exports){
 var Generator = require('../generator');
 
-function StringGenerator(name, capture) {
+function StringGenerator(name, capture, initializer) {
   this.buffer = name || '_b';
   this.capture = capture;
+  this.initializer = initializer;
 }
 var StringGeneratorProto = StringGenerator.prototype = new Generator;
 
 
 StringGeneratorProto.preamble = function() {
   if (this.capture) {
-    return this.buffer + "='';";
+    if (this.initializer) {
+      return this.initializer;
+    } else {
+      return 'var ' + this.buffer + '=' + '"";';
+    }
   }
   return "var " + this.buffer + "='';";
 }
@@ -925,7 +945,7 @@ FastProto.on_html_attrs = function(exps) {
 FastProto.on_html_attr = function(exps) {
   var name = exps[2], value = exps[3];
 
-  if (this.format != 'xhtml' && this.isEmptyExp(value)) {
+  if (this.format !== 'xhtml' && this.isEmptyExp(value)) {
     return ['static', ' ' + name];
   } else {
     return ['multi',
@@ -1012,6 +1032,7 @@ module.exports = Html;
 },{"../filter":4}],20:[function(require,module,exports){
 
 function Parser() {
+  this.file = null;
   this.lineno = 0;
   this.lines = [];
   this.indents = [0];
@@ -1055,7 +1076,7 @@ function Parser() {
   this.textContentRe = /^( ?)(.*)$/;
   this.indentRegex  = /^[ \t]+/;
   this.indentationRe = /^\s+/;
-  this.nextLineRe = /^[,\\]$/;
+  this.nextLineRe = /[,\\]$/;
   this.tabRe = /\t/g;
 }
 
@@ -1098,7 +1119,12 @@ ParserProto.getIndent = function(line) {
   return m ? m[0].replace(this.tabRe, ' ').length : 0
 }
 
-ParserProto.exec = function(str) {
+ParserProto.exec = function(str, options) {
+  if (options && options['file']) {
+    this.file = options['file'];
+  } else {
+    this.file = null;
+  }
   var result = ['multi'];
   this.reset(str.split(this.newLineRe), [result]);
 
@@ -1554,10 +1580,13 @@ ParserProto.parseCommentBlock = function() {
 }
 
 ParserProto.parseBrokenLine = function() {
-  var brokenLine = this.line.trim();
-  while (this.nextLineRe.test(brokenLine)) {
+  var brokenLine = this.line.trim(), m;
+  while (m = this.nextLineRe.exec(brokenLine)) {
     this.expectNextLine();
-    brokenLine += "\n" + this.line;
+    if (m[0] === '\\') {
+      brokenLine = brokenLine.slice(0, brokenLine.length - 2);
+    }
+    brokenLine += '\n' + this.line;
   }
   return brokenLine;
 }
@@ -1637,11 +1666,20 @@ ParserProto.parseQuotedAttribute = function(quote) {
 }
 
 ParserProto.syntaxError = function(message) {
-  throw new Error(message + ' line: ' + this.lineno);
+  var column = (this.origLine != null && this.line != null) ? this.origLine.length - this.line.length : 0;
+  column += 1;
+  var msg = [
+    message,
+    '  ' + (this.file || '(__TEMPLATE__)') + ', Line ' + this.lineno + ", Column " + column,
+    '  ' + this.origLine,
+    '  ' + new Array(column).join(' ') + '^',
+    ''
+  ].join('\n');
+  throw new Error(msg);
 }
 
 ParserProto.expectNextLine = function() {
-  if (this.nextLine()) {
+  if (!this.nextLine()) {
     this.syntaxError('Unexpected end of file');
   }
   this.line = this.line.trim();
