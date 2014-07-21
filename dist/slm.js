@@ -352,19 +352,15 @@ BracketsProto.on_slm_control = function(exps) {
 }
 
 BracketsProto.on_slm_output = function(exps) {
-  var code = exps[3], content = exps[4];
+  var code = exps[3], content = exps[4], postCode = '}', m;
   if (!this.blockRe.test(code) && !this.isEmptyExp(content)) {
-    var m;
     if (m = this.callbackRe.exec(code)) {
       var index = m.index + m[1].length;
-      var codePre = code.slice(0, index);
-      var codePost = code.slice(index);
-      code = codePre + '{';
-      content.push(['code', '}' + codePost])
-    } else {
-      code += '{';
-      content.push(['code', '}']);
+      postCode += code.slice(index);
+      code = code.slice(0, index);
     }
+    code += '{';
+    content.push(['code', postCode]);
   }
   return ['slm', 'output', exps[2], code, this.compile(content)];
 }
