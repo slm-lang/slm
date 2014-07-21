@@ -10,7 +10,7 @@ var assert  = Lab.assert
 
 suite("Parser", function() {
 
-  test("#getIndent", function(done) {
+  test(".getIndent()", function(done) {
     var parser = new Parser;
 
     assert.equal(parser.getIndent(' '), 1);
@@ -23,7 +23,7 @@ suite("Parser", function() {
     done();
   });
 
-  test("#exec", function(done) {
+  test(".exec()", function(done) {
     var parser = new Parser;
 
     assert.deepEqual(
