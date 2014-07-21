@@ -17,6 +17,9 @@ exports.assertHtml = function(template, src, result, options, callback) {
     message: function(v){return v},
     helloBlock: function(callback) {
       return this.helloWorld + ' ' + callback() + ' ' + this.helloWorld;
+    },
+    evilMethod: function() {
+      return '<script>do_something_evil();</script>';
     }
   };
   assert.deepEqual(template.eval(src, context, options), result);
@@ -46,7 +49,7 @@ exports.assertSyntaxError = function(template, src, result, options, callback) {
   assert.throw(function() {
     template.eval(src, context, options);
   }, result);
-  
+
   if (callback) {
     callback();
   }
