@@ -1,8 +1,10 @@
-var Lab = require('lab')
+var Lab = require('lab'),
+    Runtime = require('../lib/runtime');
 var assert  = Lab.assert
 
 exports.assertHtml = function(template, src, result, options, callback) {
   src = src.join('\n');
+  var env = {};
   var context = {
     idHelper: 'notice',
     outputNumber: 1337,
@@ -23,6 +25,23 @@ exports.assertHtml = function(template, src, result, options, callback) {
     },
     helloBlock: function(callback) {
       return this.helloWorld + ' ' + callback() + ' ' + this.helloWorld;
+    },
+    block: function(callback) {
+      return Runtime.safe(callback());
+    },
+    content: function() {
+      switch(arguments.length) {
+        case 0:
+          return env[''];
+        case 1:
+          return env[arguments[0]];
+        case 2:
+          var arg = arguments[0]
+          if (!arg) {
+            return arguments[1]();
+          }
+          return env[arg] || arguments[1]();
+      }
     },
     evilMethod: function() {
       return '<script>do_something_evil();</script>';

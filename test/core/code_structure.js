@@ -159,4 +159,27 @@ suite('Code structure', function() {
       '<p>Try</p><p>Boom</p><p>Finally</p><p>After</p>',
       {}, done);
   });
+
+  test('injects callback arg', function(done) {
+    assertHtml(template, [
+      '= this.block()',
+      '  p Block',
+      'p After',
+      ],
+      '<p>Block</p><p>After</p>',
+      {}, done);
+  });
+
+  test('content', function(done) {
+    assertHtml(template, [
+      '= this.content()',
+      'p After 1',
+      '= this.content("head")',
+      'p After 2',
+      '= this.content("head")',
+        'title title',
+      ],
+      '<p>After 1</p><p>After 2</p><title>title</title>',
+      {}, done);
+  });
 });
