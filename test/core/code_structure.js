@@ -66,6 +66,8 @@ suite('Code structure', function() {
 
   test('render with case', function(done) {
     assertHtml(template, [
+      '- var url = require("url")',
+      '- console.log(url.format({protocol: "http"}))',
       'p',
       '  - switch(42)',
       '    - case 41:',
@@ -172,14 +174,19 @@ suite('Code structure', function() {
 
   test('content', function(done) {
     assertHtml(template, [
-      '= this.content()',
+      '= content()',
       'p After 1',
-      '= this.content("head")',
+      '= content("head")',
       'p After 2',
-      '= this.content("head")',
-        'title title',
+      '= content(false)',
+        'title title1',
+      'p After 3',
+      '= content("head")',
+        'title title2',
+      'p After 4',
+      '= content("head")',
       ],
-      '<p>After 1</p><p>After 2</p><title>title</title>',
+      '<p>After 1</p><p>After 2</p><title>title1</title><p>After 3</p><title>title2</title><p>After 4</p>',
       {}, done);
   });
 });

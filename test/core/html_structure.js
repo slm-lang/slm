@@ -55,24 +55,6 @@ suite('Html structure', function() {
       {}, done);
   });
 
-  test('doctype new syntax', function(done) {
-    assertHtml(template, [
-      'doctype 5',
-      'html'
-      ],
-      '<!DOCTYPE html><html></html>',
-      {}, done);
-  });
-
-  test('doctype new syntax html 5', function(done) {
-    assertHtml(template, [
-      'doctype html',
-      'html'
-      ],
-      '<!DOCTYPE html><html></html>',
-      {}, done);
-  });
-
   test('render with shortcut attributes', function(done) {
     assertHtml(template, [
       'h1#title This is my title',
@@ -471,6 +453,47 @@ suite('Html structure', function() {
     ],
     '<html><head><meta content="Hello World from @env" name="keywords" /></head><p>Hello World from @env</p><span>Hello World from @env</span></html>',
     {}, done);
+  });
+
+  test('test context', function(done) {
+    var runtime = require('../../lib/runtime');
+    var ctx = new runtime.Ctx;
+
+    ctx.cache['layout'] = template.exec([
+      'html',
+      '  head',
+      '    = content("head")',
+      '  body',
+      '    = content()'
+      ].join('\n'))
+
+    ctx.cache['partialLayout'] = template.exec([
+      'p Partial Layout',
+      '= content()'
+      ].join('\n'));
+
+    ctx.cache['partialWorld'] = template.exec([
+      '- extend("partialLayout")',
+      '- if this.what',
+      '  strong The partial is ${this.what}',
+      '= content("partial.override")',
+      '= content()'
+      ].join('\n'));
+
+    var src = [
+    '- extend("layout")',
+    '= content("head")',
+    '  meta name="keywords" content=this.who',
+    'p Hello, ${this.who}',
+    '= include("partial" + this.who, {what: this.what})',
+    '  = content("partial.override")',
+    '    p nice',
+    '  strong super!!! ${this.who}'
+    ].join('\n')
+
+    var result = template.eval(src, {who: 'World', what: 'the best'}, {}, ctx);
+    assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p><p>Partial Layout</p><strong>The partial is the best</strong><p>nice</p><strong>super!!! World</strong></body></html>');
+    done();
   });
 
 });

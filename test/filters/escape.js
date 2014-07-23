@@ -25,7 +25,7 @@ suite('Escape', function() {
       ]),
       ['multi',
         ['static', 'a &lt; b'],
-        ['dynamic', 'slm.escape(this.jsMethod())'],
+        ['dynamic', 'rt.escape(this.jsMethod())'],
       ]
     );
     done();

@@ -60,7 +60,7 @@ suite('Html attribtues', function() {
     assertHtml(template, [
       '#alpha id="beta" Test it'
       ],
-      '<div id="alpha_beta">Test it</div>',
+      '<div id="alpha-beta">Test it</div>',
       {}, done);
   });
 
