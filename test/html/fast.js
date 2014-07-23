@@ -18,7 +18,7 @@ suite('Fast', function() {
 
   test('compile html doctype', function(done) {
     assert.deepEqual(
-      filter.exec(['multi', ['html', 'doctype', '5']]),
+      filter.exec(['multi', ['html', 'doctype', 'html']]),
       ['multi', ['static', '<!DOCTYPE html>']]
     );
 
