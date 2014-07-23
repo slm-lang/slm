@@ -15,7 +15,9 @@ gulp.task('test', function(cb) {
   });
 });
 
-gulp.task('build', function() {
+gulp.task('build', ['full', 'runtime']);
+
+gulp.task('full', function() {
   gulp.src('lib/template.js')
   .pipe(browserify())
   .pipe(concat('slm.js'))
@@ -23,6 +25,21 @@ gulp.task('build', function() {
   .pipe(gulp.dest('dist'))
   .pipe(uglify())
   .pipe(concat('slm.min.js'))
+  .pipe(size({showFiles: true}))
+  .pipe(gulp.dest('dist'))
+  .pipe(gzip())
+  .pipe(size({showFiles: true}))
+  .pipe(gulp.dest('dist'))
+});
+
+gulp.task('runtime', function() {
+  gulp.src('lib/runtime.js')
+  .pipe(browserify())
+  .pipe(concat('slm-runtime.js'))
+  .pipe(size({showFiles: true}))
+  .pipe(gulp.dest('dist'))
+  .pipe(uglify())
+  .pipe(concat('slm-runtime.min.js'))
   .pipe(size({showFiles: true}))
   .pipe(gulp.dest('dist'))
   .pipe(gzip())
