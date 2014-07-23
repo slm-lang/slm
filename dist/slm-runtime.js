@@ -63,11 +63,20 @@ function Ctx() {
   this.contents = {};
   this.res = '';
   this.stack = [];
-  this.cache = {};
   this.m = null;
-};
+}
+
+Ctx.cache = {};
 
 var CtxProto = Ctx.prototype;
+
+CtxProto.pop = function(sp) {
+  var l = this.stack.length;
+  while(sp < l--) {
+    this.load(this.stack.pop()).call(this.m, this);
+  }
+  return this.res;
+}
 
 CtxProto.include = function(path, model, cb) {
   if (cb) {
@@ -77,14 +86,6 @@ CtxProto.include = function(path, model, cb) {
   res = safe(f.call(this.m = model, this));
   this.m = oldModel;
   return res;
-}
-
-CtxProto.pop = function(sp) {
-  var l = this.stack.length;
-  while(sp < l--) {
-    this.load(this.stack.pop()).call(this.m, this);
-  }
-  return this.res;
 }
 
 CtxProto.extend = function(path) {
@@ -110,7 +111,7 @@ CtxProto.content = function() {
 }
 
 CtxProto.load = function(path) {
-  return this.cache[path];
+  return Ctx.cache[path];
 }
 
 module.exports = {

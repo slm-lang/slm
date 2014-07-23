@@ -456,10 +456,10 @@ suite('Html structure', function() {
   });
 
   test('test context', function(done) {
-    var runtime = require('../../lib/runtime');
-    var ctx = new runtime.Ctx;
+    var Ctx = require('../../lib/runtime').Ctx;
+    Ctx.cache = {};
 
-    ctx.cache['layout'] = template.exec([
+    Ctx.cache['layout'] = template.exec([
       'html',
       '  head',
       '    = content("head")',
@@ -467,12 +467,12 @@ suite('Html structure', function() {
       '    = content()'
       ].join('\n'))
 
-    ctx.cache['partialLayout'] = template.exec([
+    Ctx.cache['partialLayout'] = template.exec([
       'p Partial Layout',
       '= content()'
       ].join('\n'));
 
-    ctx.cache['partialWorld'] = template.exec([
+    Ctx.cache['partialWorld'] = template.exec([
       '- extend("partialLayout")',
       '- if this.what',
       '  strong The partial is ${this.what}',
@@ -491,7 +491,7 @@ suite('Html structure', function() {
     '  strong super!!! ${this.who}'
     ].join('\n')
 
-    var result = template.eval(src, {who: 'World', what: 'the best'}, {}, ctx);
+    var result = template.eval(src, {who: 'World', what: 'the best'}, {});
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p><p>Partial Layout</p><strong>The partial is the best</strong><p>nice</p><strong>super!!! World</strong></body></html>');
     done();
   });
