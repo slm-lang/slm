@@ -137,13 +137,22 @@ function Template() {
 }
 
 Template.prototype.render = function(src, options) {
-  return 'function(context) {\n'
-    + 'var slm = require("./runtime");'
-    + this.engine.exec(src, options) + '}';
+  return [
+    'function(c) {',
+    'var rt = require("./runtime");',
+    'c = c || new rt.Ctx(this);',
+    'c.m = this;',
+    'var sp = c.stack.length,',
+    'content = c.content.bind(c),',
+    'extend = c.extend.bind(c),',
+    'include = c.include.bind(c);',
+    this.engine.exec(src, options),
+    'c.res=_b;return c.pop(sp);}'
+  ].join('');
 };
 
-Template.prototype.eval = function(src, context, options) {
-  return this.exec(src, options).call(context);
+Template.prototype.eval = function(src, model, options, ctx) {
+  return this.exec(src, options).call(model, ctx);
 };
 
 Template.prototype.exec = function(src, options) {
@@ -230,7 +239,7 @@ module.exports = Filter;
 var Slm = require('./slm');
 
 function AttrMerge() {
-  this.mergeAttrs = {'id' : '_', 'class' : ' '};
+  this.mergeAttrs = {'id' : '-', 'class' : ' '};
 }
 
 AttrMerge.prototype = new Slm;
@@ -280,7 +289,7 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
         for (var j = 0, v; v = value[j]; j++) {
           exp.push(['capture', captures + '[' + j + ']', captures + '[' + j + ']' + "='';", v]);
         }
-        exp.push(['dynamic', 'slm.rejectEmpty('+captures +').join("' + delimiter + '")']);
+        exp.push(['dynamic', 'rt.rejectEmpty('+captures +').join("' + delimiter + '")']);
         attrs[i] = ['html', 'attr', name, exp];
       }
     } else {
@@ -332,6 +341,7 @@ var Slm = require('./slm');
 function Brackets() {
   this.blockRe = /^(case|default)\b/;
   this.wrapCondRe = /^(for|switch|catch|while|if|else\s+if)\s+(?!\()((\S|\s\S)*)\s*$/
+  this.ifRe = /^(if|switch|while|for|else|finally|catch)\b/
   this.callbackRe = /(function\s*\([^\)]*\)\s*)[^\{]/;
 }
 
@@ -344,25 +354,42 @@ BracketsProto.on_slm_control = function(exps) {
     code = code.replace(m[2], '(' + m[2] + ')');
   }
 
-  if (!this.blockRe.test(code) && !this.isEmptyExp(content)) {
-    code += '{';
-    content.push(['code', '}']);
-  }
+  code = this.expandCallback(code, content);
   return ['slm', 'control', code, this.compile(content)]
 }
 
 BracketsProto.on_slm_output = function(exps) {
   var code = exps[3], content = exps[4], postCode = '}', m;
+  code = this.expandCallback(code, content);
+  return ['slm', 'output', exps[2], code, this.compile(content)];
+}
+
+BracketsProto.expandCallback = function(code, content) {
+  var postCode = '}', m, index;
   if (!this.blockRe.test(code) && !this.isEmptyExp(content)) {
-    if (m = this.callbackRe.exec(code)) {
-      var index = m.index + m[1].length;
-      postCode += code.slice(index);
-      code = code.slice(0, index);
+    if (!this.ifRe.test(code)) {
+      if (m = this.callbackRe.exec(code)) {
+        index = m.index + m[1].length;
+        postCode += code.slice(index);
+        code = code.slice(0, index);
+      } else if ((index = code.lastIndexOf(')')) !== -1) {
+        var firstIndex = code.indexOf('(');
+        if (firstIndex !== -1) {
+          var args = code.slice(firstIndex + 1, index);
+          postCode += code.slice(index);
+          if (/^\s*$/.test(args)) {
+            code = code.slice(0, index) + 'function()';
+          } else {
+            code = code.slice(0, index) + ',function()';
+          }
+        }
+      }
     }
     code += '{';
     content.push(['code', postCode]);
+
   }
-  return ['slm', 'output', exps[2], code, this.compile(content)];
+  return code;
 }
 
 module.exports = Brackets;
@@ -427,7 +454,7 @@ CodeAttributesProto.on_slm_attrvalue = function(exps) {
      ['code', 'var ' + tmp + '=' + code + ';'],
      ['if', tmp + ' instanceof Array',
       ['multi',
-        ['code',  tmp + '=slm.rejectEmpty(slm.flatten(' + tmp + '));'],
+        ['code',  tmp + '=rt.rejectEmpty(rt.flatten(' + tmp + '));'],
        ['escape', escape, ['dynamic', tmp + '.join("'+ delimiter +'")']]],
       ['escape', escape, ['dynamic', tmp]]]]
   } else {
@@ -501,7 +528,7 @@ ControlProto.on_slm_output = function(exps) {
     var tmp = this.uniqueName();
     var tmp2 = this.uniqueName();
     content = this.compile(content);
-    content.splice(content.length - 2, 0, ['code', 'return slm.safe(' + tmp2 + ');']);
+    content.splice(content.length - 1, 0, ['code', 'return rt.safe(' + tmp2 + ');']);
     return ['multi',
       // Capture the result of the code in a variable. We can't do
       // `[:dynamic, code]` because it's probably not a complete
@@ -545,7 +572,7 @@ function Escape() {
 var EscapeProto = Escape.prototype = new Filter;
 
 EscapeProto.escapeCode = function(v) {
-  return 'slm.escape(' + v + ')';
+  return 'rt.escape(' + v + ')';
 }
 
 EscapeProto.on_escape = function(exps) {
@@ -662,8 +689,6 @@ module.exports = MultiFlattener;
 },{"../filter":4}],14:[function(require,module,exports){
 var Filter = require('../html/html');
 
-// Flattens nested multi expressions
-
 function Slm() {}
 var SlmProto = Slm.prototype = new Filter;
 
@@ -743,7 +768,7 @@ function Generator() {
 var GeneratorProto = Generator.prototype = new Dispatcher();
 
 GeneratorProto.exec = function(exp) {
-  return [this.preamble(), this.compile(exp), this.postamble()].join('\n');
+  return [this.preamble(), this.compile(exp)].join('\n');
 }
 
 GeneratorProto.on = function(exp) {
@@ -790,23 +815,11 @@ function StringGenerator(name, capture, initializer) {
 }
 var StringGeneratorProto = StringGenerator.prototype = new Generator;
 
-
 StringGeneratorProto.preamble = function() {
-  if (this.capture) {
-    if (this.initializer) {
-      return this.initializer;
-    } else {
-      return 'var ' + this.buffer + '=' + '"";';
-    }
+  if (this.capture && this.initializer) {
+    return this.initializer;
   }
   return "var " + this.buffer + "='';";
-}
-
-StringGeneratorProto.postamble = function() {
-  if (this.capture) {
-    return '';
-  }
-  return 'return ' + this.buffer + ';';
 }
 
 StringGeneratorProto.on_capture = function(exps) {
@@ -856,18 +869,15 @@ FastProto.on_html_doctype = function(exps) {
 
   var XHTML_DOCTYPES = {
     '1.1'          : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
-    '5'            : '<!DOCTYPE html>',
     'html'         : '<!DOCTYPE html>',
     'strict'       : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
     'frameset'     : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
-    'mobile'       : '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">',
     'basic'        : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">',
     'transitional' : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
     'svg'          : '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
   }
 
   var HTML_DOCTYPES = {
-    '5'            : '<!DOCTYPE html>',
     'html'         : '<!DOCTYPE html>',
     'strict'       : '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
     'frameset'     : '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">',
@@ -1744,11 +1754,66 @@ function flatten(arr) {
   }, []);
 }
 
+function Ctx() {
+  this.contents = {};
+  this.res = '';
+  this.stack = [];
+  this.cache = {};
+  this.m = null;
+};
+
+var CtxProto = Ctx.prototype;
+
+CtxProto.include = function(path, model, cb) {
+  if (cb) {
+    this.res = cb.call(this.m, this);
+  }
+  var f = this.load(path), oldModel = this.m,
+  res = safe(f.call(this.m = model, this));
+  this.m = oldModel;
+  return res;
+}
+
+CtxProto.pop = function(sp) {
+  var l = this.stack.length;
+  while(sp < l--) {
+    this.load(this.stack.pop()).call(this.m, this);
+  }
+  return this.res;
+}
+
+CtxProto.extend = function(path) {
+  this.stack.push(path);
+}
+
+CtxProto.content = function() {
+  switch(arguments.length) {
+    case 0:
+      return safe(this.res);
+    case 1:
+      return this.contents[arguments[0]] || '';
+    case 2:
+      var name = arguments[0], cb = arguments[1];
+      if (name) {
+        // capturing block
+        this.contents[name] = cb.call(this.m);
+        return '';
+      } else {
+        return cb.call(this.m);
+      }
+  }
+}
+
+CtxProto.load = function(path) {
+  return this.cache[path];
+}
+
 module.exports = {
   safe: safe,
   escape: escape,
   rejectEmpty: rejectEmpty,
-  flatten: flatten
+  flatten: flatten,
+  Ctx: Ctx
 }
 
 },{}]},{},[3])
