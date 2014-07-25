@@ -13,6 +13,7 @@
   ],
   "author": "Yury Korolev",
   "license": "ISC",
+  "main": "lib/slm.js",
   "devDependencies": {
     "browserify": "^4.2.1",
     "gulp": "^3.8.6",
