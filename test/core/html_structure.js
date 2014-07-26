@@ -456,7 +456,7 @@ suite('Html structure', function() {
   });
 
   test('test context', function(done) {
-    var Ctx = require('../../lib/runtime').Ctx;
+    var Ctx = require('../../lib/ctx');
     Ctx.cache = {};
 
     Ctx.cache['layout'] = template.exec([
@@ -485,7 +485,7 @@ suite('Html structure', function() {
     '= content("head")',
     '  meta name="keywords" content=this.who',
     'p Hello, ${this.who}',
-    '= include("partial" + this.who, {what: this.what})',
+    '= partial("partial" + this.who, {what: this.what})',
     '  = content("partial.override")',
     '    p nice',
     '  strong super!!! ${this.who}'
