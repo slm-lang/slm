@@ -18,7 +18,7 @@ gulp.task('test', function(cb) {
 gulp.task('build', ['full', 'runtime']);
 
 gulp.task('full', function() {
-  gulp.src('lib/template.js')
+  gulp.src('lib/slm.js')
   .pipe(browserify())
   .pipe(concat('slm.js'))
   .pipe(size({showFiles: true}))
