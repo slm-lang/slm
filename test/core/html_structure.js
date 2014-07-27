@@ -201,6 +201,14 @@ suite('Html structure', function() {
       {}, done);
   });
 
+  test('with inline mustashe', function(done) {
+    assertHtml(template, [
+      'label {{title}}'
+      ],
+      '<label>{{title}}</label>',
+      {}, done);
+  });
+
   test('paragraph with attributes and nested text', function(done) {
     assertHtml(template, [
       'p#test class="paragraph" This is line one.',
