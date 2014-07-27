@@ -186,6 +186,21 @@ suite('Html structure', function() {
       {}, done);
   });
 
+  test('labels with with br', function(done) {
+    assertHtml(template, [
+      'label',
+      '  . Название',
+      '  input name="name" type="text" value=1',
+      'br',
+      '',
+      'label',
+      '  . Название 2',
+      '  input name="name" type="text" value=2',
+      ],
+      '<label>Название <input name="name" type="text" value="1" /></label><br /><label>Название 2 <input name="name" type="text" value="2" /></label>',
+      {}, done);
+  });
+
   test('paragraph with attributes and nested text', function(done) {
     assertHtml(template, [
       'p#test class="paragraph" This is line one.',
