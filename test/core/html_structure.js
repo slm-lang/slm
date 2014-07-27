@@ -286,7 +286,7 @@ suite('Html structure', function() {
 
   test('attributes with parens and spaces', function(done) {
     assertHtml(template, [
-      "label{ for='filter' }= this.helloWorld"
+      "label[ for='filter' ]= this.helloWorld"
       ],
       '<label for="filter">Hello World from @env</label>',
       {}, done);
@@ -294,7 +294,7 @@ suite('Html structure', function() {
 
   test('attributes with parens and spaces 2', function(done) {
     assertHtml(template, [
-      "label{ for='filter' } = this.helloWorld"
+      "label[ for='filter' ] = this.helloWorld"
       ],
       '<label for="filter">Hello World from @env</label>',
       {}, done);
@@ -387,9 +387,9 @@ suite('Html structure', function() {
 
   test('multiline attributes with dynamic attr', function(done) {
     assertHtml(template, [
-      'p{id=this.idHelper',
+      'p[id=this.idHelper',
       '  class="martian"',
-      '  data-info="Illudium Q-36"}',
+      '  data-info="Illudium Q-36"]',
       '  | THE space modulator'
       ],
       '<p class="martian" data-info="Illudium Q-36" id="notice">THE space modulator</p>',

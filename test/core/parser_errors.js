@@ -84,9 +84,9 @@ suite('Parser errors', function() {
   test('expected closing delimiter', function(done) {
     assertSyntaxError(template, [
       'p',
-      '  img(src="img.jpg" title={title}',
+      '  img(src="img.jpg" title=(title)',
       ],
-      'Expected closing delimiter )\n  (__TEMPLATE__), Line 2, Column 34\n    img(src=\"img.jpg\" title={title}\n                                   ^\n',
+      'Expected closing delimiter )\n  (__TEMPLATE__), Line 2, Column 34\n    img(src=\"img.jpg\" title=(title)\n                                   ^\n',
       {}, done);
   });
 
@@ -120,18 +120,18 @@ suite('Parser errors', function() {
   test('invalid empty attribute', function(done) {
     assertSyntaxError(template, [
       'p',
-      '  img{src= }',
+      '  img[src= ]',
       ],
-      'Invalid empty attribute\n  (__TEMPLATE__), Line 2, Column 12\n    img{src= }\n             ^\n',
+      'Invalid empty attribute\n  (__TEMPLATE__), Line 2, Column 12\n    img[src= ]\n             ^\n',
       {}, done);
   });
 
   test('invalid empty attribute 2', function(done) {
     assertSyntaxError(template, [
       'p',
-      '  img{src=}',
+      '  img[src=]',
       ],
-      'Invalid empty attribute\n  (__TEMPLATE__), Line 2, Column 11\n    img{src=}\n            ^\n',
+      'Invalid empty attribute\n  (__TEMPLATE__), Line 2, Column 11\n    img[src=]\n            ^\n',
       {}, done);
   });
 
