@@ -459,7 +459,7 @@ suite('Html structure', function() {
     var Ctx = require('../../lib/ctx');
     Ctx.cache = {};
 
-    Ctx.cache['layout'] = template.exec([
+    Ctx.cache['layout.slm'] = template.exec([
       'html',
       '  head',
       '    = content("head")',
@@ -467,12 +467,12 @@ suite('Html structure', function() {
       '    = content()'
       ].join('\n'))
 
-    Ctx.cache['partialLayout'] = template.exec([
+    Ctx.cache['partialLayout.slm'] = template.exec([
       'p Partial Layout',
       '= content()'
       ].join('\n'));
 
-    Ctx.cache['partialWorld'] = template.exec([
+    Ctx.cache['partialWorld.slm'] = template.exec([
       '- extend("partialLayout")',
       '- if this.what',
       '  strong The partial is ${this.what}',
@@ -482,7 +482,7 @@ suite('Html structure', function() {
 
     var src = [
     '- extend("layout")',
-    '= content("head")',
+    '= content("head");',
     '  meta name="keywords" content=this.who',
     'p Hello, ${this.who}',
     '= partial("partial" + this.who, {what: this.what})',
@@ -491,7 +491,10 @@ suite('Html structure', function() {
     '  strong super!!! ${this.who}'
     ].join('\n')
 
-    var result = template.eval(src, {who: 'World', what: 'the best'}, {});
+    var ctx = new Ctx();
+    ctx.filename = 'script'
+
+    var result = template.eval(src, {who: 'World', what: 'the best'}, {}, ctx);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p><p>Partial Layout</p><strong>The partial is the best</strong><p>nice</p><strong>super!!! World</strong></body></html>');
     done();
   });
