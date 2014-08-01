@@ -3,11 +3,8 @@ var Path = require('path');
 var FS = require('fs');
 
 function Ctx() {
-  this.contents = {};
-  this.res = '';
-  this.stack = [];
-  this.m = null;
-  this.tempalte = null;
+  this.reset();
+  this.template = null;
   this.basePath = null;
 }
 
@@ -15,14 +12,23 @@ Ctx.cache = {};
 
 var CtxProto = Ctx.prototype;
 
+CtxProto.reset = function() {
+  this.contents = {};
+  this.res = '';
+  this.stack = [];
+  this.m = null;
+}
+
 CtxProto.pop = function(sp) {
   var l = this.stack.length;
+  var oldFilename = this.filename;
   while(sp < l--) {
     var path = this.resolvePath(this.stack.pop());
     var fn = this.load(path);
     this.filename = path;
     fn.call(this.m, this);
   }
+  this.filename = oldFilename;
   return this.res;
 }
 
@@ -75,9 +81,9 @@ CtxProto.load = function(path) {
 };
 
 CtxProto.resolvePath = function(path) {
-  var dirname = Path.dirname;
-  var basename = Path.basename;
-  var join = Path.join;
+  var dirname  = Path.dirname,
+      basename = Path.basename,
+      join = Path.join;
 
   if (path[0] !== '/' && !this.filename)
     throw new Error('the "filename" option is required to use with "relative" paths');
@@ -96,7 +102,7 @@ CtxProto.resolvePath = function(path) {
 
 module.exports = Ctx;
 
-},{"fs":24,"path":25}],2:[function(require,module,exports){
+},{"fs":25,"path":26}],2:[function(require,module,exports){
 function Node() {
   this.method = null;
   this.children = {};
@@ -171,8 +177,7 @@ DispatcherProto.replaceDispatcher = function(exp) {
     }
     node.method = method;
   }
-  var code = '[function(exps) {' + tree.compile(0) + '}]';
-  this.dispatcher = eval(code)[0];
+  this.dispatcher = Function('exps', tree.compile(0));
   return this.dispatcher(exp);
 }
 
@@ -209,7 +214,7 @@ exports.compile = function(src, options) {
   return template.compile(src, options);
 };
 
-},{"./template":23}],5:[function(require,module,exports){
+},{"./template":24}],5:[function(require,module,exports){
 var Dispatcher = require('./dispatcher');
 
 function Filter() {};
@@ -349,7 +354,7 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
 
 module.exports = AttrMerge;
 
-},{"./slm":15}],7:[function(require,module,exports){
+},{"./slm":16}],7:[function(require,module,exports){
 var Slm = require('./slm');
 
 function AttrRemove() {
@@ -382,7 +387,7 @@ AttrRemove.prototype.on_html_attr = function(exps) {
 
 module.exports = AttrRemove;
 
-},{"./slm":15}],8:[function(require,module,exports){
+},{"./slm":16}],8:[function(require,module,exports){
 var Slm = require('./slm');
 
 function Brackets() {
@@ -441,7 +446,7 @@ BracketsProto.expandCallback = function(code, content) {
 
 module.exports = Brackets;
 
-},{"./slm":15}],9:[function(require,module,exports){
+},{"./slm":16}],9:[function(require,module,exports){
 var Slm = require('./slm');
 
 function CodeAttributes() {
@@ -511,7 +516,7 @@ CodeAttributesProto.on_slm_attrvalue = function(exps) {
 
 module.exports = CodeAttributes;
 
-},{"./slm":15}],10:[function(require,module,exports){
+},{"./slm":16}],10:[function(require,module,exports){
 var Slm = require('./slm');
 
 function ControlFlow() {}
@@ -556,7 +561,7 @@ FlowProto.on_block = function(exps) {
 
 module.exports = ControlFlow;
 
-},{"./slm":15}],11:[function(require,module,exports){
+},{"./slm":16}],11:[function(require,module,exports){
 var Slm = require('./slm');
 
 function Control() {
@@ -606,7 +611,95 @@ ControlProto.on_slm_text = function(exps) {
 
 module.exports = Control;
 
-},{"./slm":15}],12:[function(require,module,exports){
+},{"./slm":16}],12:[function(require,module,exports){
+var Slm = require('./slm');
+
+function TextCollector() {}
+var TextProto = TextCollector.prototype = new Slm();
+
+TextProto.exec = function(exp) {
+  this.collected = ''
+  Slm.prototype.exec.call(this, exp);
+  return this.collected;
+}
+
+TextProto.on_slm_interpolate = function(exps) {
+  this.collected += exps[2];
+  return null;
+}
+
+function NewlineCollector() {}
+var NewlineProto = NewlineCollector.prototype = new Slm();
+
+NewlineProto.exec = function(exp) {
+  this.collected = ['multi'];
+  Slm.prototype.exec.call(this, exp);
+  return this.collected;
+}
+
+NewlineProto.on_newline = function() {
+  this.collected.push(['newline']);
+  return null;
+}
+
+function Engine() {
+  this.textCollector = new TextCollector();
+  this.newlineCollector = new NewlineCollector();
+}
+var EngineProto = Engine.prototype = new Slm();
+
+EngineProto.collectText = function(body) {
+  return this.textCollector.exec(body);
+}
+
+EngineProto.collectNewlines = function(body) {
+  return this.newlineCollector.exec(body);
+}
+
+function JavascriptEngine() {}
+JavascriptEngine.prototype = new Engine();
+
+JavascriptEngine.prototype.on_slm_embedded = function(exps) {
+  var engine = exps[2], body = exps[3];
+  return ['html', 'tag', 'script',['html', 'attrs',
+    ['html', 'attr', 'type', ['static', 'text/javascript']]], body];
+}
+
+function CSSEngine(){}
+CSSEngine.prototype = new Engine();
+
+CSSEngine.prototype.on_slm_embedded = function(exps) {
+  var engine = exps[2], body = exps[3];
+  return ['html', 'tag', 'style', ['html', 'attrs',
+    ['html', 'attr', 'type', ['static', 'text/css']]], body];
+}
+
+function Embedded() {
+  this.engines = {}
+}
+
+var EmbeddedProto = Embedded.prototype = new Slm();
+
+EmbeddedProto.register = function(name, filter) {
+  this.engines[name] = filter;
+};
+
+EmbeddedProto.on_slm_embedded = function(exps) {
+  var name = exps[2], body = 3;
+  var engine = this.engines[name];
+  if (!engine) {
+    throw new Error('Embedded engine ' + name + ' is not registered.')
+  }
+  return this.engines[name].on_slm_embedded(exps);
+}
+
+exports.Embedded = Embedded;
+exports.JavascriptEngine = JavascriptEngine;
+exports.CSSEngine = CSSEngine;
+exports.TextCollector = TextCollector;
+exports.NewlineCollector = NewlineCollector;
+
+},{"./slm":16}],13:[function(require,module,exports){
 var Filter = require('../filter'),
     Runtime = require('../runtime');
 
@@ -642,7 +735,7 @@ EscapeProto.on_dynamic = function(exps) {
 
 module.exports = Escape;
 
-},{"../filter":5,"../runtime":22}],13:[function(require,module,exports){
+},{"../filter":5,"../runtime":23}],14:[function(require,module,exports){
 var Slm = require('./slm');
 
 function Interpolation() {
@@ -699,7 +792,7 @@ InterpolationProto.parseExpression = function(str) {
 
 module.exports = Interpolation;
 
-},{"./slm":15}],14:[function(require,module,exports){
+},{"./slm":16}],15:[function(require,module,exports){
 var Filter = require('../filter');
 
 // Flattens nested multi expressions
@@ -733,7 +826,7 @@ MultiFlattener.prototype.on_multi = function(exps) {
 
 module.exports = MultiFlattener;
 
-},{"../filter":5}],15:[function(require,module,exports){
+},{"../filter":5}],16:[function(require,module,exports){
 var Filter = require('../html/html');
 
 function Slm() {}
@@ -762,7 +855,7 @@ SlmProto.on_slm_output = function(exps) {
 
 module.exports = Slm;
 
-},{"../html/html":20}],16:[function(require,module,exports){
+},{"../html/html":21}],17:[function(require,module,exports){
 var Filter = require('../filter');
 
 /**
@@ -805,7 +898,7 @@ StaticMerger.prototype.on_multi = function(exps) {
 
 module.exports = StaticMerger;
 
-},{"../filter":5}],17:[function(require,module,exports){
+},{"../filter":5}],18:[function(require,module,exports){
 var Dispatcher = require('./dispatcher');
 
 function Generator() {
@@ -852,7 +945,7 @@ GeneratorProto.concat = function(str) {
 
 module.exports = Generator;
 
-},{"./dispatcher":2}],18:[function(require,module,exports){
+},{"./dispatcher":2}],19:[function(require,module,exports){
 var Generator = require('../generator');
 
 function StringGenerator(name, capture, initializer) {
@@ -877,7 +970,7 @@ StringGeneratorProto.on_capture = function(exps) {
 
 module.exports = StringGenerator;
 
-},{"../generator":17}],19:[function(require,module,exports){
+},{"../generator":18}],20:[function(require,module,exports){
 var Html = require('./html');
 
 function Fast(options) {
@@ -1023,7 +1116,7 @@ FastProto.on_html_js = function(exps) {
 
 module.exports = Fast;
 
-},{"./html":20}],20:[function(require,module,exports){
+},{"./html":21}],21:[function(require,module,exports){
 var Filter = require('../filter');
 
 function Html() {}
@@ -1082,7 +1175,7 @@ HtmlProto.isContainNonEmptyStatic = function(exp) {
 
 module.exports = Html;
 
-},{"../filter":5}],21:[function(require,module,exports){
+},{"../filter":5}],22:[function(require,module,exports){
 
 function Parser() {
   this.file = null;
@@ -1102,8 +1195,7 @@ function Parser() {
   };
   this.attrDelims = {
     '(' : ')',
-    '[' : ']',
-    '{' : '}',
+    '[' : ']'
   };
 
   this.tagRe = /^(?:#|\.|\*(?=[^\s]+)|(\w+(?:\w+|:|-)*\w|\w+))/
@@ -1113,8 +1205,8 @@ function Parser() {
   this.quotedAttrRe = new RegExp(this.attrName + '\\s*=(=?)\\s*("|\')');
   this.codeAttrRe = new RegExp(this.attrName + '\\s*=(=?)\\s*');
 
-  this.delimRe = /^[\(\)\[\]\{\}]/;
-  this.attrDelimRe = /^\s*([\(\)\[\]\{\}])/;
+  this.delimRe = /^[\(\)\[\]]/;
+  this.attrDelimRe = /^\s*([\(\)\[\]])/;
   this.newLineRe = /\r?\n/;
   this.emptyLineRe = /^\s*$/;
   this.htmlCommentRe = /^\/!(\s?)/;
@@ -1181,7 +1273,7 @@ ParserProto.exec = function(str, options) {
   var result = ['multi'];
   this.reset(str.split(this.newLineRe), [result]);
 
-  while (this.nextLine()) {
+  while (this.nextLine() !== null) {
     this.parseLine()
   }
 
@@ -1740,7 +1832,7 @@ ParserProto.expectNextLine = function() {
 
 module.exports = Parser;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var escapeRe = /[&<>"]/;
 var ampRe = /&/g;
 var ltRe = /</g;
@@ -1808,9 +1900,10 @@ module.exports = {
   flatten: flatten
 }
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 var Engine = require('./engine'),
   Parser = require('./parser'),
+  Embeddeds = require('./filters/embedded'),
   Interpolation = require('./filters/interpolation'),
   Brackets = require('./filters/brackets'),
   Controls = require('./filters/controls'),
@@ -1824,12 +1917,19 @@ var Engine = require('./engine'),
   StaticMerger = require('./filters/static_merger'),
   StringGenerator = require('./generators/string_generator'),
   Runtime = require('./runtime'),
+
   Ctx = require('./ctx');
 
 function Template() {
   this.engine = new Engine;
+  this.embedded = new Embeddeds.Embedded;
+  var jsEngine = new Embeddeds.JavascriptEngine;
+  this.embedded.register('script', jsEngine);
+  this.embedded.register('javascript', jsEngine);
+  this.embedded.register('css', new Embeddeds.CSSEngine);
 
   this.engine.use(new Parser);
+  this.engine.use(this.embedded);
   this.engine.use(new Interpolation);
   this.engine.use(new Brackets);
   this.engine.use(new Controls);
@@ -1877,16 +1977,18 @@ Template.prototype.compile = function(src, options) {
   ctx.rt = Runtime;
 
   var fnWrap = function(context, runtimeOptions) {
-    return fn.call(context, ctx);
+    var res = fn.call(context, ctx);
+    ctx.reset();
+    return res;
   }
   return fnWrap;
 }
 
 module.exports = Template;
 
-},{"./ctx":1,"./engine":3,"./filters/attr_merge":6,"./filters/attr_remove":7,"./filters/brackets":8,"./filters/code_attributes":9,"./filters/control_flow":10,"./filters/controls":11,"./filters/escape":12,"./filters/interpolation":13,"./filters/multi_flattener":14,"./filters/static_merger":16,"./generators/string_generator":18,"./html/fast":19,"./parser":21,"./runtime":22}],24:[function(require,module,exports){
+},{"./ctx":1,"./engine":3,"./filters/attr_merge":6,"./filters/attr_remove":7,"./filters/brackets":8,"./filters/code_attributes":9,"./filters/control_flow":10,"./filters/controls":11,"./filters/embedded":12,"./filters/escape":13,"./filters/interpolation":14,"./filters/multi_flattener":15,"./filters/static_merger":17,"./generators/string_generator":19,"./html/fast":20,"./parser":22,"./runtime":23}],25:[function(require,module,exports){
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -2114,7 +2216,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require("1YiZ5S"))
-},{"1YiZ5S":26}],26:[function(require,module,exports){
+},{"1YiZ5S":27}],27:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
