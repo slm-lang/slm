@@ -4,8 +4,7 @@ var FS = require('fs');
 
 function Ctx() {
   this.reset();
-  this.template = null;
-  this.basePath = null;
+  this.template = this.basePath = null;
 }
 
 Ctx.cache = {};
@@ -114,7 +113,6 @@ function Node() {
 }
 
 Node.prototype.compile = function(level, callMethod) {
-
   if (this._method) {
     callMethod = 'this.' + this._method + '(exps)';
   }
@@ -139,7 +137,7 @@ Node.prototype.compile = function(level, callMethod) {
 
 function Dispatcher() {
   this._methodSplitRE = /_/;
-  this._methodRE = /^on(_[a-zA-Z0-9]+)*$/;
+  this._methodRE = /^on(_\w+)*$/;
 }
 
 var DispatcherProto = Dispatcher.prototype;
