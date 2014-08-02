@@ -7,7 +7,7 @@ var after   = Lab.after;
 var test    = Lab.test
 var assert  = Lab.assert
 
-suite("Interpolation", function() {
+suite("Interpolate", function() {
 
   var template;
   before(function(done) {

@@ -16,7 +16,7 @@ var CtxProto = Ctx.prototype;
   Prepare ctx for next template rendering
 */
 CtxProto.reset = function() {
-  this.contents = {};
+  this._contents = {};
   this.res = '';
   this.stack = [];
   this.m = null;
@@ -30,7 +30,7 @@ CtxProto.pop = function(sp) {
   var filename = this.filename;
   while(sp < l--) {
     var path = this._resolvePath(this.stack.pop());
-    var fn = this.load(path);
+    var fn = this._load(path);
     this.filename = path;
     fn.call(this.m, this);
   }
@@ -45,7 +45,7 @@ CtxProto.partial = function(path, model, cb) {
 
   path = this._resolvePath(path);
 
-  var f = this.load(path), oldModel = this.m, filename = this.filename;
+  var f = this._load(path), oldModel = this.m, filename = this.filename;
   this.filename = path;
   var res = this.rt.safe(f.call(this.m = model, this));
   this.m = oldModel;
@@ -62,12 +62,12 @@ CtxProto.content = function() {
     case 0:
       return this.rt.safe(this.res);
     case 1:
-      return this.contents[arguments[0]] || '';
+      return this._contents[arguments[0]] || '';
     case 2:
       var name = arguments[0], cb = arguments[1];
       if (name) {
         // capturing block
-        this.contents[name] = cb.call(this.m);
+        this._contents[name] = cb.call(this.m);
         return '';
       } else {
         return cb.call(this.m);
@@ -75,7 +75,7 @@ CtxProto.content = function() {
   }
 }
 
-CtxProto.load = function(path) {
+CtxProto._load = function(path) {
   var fn = Ctx.cache[path];
   if (fn) {
     return fn;
@@ -178,7 +178,7 @@ DispatcherProto._replaceDispatcher = function(exp) {
     var node = tree;
     for (var j = 1, type; type = types[j]; j++) {
       var n = node._nodes[type];
-      node = node._nodes[type] = n || new Node;
+      node = node._nodes[type] = n || new Node();
     }
     node._method = method;
   }
@@ -296,7 +296,7 @@ module.exports = Filter;
 var Slm = require('./slm');
 
 function AttrMerge() {
-  this.mergeAttrs = {'id' : '-', 'class' : ' '};
+  this._mergeAttrs = {'id' : '-', 'class' : ' '};
 }
 
 AttrMerge.prototype = new Slm;
@@ -307,7 +307,7 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
     var attr = exps[i];
     var name = attr[2].toString(), value = attr[3];
     if (values[name]) {
-      if (!this.mergeAttrs[name]) {
+      if (!this._mergeAttrs[name]) {
         throw new Error('Multiple ' + name + ' attributes specified');
       }
 
@@ -323,7 +323,7 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
   var attrs = [];
   for (var i = 0, name; name = names[i]; i++) {
     var value = values[name], delimiter;
-    if ((delimiter = this.mergeAttrs[name]) && value.length > 1) {
+    if ((delimiter = this._mergeAttrs[name]) && value.length > 1) {
       var exp = ['multi'];
       var all = false;
       for (var j = 0, v; v = value[j]; j++) {
@@ -456,7 +456,7 @@ var Slm = require('./slm');
 
 function CodeAttributes() {
   this._attr = null;
-  this.mergeAttrs = {'class':' '};
+  this._mergeAttrs = {'class':' '};
 }
 
 var CodeAttributesProto = CodeAttributes.prototype = new Slm;
@@ -471,7 +471,7 @@ CodeAttributesProto.on_html_attrs = function(exps) {
 
 CodeAttributesProto.on_html_attr = function(exps) {
   var name = exps[2], value = exps[3];
-  if (value[0] === 'slm' && value[1] === 'attrvalue' && !this.mergeAttrs[name]) {
+  if (value[0] === 'slm' && value[1] === 'attrvalue' && !this._mergeAttrs[name]) {
     // We handle the attribute as a boolean attribute
     var escape = value[2], code = value[3];
     switch(code) {
@@ -504,7 +504,7 @@ CodeAttributesProto.on_html_attr = function(exps) {
 CodeAttributesProto.on_slm_attrvalue = function(exps) {
   var escape = exps[2], code = exps[3];
   // We perform attribute merging on Array values
-  var delimiter = this.mergeAttrs[this._attr]
+  var delimiter = this._mergeAttrs[this._attr]
   if (delimiter) {
     var tmp = this._uniqueName();
     return ['multi',
@@ -529,10 +529,9 @@ function ControlFlow() {}
 var FlowProto = ControlFlow.prototype = new Slm;
 
 FlowProto.on_switch = function(exps) {
-  var arg = exps[1],
-      res = ['multi', ['code', "switch(" + arg + "){"]],
-      len = exps.length;
-  for (var i = 2; i < len; i++) {
+  var arg = exps[1], res = ['multi', ['code', "switch(" + arg + "){"]];
+
+  for (var i = 2, l = exps.length; i < l; i++) {
     var exp = exps[i];
     res.push(['code', exp[0] === 'default' ? 'default:' : 'case ' + exp[0] + ':']);
     res.push(this.compile(exp[1]));
@@ -680,22 +679,22 @@ CSSEngine.prototype.on_slm_embedded = function(exps) {
 }
 
 function Embedded() {
-  this.engines = {}
+  this._engines = {}
 }
 
 var EmbeddedProto = Embedded.prototype = new Slm();
 
 EmbeddedProto.register = function(name, filter) {
-  this.engines[name] = filter;
+  this._engines[name] = filter;
 };
 
 EmbeddedProto.on_slm_embedded = function(exps) {
   var name = exps[2], body = 3;
-  var engine = this.engines[name];
+  var engine = this._engines[name];
   if (!engine) {
     throw new Error('Embedded engine ' + name + ' is not registered.')
   }
-  return this.engines[name].on_slm_embedded(exps);
+  return this._engines[name].on_slm_embedded(exps);
 }
 
 exports.Embedded = Embedded;
@@ -709,7 +708,7 @@ var Filter = require('../filter'),
     Runtime = require('../runtime');
 
 function Escape() {
-  this.disableEscape = false;
+  this._disableEscape = false;
   this._escape = false;
   this._escaper = Runtime.escape;
 }
@@ -722,7 +721,7 @@ EscapeProto._escapeCode = function(v) {
 
 EscapeProto.on_escape = function(exps) {
   var old = this.escape;
-  this._escape = exps[1] && !this.disableEscape;
+  this._escape = exps[1] && !this._disableEscape;
   try {
     return this.compile(exps[2]);
   } finally {
@@ -743,15 +742,15 @@ module.exports = Escape;
 },{"../filter":5,"../runtime":23}],14:[function(require,module,exports){
 var Slm = require('./slm');
 
-function Interpolation() {
+function Interpolate() {
   this._escapedInterpolationRe = /^\\\$\{/;
   this._interpolationRe = /^\$\{/;
   this._staticTextRe = /^([\$\\]|[^\$\\]*)/;
 }
 
-var InterpolationProto = Interpolation.prototype = new Slm;
+var InterpolateProto = Interpolate.prototype = new Slm;
 
-InterpolationProto.on_slm_interpolate = function(exps) {
+InterpolateProto.on_slm_interpolate = function(exps) {
   var str = exps[2], m, code;
 
   // Interpolate variables in text (#{variable}).
@@ -778,7 +777,7 @@ InterpolationProto.on_slm_interpolate = function(exps) {
   return block;
 }
 
-InterpolationProto._parseExpression = function(str) {
+InterpolateProto._parseExpression = function(str) {
   for (var count = 1, i = 0, l = str.length; i < l && count; i++) {
     if (str[i] === '{') {
       count ++;
@@ -795,7 +794,7 @@ InterpolationProto._parseExpression = function(str) {
   return [str.slice(i), code];
 }
 
-module.exports = Interpolation;
+module.exports = Interpolate;
 
 },{"./slm":16}],15:[function(require,module,exports){
 var Filter = require('../filter');
@@ -812,21 +811,21 @@ MultiFlattener.prototype.on_multi = function(exps) {
     return this.compile(exps[1]);
   }
 
-  var result = ['multi'];
+  var res = ['multi'];
 
   for (var i = 1; i < len; i++) {
     var exp = exps[i];
     exp = this.compile(exp);
     if (exp[0] === 'multi') {
       for (var j = 1, l = exp.length; j < l; j++) {
-        result.push(exp[j]);
+        res.push(exp[j]);
       }
     } else {
-      result.push(exp);
+      res.push(exp);
     }
   }
 
-  return result;
+  return res;
 }
 
 module.exports = MultiFlattener;
@@ -969,7 +968,7 @@ StringGeneratorProto.preamble = function() {
 
 StringGeneratorProto.on_capture = function(exps) {
   var generator = new StringGenerator(exps[1], true, exps[2]);
-  generator.dispatcher = this.dispatcher;
+  generator._dispatcher = this._dispatcher;
   return generator.exec(exps[3]);
 }
 
@@ -1126,8 +1125,7 @@ function Html() {}
 var HtmlProto = Html.prototype = new Filter;
 
 HtmlProto.on_html_attrs = function(exps) {
-  var len = exps.length;
-  for (var i = 2; i < len; i++) {
+  for (var i = 2, l = exps.length; i < l; i++) {
     exps[i] = this.compile(exps[i]);
   }
   return exps;
@@ -1237,10 +1235,10 @@ ParserProto._escapeRegExp = function(str) {
   return str.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
 }
 
-ParserProto.reset = function(lines, stacks) {
-  this.stacks = stacks || [];
+ParserProto._reset = function(lines, stacks) {
+  this._stacks = stacks || [];
   this._indents = [0];
-  this._indents.last = this.stacks.last = function() {
+  this._indents.last = this._stacks.last = function() {
     return this[this.length - 1];
   }
   this._lineno = 0;
@@ -1249,7 +1247,7 @@ ParserProto.reset = function(lines, stacks) {
 }
 
 ParserProto._pushOnTop = function(item) {
-  this.stacks.last().push(item);
+  this._stacks.last().push(item);
 }
 
 ParserProto._nextLine = function() {
@@ -1274,19 +1272,18 @@ ParserProto.exec = function(str, options) {
     this._file = null;
   }
   var result = ['multi'];
-  this.reset(str.split(this._newLineRe), [result]);
+  this._reset(str.split(this._newLineRe), [result]);
 
   while (this._nextLine() !== null) {
     this._parseLine()
   }
 
-  this.reset();
+  this._reset();
 
   return result;
 }
 
 ParserProto._parseLine = function() {
-
   if (this._emptyLineRe.test(this._line)) {
     this._pushOnTop(['newline']);
     return;
@@ -1299,7 +1296,7 @@ ParserProto._parseLine = function() {
 
   // If there's more stacks than indents, it means that the previous
   // line is expecting this line to be indented.
-  var expectingIndentation = this.stacks.length > this._indents.length;
+  var expectingIndentation = this._stacks.length > this._indents.length;
 
   if (indent > this._indents.last()) {
     // This line was actually indented, so we'll have to check if it was
@@ -1314,7 +1311,7 @@ ParserProto._parseLine = function() {
     // This line was *not* indented more than the line before,
     // so we'll just forget about the stack that the previous line pushed.
     if (expectingIndentation) {
-      this.stacks.pop();
+      this._stacks.pop();
     }
 
     // This line was deindented.
@@ -1322,7 +1319,7 @@ ParserProto._parseLine = function() {
     // how many levels we've deindented.
     while(indent < this._indents.last()) {
       this._indents.pop();
-      this.stacks.pop();
+      this._stacks.pop();
     }
 
     // This line's indentation happens lie "between" two other line's
@@ -1361,7 +1358,7 @@ ParserProto._parseLineIndicators = function() {
     if (m = this._htmlConditionalCommentRe.exec(this._line)) {
       var block = ['multi'];
       this._pushOnTop(['html', 'condcomment', m[1], block]);
-      this.stacks.push(block);
+      this._stacks.push(block);
       break;
     }
 
@@ -1403,7 +1400,7 @@ ParserProto._parseLineIndicators = function() {
     if (firstChar === '<') {
       var block = ['multi'];
       this._pushOnTop(['multi', ['slm', 'interpolate', this._line], block]);
-      this.stacks.push(block);
+      this._stacks.push(block);
       break;
     }
 
@@ -1413,7 +1410,7 @@ ParserProto._parseLineIndicators = function() {
       this._line = this._line.slice(1);
       var block = ['multi'];
       this._pushOnTop(['slm', 'control', this._parseBrokenLine(), block]);
-      this.stacks.push(block);
+      this._stacks.push(block);
       break;
     }
 
@@ -1431,7 +1428,7 @@ ParserProto._parseLineIndicators = function() {
       if (trailingWS) {
         this._pushOnTop(['static', ' ']);
       }
-      this.stacks.push(block);
+      this._stacks.push(block);
 
       break;
     }
@@ -1531,10 +1528,10 @@ ParserProto._parseTag = function(tag) {
       var content = ['multi'];
       tag.push(content);
 
-      var i = this.stacks.length;
-      this.stacks.push(content);
+      var i = this._stacks.length;
+      this._stacks.push(content);
       this._parseTag(m[0]);
-      this.stacks.splice(i, 1);
+      this._stacks.splice(i, 1);
 
       break;
     }
@@ -1549,7 +1546,7 @@ ParserProto._parseTag = function(tag) {
       var block = ['multi'];
 
       if (!leadingWS && leadingWS2) {
-        var lastStack = this.stacks.last();
+        var lastStack = this._stacks.last();
         lastStack.insert(lastStack.length - 2, 0, ['static', ' ']);
       }
 
@@ -1557,7 +1554,7 @@ ParserProto._parseTag = function(tag) {
       if (!trailingWS && trailingWS2) {
         this._pushOnTop(['static', ' ']);
       }
-      this.stacks.push(block);
+      this._stacks.push(block);
       break;
     }
 
@@ -1574,7 +1571,7 @@ ParserProto._parseTag = function(tag) {
     if (this._emptyLineRe.test(this._line)) {
       var content = ['multi'];
       tag.push(content);
-      this.stacks.push(content);
+      this._stacks.push(content);
       break;
     }
 
@@ -1907,7 +1904,7 @@ module.exports = {
 var Engine = require('./engine'),
   Parser = require('./parser'),
   Embeddeds = require('./filters/embedded'),
-  Interpolation = require('./filters/interpolation'),
+  Interpolate = require('./filters/interpolate'),
   Brackets = require('./filters/brackets'),
   Controls = require('./filters/controls'),
   AttrMerge = require('./filters/attr_merge'),
@@ -1918,7 +1915,7 @@ var Engine = require('./engine'),
   ControlFlow = require('./filters/control_flow'),
   MultiFlattener = require('./filters/multi_flattener'),
   StaticMerger = require('./filters/static_merger'),
-  StringGenerator = require('./generators/string_generator'),
+  StringGenerator = require('./generators/string'),
   Runtime = require('./runtime'),
 
   Ctx = require('./ctx');
@@ -1933,7 +1930,7 @@ function Template() {
 
   this._engine.use(new Parser);
   this._engine.use(this._embedded);
-  this._engine.use(new Interpolation);
+  this._engine.use(new Interpolate);
   this._engine.use(new Brackets);
   this._engine.use(new Controls);
   this._engine.use(new AttrMerge);
@@ -1987,7 +1984,7 @@ Template.prototype.compile = function(src, options) {
 
 module.exports = Template;
 
-},{"./ctx":1,"./engine":3,"./filters/attr_merge":6,"./filters/attr_remove":7,"./filters/brackets":8,"./filters/code_attributes":9,"./filters/control_flow":10,"./filters/controls":11,"./filters/embedded":12,"./filters/escape":13,"./filters/interpolation":14,"./filters/multi_flattener":15,"./filters/static_merger":17,"./generators/string_generator":19,"./html/fast":20,"./parser":22,"./runtime":23}],25:[function(require,module,exports){
+},{"./ctx":1,"./engine":3,"./filters/attr_merge":6,"./filters/attr_remove":7,"./filters/brackets":8,"./filters/code_attributes":9,"./filters/control_flow":10,"./filters/controls":11,"./filters/embedded":12,"./filters/escape":13,"./filters/interpolate":14,"./filters/multi_flattener":15,"./filters/static_merger":17,"./generators/string":19,"./html/fast":20,"./parser":22,"./runtime":23}],25:[function(require,module,exports){
 
 },{}],26:[function(require,module,exports){
 (function (process){
