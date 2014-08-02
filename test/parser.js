@@ -10,15 +10,15 @@ var assert  = Lab.assert
 
 suite("Parser", function() {
 
-  test(".getIndent()", function(done) {
+  test("._getIndent()", function(done) {
     var parser = new Parser;
 
-    assert.equal(parser.getIndent(' '), 1);
-    assert.equal(parser.getIndent(' '), 1);
-    assert.equal(parser.getIndent(' . text'), 1);
+    assert.equal(parser._getIndent(' '), 1);
+    assert.equal(parser._getIndent(' '), 1);
+    assert.equal(parser._getIndent(' . text'), 1);
 
-    assert.equal(parser.getIndent('  bold'), 2);
-    assert.equal(parser.getIndent('\t  strong'), 3);
+    assert.equal(parser._getIndent('  bold'), 2);
+    assert.equal(parser._getIndent('\t  strong'), 3);
 
     done();
   });

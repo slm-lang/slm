@@ -3,6 +3,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     gzip = require('gulp-gzip'),
     size = require('gulp-size'),
+    replace = require('gulp-replace'),
     concat = require('gulp-concat');
 
 gulp.task('default', ['test']);
@@ -18,11 +19,27 @@ gulp.task('test', function(cb) {
 gulp.task('build', ['full', 'runtime']);
 
 gulp.task('full', function() {
+  var vars = [];
+  var varsMap = {};
+
+  var replacePrivate = function(name) {
+    var map = varsMap[name];
+    if (!map) {
+      vars.push(name);
+      map = '._' + vars.length.toString(32)
+      varsMap[name] = map;
+      console.log(name, map);
+    }
+
+    return map;
+  };
+
   gulp.src('lib/slm.js')
   .pipe(browserify())
   .pipe(concat('slm.js'))
   .pipe(size({showFiles: true}))
   .pipe(gulp.dest('dist'))
+  .pipe(replace( /\._(\w+)/g, replacePrivate))
   .pipe(uglify())
   .pipe(concat('slm.min.js'))
   .pipe(size({showFiles: true}))
@@ -33,11 +50,25 @@ gulp.task('full', function() {
 });
 
 gulp.task('runtime', function() {
+  var vars = [];
+  var varsMap = {};
+
+  var replacePrivate = function(name) {
+    var map = varsMap[name];
+    if (!map) {
+      vars.push(name);
+      map = varsMap[name] = '._' + vars.length.toString(32);
+    }
+
+    return map;
+  };
+
   gulp.src('lib/runtime.js')
   .pipe(browserify())
   .pipe(concat('slm-runtime.js'))
   .pipe(size({showFiles: true}))
   .pipe(gulp.dest('dist'))
+  .pipe(replace( /\._(\w+)/g, replacePrivate))
   .pipe(uglify())
   .pipe(concat('slm-runtime.min.js'))
   .pipe(size({showFiles: true}))

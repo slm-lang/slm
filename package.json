@@ -2,7 +2,7 @@
   "name": "slm",
   "version": "0.0.8",
   "description": "Slim/Jade like templating engine",
-  "main": "index.js",
+  "main": "lib/slm.js",
   "scripts": {
     "test": "node_modules/lab/bin/lab -v -t 90"
   },
@@ -13,23 +13,22 @@
   ],
   "author": "Yury Korolev",
   "license": "ISC",
-  "main": "lib/slm.js",
   "devDependencies": {
     "browserify": "^4.2.1",
-    "lab": "^3.2.1",
     "gulp": "^3.8.6",
     "gulp-browserify": "^0.5.0",
     "gulp-concat": "^2.3.3",
     "gulp-gzip": "0.0.8",
+    "gulp-replace": "^0.4.0",
     "gulp-size": "^0.4.0",
     "gulp-uglify": "^0.3.1",
-    "gulp-util": "^2.2.20"
+    "gulp-util": "^2.2.20",
+    "lab": "^3.2.1"
   },
   "directories": {
     "test": "test"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/slm-lang/slm.git"

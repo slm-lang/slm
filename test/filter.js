@@ -68,7 +68,7 @@ suite("Filter", function() {
   test("#dispatchedMethods", function(done) {
     var filter = new Filter;
     assert.deepEqual(
-      filter.dispatchedMethods(),
+      filter._dispatchedMethods(),
       [ 'on_multi',
         'on_capture',
         'on_if',
@@ -80,7 +80,7 @@ suite("Filter", function() {
     var filterWithOnA = new FilterWithOnA;
 
     assert.deepEqual(
-      filterWithOnA.dispatchedMethods(),
+      filterWithOnA._dispatchedMethods(),
       [ 'on_a',
         'on_a_b',
         'on_multi',
