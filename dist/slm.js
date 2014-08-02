@@ -12,6 +12,9 @@ Ctx.cache = {};
 
 var CtxProto = Ctx.prototype;
 
+/*
+  Prepare ctx for next template rendering
+*/
 CtxProto.reset = function() {
   this.contents = {};
   this.res = '';
@@ -19,16 +22,19 @@ CtxProto.reset = function() {
   this.m = null;
 }
 
+/*
+  Pop stack to sp
+*/
 CtxProto.pop = function(sp) {
   var l = this.stack.length;
-  var oldFilename = this.filename;
+  var filename = this.filename;
   while(sp < l--) {
     var path = this.resolvePath(this.stack.pop());
     var fn = this.load(path);
     this.filename = path;
     fn.call(this.m, this);
   }
-  this.filename = oldFilename;
+  this.filename = filename;
   return this.res;
 }
 
@@ -39,11 +45,11 @@ CtxProto.partial = function(path, model, cb) {
 
   path = this.resolvePath(path);
 
-  var f = this.load(path), oldModel = this.m, oldFilename = this.filename;
+  var f = this.load(path), oldModel = this.m, filename = this.filename;
   this.filename = path;
   var res = this.rt.safe(f.call(this.m = model, this));
   this.m = oldModel;
-  this.filename = oldFilename;
+  this.filename = filename;
   return res;
 }
 
@@ -76,8 +82,7 @@ CtxProto.load = function(path) {
   }
 
   var src = FS.readFileSync(path, 'utf8');
-  Ctx.cache[path] = fn = this.template.exec(src)
-  return fn;
+  return Ctx.cache[path] = this.template.exec(src)
 };
 
 CtxProto.resolvePath = function(path) {
@@ -1967,12 +1972,10 @@ Template.prototype.exec = function(src, options) {
 
 Template.prototype.compile = function(src, options) {
   var fn = this.exec(src, options);
-  var basePath = options['basePath'];
-  var filename = options['filename'];
   var ctx = new Ctx();
   ctx.template = this;
-  ctx.basePath = basePath;
-  ctx.filename = filename;
+  ctx.basePath = options['basePath'];
+  ctx.filename = options['filename'];
   ctx.require = require;
   ctx.rt = Runtime;
 
