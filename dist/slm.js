@@ -144,9 +144,6 @@ function Dispatcher() {
 
 var DispatcherProto = Dispatcher.prototype;
 
-
-// Dispatching
-
 DispatcherProto.exec = function(exp) {
   return this.compile(exp);
 }
@@ -174,8 +171,7 @@ DispatcherProto._replaceDispatcher = function(exp) {
   var tree = new Node();
   var dispatchedMethods = this._dispatchedMethods();
   for (var i = 0, method; method = dispatchedMethods[i]; i++) {
-    var types = method.split(this._methodSplitRE);
-    var node = tree;
+    var types = method.split(this._methodSplitRE), node = tree;
     for (var j = 1, type; type = types[j]; j++) {
       var n = node._nodes[type];
       node = node._nodes[type] = n || new Node();
@@ -324,8 +320,7 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
   for (var i = 0, name; name = names[i]; i++) {
     var value = values[name], delimiter;
     if ((delimiter = this._mergeAttrs[name]) && value.length > 1) {
-      var exp = ['multi'];
-      var all = false;
+      var exp = ['multi'], all = false;
       for (var j = 0, v; v = value[j]; j++) {
         all = this._isContainNonEmptyStatic(v);
         if (!all) {
@@ -334,7 +329,7 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
       }
       if (all) {
         for (var j = 0, v; v = value[j]; j++) {
-          if (j !== 0) {
+          if (j) {
             exp.push(['static', delimiter]);
           }
           exp.push(v);
@@ -622,14 +617,13 @@ function TextCollector() {}
 var TextProto = TextCollector.prototype = new Slm();
 
 TextProto.exec = function(exp) {
-  this._collected = ''
+  this._collected = '';
   Slm.prototype.exec.call(this, exp);
   return this._collected;
 }
 
 TextProto.on_slm_interpolate = function(exps) {
   this._collected += exps[2];
-  return null;
 }
 
 function NewlineCollector() {}
@@ -643,7 +637,6 @@ NewlineProto.exec = function(exp) {
 
 NewlineProto.on_newline = function() {
   this._collected.push(['newline']);
-  return null;
 }
 
 function Engine() {
@@ -697,11 +690,13 @@ EmbeddedProto.on_slm_embedded = function(exps) {
   return this._engines[name].on_slm_embedded(exps);
 }
 
-exports.Embedded = Embedded;
-exports.JavascriptEngine = JavascriptEngine;
-exports.CSSEngine = CSSEngine;
-exports.TextCollector = TextCollector;
-exports.NewlineCollector = NewlineCollector;
+module.exports = {
+  Embedded: Embedded,
+  JavascriptEngine: JavascriptEngine,
+  CSSEngine: CSSEngine,
+  TextCollector: TextCollector,
+  NewlineCollector: NewlineCollector
+}
 
 },{"./slm":16}],13:[function(require,module,exports){
 var Filter = require('../filter'),
@@ -780,9 +775,9 @@ InterpolateProto.on_slm_interpolate = function(exps) {
 InterpolateProto._parseExpression = function(str) {
   for (var count = 1, i = 0, l = str.length; i < l && count; i++) {
     if (str[i] === '{') {
-      count ++;
+      count++;
     } else if (str[i] === '}') {
-      count --;
+      count--;
     }
   }
 
@@ -790,8 +785,7 @@ InterpolateProto._parseExpression = function(str) {
     throw new Error('Text interpolation: Expected closing }');
   }
 
-  var code = str.substring(0, i - 1);
-  return [str.slice(i), code];
+  return [str.slice(i), str.substring(0, i - 1)];
 }
 
 module.exports = Interpolate;
@@ -920,11 +914,11 @@ GeneratorProto.on = function(exp) {
 }
 
 GeneratorProto.on_multi = function(exps) {
-  var res = [];
   for (var i = 1, l = exps.length; i < l; i++) {
-    res[i] = this.compile(exps[i]);
+    exps[i] = this.compile(exps[i]);
   }
-  return res.join('\n');
+  exps.shift();
+  return exps.join('\n');
 }
 
 GeneratorProto.on_newline = function() {
@@ -952,22 +946,18 @@ module.exports = Generator;
 },{"./dispatcher":2}],19:[function(require,module,exports){
 var Generator = require('../generator');
 
-function StringGenerator(name, capture, initializer) {
+function StringGenerator(name, initializer) {
   this._buffer = name || '_b';
-  this._capture = capture;
   this._initializer = initializer;
 }
 var StringGeneratorProto = StringGenerator.prototype = new Generator;
 
 StringGeneratorProto.preamble = function() {
-  if (this._capture && this._initializer) {
-    return this._initializer;
-  }
-  return "var " + this._buffer + "='';";
+  return this._initializer ? this._initializer : "var " + this._buffer + "='';";
 }
 
 StringGeneratorProto.on_capture = function(exps) {
-  var generator = new StringGenerator(exps[1], true, exps[2]);
+  var generator = new StringGenerator(exps[1], exps[2]);
   generator._dispatcher = this._dispatcher;
   return generator.exec(exps[3]);
 }
@@ -1183,8 +1173,7 @@ function Parser() {
   this._lineno = 0;
   this._lines = [];
   this._indents = [0];
-  this._line = null;
-  this._origLine = null;
+  this._line = this._origLine = null;
 
   this._tagShortcut = {
     '.': 'div',
@@ -1253,7 +1242,7 @@ ParserProto._pushOnTop = function(item) {
 ParserProto._nextLine = function() {
   if (this._lines.length) {
     this._origLine = this._lines.shift();
-    this._lineno += 1;
+    this._lineno++;
     return this._line = this._origLine;
   } else {
     return this._origLine = this._line = null;
@@ -1271,8 +1260,8 @@ ParserProto.exec = function(str, options) {
   } else {
     this._file = null;
   }
-  var result = ['multi'];
-  this._reset(str.split(this._newLineRe), [result]);
+  var res = ['multi'];
+  this._reset(str.split(this._newLineRe), [res]);
 
   while (this._nextLine() !== null) {
     this._parseLine()
@@ -1280,7 +1269,7 @@ ParserProto.exec = function(str, options) {
 
   this._reset();
 
-  return result;
+  return res;
 }
 
 ParserProto._parseLine = function() {
@@ -1345,8 +1334,7 @@ ParserProto._parseLineIndicators = function() {
     if (m = this._htmlCommentRe.exec(this._line)) {
       this._pushOnTop(['html', 'comment',
         [
-          'slm',
-          'text',
+          'slm', 'text',
           this._parseTextBlock(this._line.slice(m[0].length),
           this._indents.last() + m[1].length + 2)
         ]
@@ -1383,8 +1371,7 @@ ParserProto._parseLineIndicators = function() {
       var trailingWS = char === '.';
 
       this._pushOnTop([
-        'slm',
-        'text',
+        'slm', 'text',
         this._parseTextBlock(this._line.slice(m[0].length),
         this._indents.last() + space.length + 1)
       ]);
@@ -1604,17 +1591,16 @@ ParserProto._parseAttributes = function(attributes) {
     if (m = this._quotedAttrRe.exec(this._line)) {
       this._line = this._line.slice(m[0].length);
       attributes.push(['html', 'attr', m[1],
-                      ['escape', m[2].length === 0, ['slm', 'interpolate', this._parseQuotedAttribute(m[3])]]]);
+                      ['escape', !m[2].length, ['slm', 'interpolate', this._parseQuotedAttribute(m[3])]]]);
       continue;
     }
 
     // Value is JS code
     if (m = this._codeAttrRe.exec(this._line)) {
       this._line = this._line.slice(m[0].length);
-      var name = m[1];
-      var escape = m[2].length === 0;
-
+      var name = m[1], escape = !m[2].length;
       var value = this._parseJSCode(delimiter);
+
       if (!value.length) {
         this._syntaxError('Invalid empty attribute');
       }
@@ -1760,7 +1746,7 @@ ParserProto._parseJSCode = function(outerDelimeter) {
         closeDelimiter = this._attrDelims[m[0]];
       }
 
-      code = code + this._line[0];
+      code += this._line[0];
       this._line = this._line.slice(1);
     }
   }
@@ -1824,7 +1810,7 @@ ParserProto._syntaxError = function(message) {
 }
 
 ParserProto._expectNextLine = function() {
-  if (!this._nextLine()) {
+  if (this._nextLine() === null) {
     this._syntaxError('Unexpected end of file');
   }
   this._line = this._line.trim();
@@ -1917,7 +1903,6 @@ var Engine = require('./engine'),
   StaticMerger = require('./filters/static_merger'),
   StringGenerator = require('./generators/string'),
   Runtime = require('./runtime'),
-
   Ctx = require('./ctx');
 
 function Template() {
@@ -1928,20 +1913,25 @@ function Template() {
   this._embedded.register('javascript', jsEngine);
   this._embedded.register('css', new Embeddeds.CSSEngine);
 
-  this._engine.use(new Parser);
-  this._engine.use(this._embedded);
-  this._engine.use(new Interpolate);
-  this._engine.use(new Brackets);
-  this._engine.use(new Controls);
-  this._engine.use(new AttrMerge);
-  this._engine.use(new CodeAttributes);
-  this._engine.use(new AttrRemove);
-  this._engine.use(new FastHtml);
-  this._engine.use(new Escape);
-  this._engine.use(new ControlFlow);
-  this._engine.use(new MultiFlattener);
-  this._engine.use(new StaticMerger);
-  this._engine.use(new StringGenerator);
+  var filters = [
+    new Parser,
+    this._embedded,
+    new Interpolate,
+    new Brackets,
+    new Controls,
+    new AttrMerge,
+    new CodeAttributes,
+    new AttrRemove,
+    new FastHtml,
+    new Escape,
+    new ControlFlow,
+    new MultiFlattener,
+    new StaticMerger,
+    new StringGenerator,
+  ];
+  for (var i = 0, f; f = filters[i]; i++) {
+    this._engine.use(f);
+  }
 }
 
 Template.prototype.eval = function(src, model, options, ctx) {
@@ -1974,13 +1964,12 @@ Template.prototype.compile = function(src, options) {
   ctx.require = require;
   ctx.rt = Runtime;
 
-  var fnWrap = function(context, runtimeOptions) {
+  return function(context, runtimeOptions) {
     var res = fn.call(context, ctx);
     ctx.reset();
     return res;
-  }
-  return fnWrap;
-}
+  };
+};
 
 module.exports = Template;
 
