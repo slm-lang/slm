@@ -1,6 +1,6 @@
 {
   "name": "slm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Slim/Jade like templating engine",
   "main": "lib/slm.js",
   "scripts": {
