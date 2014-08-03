@@ -37,7 +37,7 @@ suite('Embedded engines', function() {
       '  alert(\'hello\')',
       'p Hi',
       ],
-      '<script type="text/javascript">$(function() {});\n\n\nalert(\'hello\')</script><p>Hi</p>',
+      '<script>$(function() {});\n\n\nalert(\'hello\')</script><p>Hi</p>',
       {}, done);
   });
 

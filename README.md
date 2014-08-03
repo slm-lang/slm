@@ -1,6 +1,6 @@
 # Slm
 
-Slm is a template language for js. Port of [Slim](http://slim-lang.com/).
+Slm is a template language for js. Port of [Slim](http://slim-lang.com/) but slimmer :)
 
 ## A little bit of history
 
