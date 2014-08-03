@@ -482,18 +482,21 @@ suite('Html structure', function() {
     var Ctx = require('../../lib/ctx');
     Ctx.cache = {};
 
+    var ctx = new Ctx();
+    ctx.filename = 'script'
+
     Ctx.cache['layout.slm'] = template.exec([
       'html',
       '  head',
       '    = content("head")',
       '  body',
       '    = content()'
-      ].join('\n'))
+      ].join('\n'), {}, ctx);
 
     Ctx.cache['partialLayout.slm'] = template.exec([
       'p Partial Layout',
       '= content()'
-      ].join('\n'));
+      ].join('\n'), {}, ctx);
 
     Ctx.cache['partialWorld.slm'] = template.exec([
       '- extend("partialLayout")',
@@ -501,7 +504,7 @@ suite('Html structure', function() {
       '  strong The partial is ${this.what}',
       '= content("partial.override")',
       '= content()'
-      ].join('\n'));
+      ].join('\n'), {}, ctx);
 
     var src = [
     '- extend("layout")',
@@ -514,8 +517,6 @@ suite('Html structure', function() {
     '  strong super!!! ${this.who}'
     ].join('\n')
 
-    var ctx = new Ctx();
-    ctx.filename = 'script'
 
     var result = template.eval(src, {who: 'World', what: 'the best'}, {}, ctx);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p><p>Partial Layout</p><strong>The partial is the best</strong><p>nice</p><strong>super!!! World</strong></body></html>');
