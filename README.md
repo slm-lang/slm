@@ -35,6 +35,37 @@ Install Slm with npm:
 
     npm install slm --save
 
+### Configure to work with hapijs
+
+```js
+var Hapi = require('hapi');
+
+var serverOptions = {
+  views: {
+    engines: {
+      'slm': require('slm')
+    },
+    basePath: __dirname + '/views',
+    compileOptions: {
+      basePath: __dirname + '/views'
+    },
+  }
+}
+
+var server = new Hapi.Server(3000, serverOptions);
+
+server.route({
+    method: 'GET', path: '/',
+    handler: function (request, reply) {
+      reply.view('index', {hello: "word"});
+    }
+});
+
+server.start(function () {
+  console.log('Server running at:', server.info.uri);
+});
+```
+
 ### Syntax example
 
 Here's a quick example to demonstrate what a Slm template looks like:
