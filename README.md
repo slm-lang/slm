@@ -25,6 +25,9 @@ HAML -> Jade -> Slim -> Slm
 
 * Source: <http://github.com/slm-lang/slm>
 * Bugs:   <http://github.com/slm-lang/slm/issues>
+* Highlighters:
+  * Atom: <https://github.com/slm-lang/language-slm>
+  * Sublime: <https://github.com/slm-lang/sublime-slm>
 
 ### How to start?
 
