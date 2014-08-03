@@ -102,3 +102,12 @@ Here's a quick example to demonstrate what a Slm template looks like:
           | Copyright &copy; ${this.year} ${this.author}
 
 Indentation matters, but the indentation depth can be chosen as you like. If you want to first indent 2 spaces, then 5 spaces, it's your choice. To nest markup you only need to indent by one space, the rest is gravy.
+
+
+# Special Thanks
+
+* [Andrew Stone](https://github.com/stonean), for [Slim](https://github.com/slim-template/slim)
+* [Magnus Holm](https://github.com/judofyr), for [Temple](https://github.com/judofyr/temple)
+* [Daniel Mendler](https://github.com/minad), for maintenance of both
+* [John Firebaugh](https://github.com/jfirebaugh), for [Skim](https://github.com/jfirebaugh/skim)
+* [AnjLab](http://anjlab.com), for such great team
