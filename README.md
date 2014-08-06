@@ -2,6 +2,8 @@
 
 Slm is a template language for js. Port of [Slim](http://slim-lang.com/) but slimmer :)
 
+[![Build Status](https://img.shields.io/travis/slm-lang/slm/master.svg)](https://travis-ci.org/slm-lang/slm)
+
 ## A little bit of history
 
 HAML -> Jade -> Slim -> Slm
