@@ -23,7 +23,7 @@ suite('Fast', function() {
     );
 
     assert.deepEqual(
-      filter.exec(['multi', ['html', 'doctype', 'html']]),
+      filter.exec(['multi', ['html', 'doctype', '5']]),
       ['multi', ['static', '<!DOCTYPE html>']]
     );
 
