@@ -33,6 +33,7 @@ HAML -> Jade -> Slim -> Slm
   * Atom: <https://github.com/slm-lang/language-slm>
   * Sublime: <https://github.com/slm-lang/sublime-slm>
 * Benchmark: <https://github.com/slm-lang/template-benchmark>
+* Gulp: <https://github.com/simnalamburt/gulp-slm>
 
 ### How to start?
 
