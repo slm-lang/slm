@@ -21,7 +21,7 @@ HAML -> Jade -> Slim -> Slm
     * Support `htmlSafe` attribute on String objects
 * Highly configurable and extendable via plugins
 * High performance
-    * Comparable speed to ECT and Hogan [see benchmakrs](https://github.com/slm-lang/template-benchmark)
+    * Comparable speed to ECT and Hogan [see benchmakrs](https://github.com/slm-lang/template-benchmark#results)
 * Easy integration with hapijs
 * Embedded engines like Markdown and Textile (TBD)
 
@@ -32,7 +32,7 @@ HAML -> Jade -> Slim -> Slm
 * Highlighters:
   * Atom: <https://github.com/slm-lang/language-slm>
   * Sublime: <https://github.com/slm-lang/sublime-slm>
-* Benchmark: <https://github.com/slm-lang/template-benchmark>
+* Benchmark: <https://github.com/slm-lang/template-benchmark#results>
 * Gulp: <https://github.com/simnalamburt/gulp-slm>
 
 ### How to start?
