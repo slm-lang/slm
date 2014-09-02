@@ -52,8 +52,10 @@ var serverOptions = {
     },
     basePath: __dirname + '/views',
     compileOptions: {
-      basePath: __dirname + '/views'
+      basePath: __dirname + '/views',
+      useCache: false // disable internal cache - useful for development
     },
+    isCached: false // disable hapi view cache
   }
 }
 
