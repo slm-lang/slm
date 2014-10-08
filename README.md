@@ -34,6 +34,7 @@ HAML -> Jade -> Slim -> Slm
   * Sublime: <https://github.com/slm-lang/sublime-slm>
 * Benchmark: <https://github.com/slm-lang/template-benchmark#results>
 * Gulp: <https://github.com/simnalamburt/gulp-slm>
+* Grunt: <https://github.com/MichaelDanilov/grunt-slm>
 
 ### How to start?
 
