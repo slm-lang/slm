@@ -47,21 +47,18 @@ Install Slm with npm:
 ```js
 var Hapi = require('hapi');
 
-var serverOptions = {
-  views: {
-    engines: {
+var server = new Hapi.Server(3000);
+server.views({
+   engines: {
       'slm': require('slm')
-    },
-    basePath: __dirname + '/views',
-    compileOptions: {
+   },
+   basePath: __dirname + '/views',
+   compileOptions: {
       basePath: __dirname + '/views',
       useCache: false // disable internal cache - useful for development
-    },
-    isCached: false // disable hapi view cache
-  }
-}
-
-var server = new Hapi.Server(3000, serverOptions);
+   },
+   isCached: false // disable hapi view cache
+});
 
 server.route({
     method: 'GET', path: '/',
