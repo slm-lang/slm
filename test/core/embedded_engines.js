@@ -13,10 +13,9 @@ suite('Embedded engines', function() {
   var template;
   before(function(done) {
     template = new Template();
-    var customEngine = new template.Embeddeds.InterpolateEngine(function(body) {
+    template.registerEmbeddedFunction('customEngine', function(body) {
       return "<pre>" + body + "</pre>";
     });
-    template.registerEmbedded('customEngine', customEngine);
     done();
   });
 
