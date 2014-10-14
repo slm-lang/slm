@@ -2,6 +2,7 @@ var Lab = require('lab'),
     Template = require('../../lib/template'),
     assertHtml = require('../helper').assertHtml;
 
+
 var suite   = Lab.experiment;
 var before  = Lab.before;
 var after   = Lab.after;
@@ -11,7 +12,11 @@ var assert  = Lab.assert
 suite('Embedded engines', function() {
   var template;
   before(function(done) {
-    template = new Template
+    template = new Template();
+    var customEngine = new template.Embeddeds.InterpolateEngine(function(body) {
+      return "<pre>" + body + "</pre>";
+    });
+    template.registerEmbedded('customEngine', customEngine);
     done();
   });
 
@@ -57,6 +62,16 @@ suite('Embedded engines', function() {
       '  body { color: red; }',
       ],
       '<style type="text/css">body { color: red; }</style>',
+      {}, done);
+  });
+
+  test('render with custom engine', function(done) {
+    assertHtml(template, [
+      'customEngine:',
+      '  text ${this.helloWorld}',
+      '  text ${this.helloWorld}!',
+      ],
+      '<pre>text Hello World from @env\ntext Hello World from @env!</pre>',
       {}, done);
   });
 });
