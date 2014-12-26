@@ -137,4 +137,13 @@ suite('Html attribtues', function() {
       '<p data-info="Illudium Q-36" id="marvin" nonempty="">1337</p>',
       {}, done);
   });
+
+  test('weird attribute', function(done) {
+    assertHtml(template, [
+      "p",
+      "  img(src='img.png' whatsthis?!)"
+    ],
+    '<p><img src="img.png" whatsthis?!="" /></p>',
+    {}, done);
+  });
 });

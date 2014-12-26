@@ -108,15 +108,6 @@ suite('Parser errors', function() {
       {}, done);
   });
 
-  test('expected attribute', function(done) {
-    assertSyntaxError(template, [
-      "p",
-      "  img(src='img.png' whatsthis?!)",
-      ],
-      'Expected attribute\n  (__TEMPLATE__), Line 2, Column 21\n    img(src=\'img.png\' whatsthis?!)\n                      ^\n',
-      {}, done);
-  });
-
   test('invalid empty attribute', function(done) {
     assertSyntaxError(template, [
       'p',
