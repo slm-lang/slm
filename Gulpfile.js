@@ -1,10 +1,10 @@
-var gulp = require('gulp'),
-    browserify = require('gulp-browserify'),
-    uglify = require('gulp-uglify'),
-    gzip = require('gulp-gzip'),
-    size = require('gulp-size'),
-    replace = require('gulp-replace'),
-    concat = require('gulp-concat');
+var gulp = require('gulp');
+var browserify = require('gulp-browserify');
+var uglify = require('gulp-uglify');
+var gzip = require('gulp-gzip');
+var size = require('gulp-size');
+var replace = require('gulp-replace');
+var concat = require('gulp-concat');
 
 gulp.task('default', ['test']);
 
@@ -46,7 +46,7 @@ gulp.task('full', function() {
   .pipe(gulp.dest('dist'))
   .pipe(gzip())
   .pipe(size({showFiles: true}))
-  .pipe(gulp.dest('dist'))
+  .pipe(gulp.dest('dist'));
 });
 
 gulp.task('runtime', function() {
@@ -75,5 +75,5 @@ gulp.task('runtime', function() {
   .pipe(gulp.dest('dist'))
   .pipe(gzip())
   .pipe(size({showFiles: true}))
-  .pipe(gulp.dest('dist'))
+  .pipe(gulp.dest('dist'));
 });
