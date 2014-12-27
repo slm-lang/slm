@@ -49,7 +49,7 @@ lab.experiment('Interpolate', function() {
     var src = 'p ${abc';
 
     assert.throw(function(){
-      template.eval(src, {})
+      template.eval(src, {});
     }, 'Text interpolation: Expected closing }');
 
     done();
