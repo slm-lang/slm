@@ -4,7 +4,7 @@
   "description": "Slim/Jade like templating engine",
   "main": "lib/slm.js",
   "scripts": {
-    "test": "node_modules/lab/bin/lab -v -t 90 -l -L"
+    "test": "node_modules/lab/bin/lab -v -t 90 -l"
   },
   "keywords": [
     "template",

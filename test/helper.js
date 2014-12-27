@@ -1,4 +1,3 @@
-var Code = require('code');
 var Lab = require('lab');
 var Runtime = require('../lib/runtime');
 
