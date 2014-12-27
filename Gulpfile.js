@@ -26,7 +26,7 @@ gulp.task('full', function() {
     var map = varsMap[name];
     if (!map) {
       vars.push(name);
-      map = '._' + vars.length.toString(32)
+      map = '._' + vars.length.toString(32);
       varsMap[name] = map;
       // console.log(vars.length, map, name);
     }
