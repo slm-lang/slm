@@ -24,6 +24,19 @@ lab.experiment('Code structure', function() {
       {}, done);
   });
 
+  lab.test('render with conditional else if', function(done) {
+    assertHtml(template, [
+      'div',
+      '  - if this.showFirst()',
+      '      p The first paragraph',
+      '  - else if this.showFirst(true)',
+      '      p The second paragraph',
+      '  - else',
+      '      p The third paragraph'
+      ],
+      '<div><p>The second paragraph</p></div>',
+      {}, done);
+  });
 
   lab.test('render with consecutive conditionals', function(done) {
     assertHtml(template, [
