@@ -1,22 +1,19 @@
-var Lab = require('lab'),
-    Filter = require('../../lib/html/fast');
+var Lab = require('lab');
+var Filter = require('../../lib/html/fast');
+var assert  = require('chai').assert;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite('Fast', function() {
+lab.experiment('Fast', function() {
 
   var filter;
 
-  before(function(done) {
-    filter = new Filter;
+  lab.before(function(done) {
+    filter = new Filter();
     done();
   });
 
-  test('compile html doctype', function(done) {
+  lab.test('compile html doctype', function(done) {
     assert.deepEqual(
       filter.exec(['multi', ['html', 'doctype', 'html']]),
       ['multi', ['static', '<!DOCTYPE html>']]
@@ -37,74 +34,74 @@ suite('Fast', function() {
     done();
   });
 
-  test('compile xml encoding', function(done) {
+  lab.test('compile xml encoding', function(done) {
     assert.deepEqual(
       filter.exec(['html', 'doctype', 'xml latin1']),
-      ['static', "<?xml version=\"1.0\" encoding=\"latin1\" ?>"]
+      ['static', '<?xml version="1.0" encoding="latin1" ?>']
     );
     done();
   });
 
-  test('compile html comment', function(done) {
+  lab.test('compile html comment', function(done) {
     assert.deepEqual(
       filter.exec(['html', 'comment', ['static', 'test']]),
-      ['multi', ['static', "<!--"], ['static', "test"], ['static', "-->"]]
+      ['multi', ['static', '<!--'], ['static', 'test'], ['static', '-->']]
     );
     done();
   });
 
-  test('compile js wrapped in comments', function(done) {
+  lab.test('compile js wrapped in comments', function(done) {
     assert.deepEqual(
       filter.exec(['html', 'js', ['static', 'test']]),
-      ['multi', ['static', "\n//<![CDATA[\n"], ['static', "test"], ['static', "\n//]]>\n"]]
+      ['multi', ['static', '\n//<![CDATA[\n'], ['static', 'test'], ['static', '\n//]]>\n']]
     );
     done();
   });
 
-  test('compile autoclosed html tag', function(done) {
+  lab.test('compile autoclosed html tag', function(done) {
     assert.deepEqual(
       filter.exec(['html', 'tag',
         'img', ['attrs'],
         ['multi', ['newline']]
       ]),
       ['multi',
-        ['static', "<img"],
+        ['static', '<img'],
         ['attrs'],
-        ['static', " />"],
+        ['static', ' />'],
         ['multi', ['newline']]]
     );
     done();
   });
 
-  test('compile explicitly closed html tag', function(done) {
+  lab.test('compile explicitly closed html tag', function(done) {
     assert.deepEqual(
       filter.exec(['html', 'tag', 'closed', ['attrs']]),
 
       ['multi',
-        ['static', "<closed"],
+        ['static', '<closed'],
         ['attrs'],
-        ['static', " />"]
+        ['static', ' />']
       ]
     );
     done();
   });
 
-  test('compile html with content', function(done) {
+  lab.test('compile html with content', function(done) {
     assert.deepEqual(
       filter.exec(['html', 'tag',
       'div', ['attrs'], ['content']]),
       ['multi',
-        ['static', "<div"],
+        ['static', '<div'],
         ['attrs'],
-        ['static', ">"],
+        ['static', '>'],
         ['content'],
-        ['static', "</div>"]
+        ['static', '</div>']
       ]
     );
     done();
   });
 
-  test('compile html with attrs', function(done) {
+  lab.test('compile html with attrs', function(done) {
     assert.deepEqual(
       filter.exec(['html', 'tag', 'div',
         ['html', 'attrs',
@@ -115,26 +112,26 @@ suite('Fast', function() {
       ['multi',
         ['static', '<div'],
         ['multi',
-          ['multi', ['static', " id=\""], ['static', "test"], ['static', '"']],
-          ['multi', ['static', " class=\""], ['dynamic', "block"], ['static', '"']]],
-        ['static', ">"],
+          ['multi', ['static', ' id="'], ['static', 'test'], ['static', '"']],
+          ['multi', ['static', ' class="'], ['dynamic', 'block'], ['static', '"']]],
+        ['static', '>'],
         ['content'],
         ['static', '</div>']
       ]);
     done();
   });
 
-  test('keep codes intact', function(done) {
+  lab.test('keep codes intact', function(done) {
     assert.deepEqual(filter.exec(['multi', ['code', 'foo']]), ['multi', ['code', 'foo']]);
     done();
   });
 
-  test('should keep statics intact', function(done) {
+  lab.test('should keep statics intact', function(done) {
     assert.deepEqual(filter.exec(['multi', ['static', '<']]), ['multi', ['static', '<']]);
     done();
   });
 
-  test('should keep dynamic intact', function(done) {
+  lab.test('should keep dynamic intact', function(done) {
     assert.deepEqual(filter.exec(['multi', ['dynamic', 'foo']]), ['multi', ['dynamic', 'foo']]);
     done();
   });

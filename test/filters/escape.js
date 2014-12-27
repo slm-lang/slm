@@ -1,22 +1,20 @@
-var Lab = require('lab'),
-    Escape = require('../../lib/filters/escape');
+var Lab = require('lab');
+var Escape = require('../../lib/filters/escape');
+var assert  = require('chai').assert;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite('Escape', function() {
+
+lab.experiment('Escape', function() {
 
   var filter;
 
-  before(function(done) {
-    filter = new Escape;
+  lab.before(function(done) {
+    filter = new Escape();
     done();
   });
 
-  test('handle escape expressions', function(done){
+  lab.test('handle escape expressions', function(done){
     assert.deepEqual(
       filter.exec(['escape', true,
                     ['multi',
@@ -25,29 +23,28 @@ suite('Escape', function() {
       ]),
       ['multi',
         ['static', 'a &lt; b'],
-        ['dynamic', 'rt.escape(this.jsMethod())'],
+        ['dynamic', 'rt.escape(this.jsMethod())']
       ]
     );
     done();
   });
 
-  test('keep codes intact', function(done) {
+  lab.test('keep codes intact', function(done) {
     assert.deepEqual(filter.exec(['multi', ['code', 'foo']]), ['multi', ['code', 'foo']]);
     done();
   });
 
-  test('keep statics intact', function(done) {
+  lab.test('keep statics intact', function(done) {
     assert.deepEqual(filter.exec(['multi', ['static', '<']]), ['multi', ['static', '<']]);
     done();
   });
 
-  test('keep dynamic intact', function(done) {
+  lab.test('keep dynamic intact', function(done) {
     assert.deepEqual(filter.exec(['multi', ['dynamic', 'foo']]), ['multi', ['dynamic', 'foo']]);
     done();
   });
 
-  test('use htmlSafe flag', function(done) {
-    // filter = Temple::Filters::Escapable.new(:use_html_safe => true)
+  lab.test('use htmlSafe flag', function(done) {
     var src = new String('a < b');
     src.htmlSafe = true;
     assert.deepEqual(

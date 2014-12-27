@@ -1,21 +1,18 @@
-var Lab = require('lab'),
-    Template = require('../../lib/template'),
-    assertHtml = require('../helper').assertHtml;
+var Lab = require('lab');
+var Template = require('../../lib/template');
+var assert  = require('chai').assert;
+var assertHtml = require('../helper').assertHtml;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite('Text interpolation', function() {
+lab.experiment('Text interpolation', function() {
   var template;
-  before(function(done) {
-    template = new Template
+  lab.before(function(done) {
+    template = new Template();
     done();
   });
 
-  test('interpolation in attribute', function(done) {
+  lab.test('interpolation in attribute', function(done) {
     assertHtml(template, [
       'p id="a${this.idHelper}b" = this.helloWorld'
       ],
@@ -23,36 +20,36 @@ suite('Text interpolation', function() {
       {}, done);
   });
 
-  test('interpolation in text', function(done) {
+  lab.test('interpolation in text', function(done) {
     assertHtml(template, [
       'p',
       ' | ${this.helloWorld} with "quotes"',
       'p',
       ' |',
-      '  A message from the compiler: ${this.helloWorld}',
+      '  A message from the compiler: ${this.helloWorld}'
       ],
       '<p>Hello World from @env with "quotes"</p><p>A message from the compiler: Hello World from @env</p>',
       {}, done);
   });
 
-  test('interpolation in tag', function(done) {
+  lab.test('interpolation in tag', function(done) {
     assertHtml(template, [
-      'p ${this.helloWorld}',
+      'p ${this.helloWorld}'
       ],
       '<p>Hello World from @env</p>',
       {}, done);
   });
 
-  test('escape interpolation', function(done) {
+  lab.test('escape interpolation', function(done) {
     assertHtml(template, [
       'p \\${this.helloWorld}',
-      'p text1 \\${this.helloWorld} text2',
+      'p text1 \\${this.helloWorld} text2'
       ],
       '<p>${this.helloWorld}</p><p>text1 ${this.helloWorld} text2</p>',
       {}, done);
   });
 
-  test('interpolation with escaping', function(done) {
+  lab.test('interpolation with escaping', function(done) {
     assertHtml(template, [
       '| ${this.evilMethod()}'
       ],
@@ -60,7 +57,7 @@ suite('Text interpolation', function() {
       {}, done);
   });
 
-  test('interpolation with escaping', function(done) {
+  lab.test('interpolation with escaping', function(done) {
     assertHtml(template, [
       '| ${=this.evilMethod()}'
       ],
@@ -68,7 +65,7 @@ suite('Text interpolation', function() {
       {}, done);
   });
 
-  test('interpolation with escaping and delimiter', function(done) {
+  lab.test('interpolation with escaping and delimiter', function(done) {
     assertHtml(template, [
       '| ${(this.evilMethod())}'
       ],

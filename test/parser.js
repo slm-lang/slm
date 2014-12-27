@@ -1,17 +1,14 @@
-var Lab = require('lab'),
-    Parser = require('../lib/parser');
+var Lab = require('lab');
+var Parser = require('../lib/parser');
+var assert  = require('chai').assert;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var expect  = Lab.expect;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite("Parser", function() {
 
-  test("._getIndent()", function(done) {
-    var parser = new Parser;
+lab.experiment('Parser', function() {
+
+  lab.test('._getIndent()', function(done) {
+    var parser = new Parser();
 
     assert.equal(parser._getIndent(' '), 1);
     assert.equal(parser._getIndent(' '), 1);
@@ -23,8 +20,8 @@ suite("Parser", function() {
     done();
   });
 
-  test(".exec()", function(done) {
-    var parser = new Parser;
+  lab.test('.exec()', function(done) {
+    var parser = new Parser();
 
     assert.deepEqual(
       parser.exec(' '),
@@ -146,9 +143,9 @@ suite("Parser", function() {
     );
 
     var code =
-      "- if (x)\n" +
-      "  p = x\n" +
-      "p nice"
+      '- if (x)\n' +
+      '  p = x\n' +
+      'p nice';
 
     assert.deepEqual(
       parser.exec(code),
@@ -166,7 +163,7 @@ suite("Parser", function() {
             ]
           ]
         ],
-        ['html', 'tag', 'p', ['html', 'attrs'], ['slm', 'text', ['multi', ['slm', 'interpolate', "nice"]]]], ['newline']
+        ['html', 'tag', 'p', ['html', 'attrs'], ['slm', 'text', ['multi', ['slm', 'interpolate', 'nice']]]], ['newline']
       ]
     );
 

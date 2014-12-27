@@ -1,21 +1,19 @@
-var Lab = require('lab'),
-    Template = require('../../lib/template');
+var Lab = require('lab');
+var Template = require('../../lib/template');
+var assert  = require('chai').assert;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite("Interpolate", function() {
+
+lab.experiment('Interpolate', function() {
 
   var template;
-  before(function(done) {
-    template = new Template;
+  lab.before(function(done) {
+    template = new Template();
     done();
   });
 
-  test('interpolation in attribute', function(done) {
+  lab.test('interpolation in attribute', function(done) {
     var src = 'p id="a${this.id_helper}b" = this.hello_world';
 
     assert.deepEqual(
@@ -26,7 +24,7 @@ suite("Interpolate", function() {
   });
 
   // Not yet
-  test('nested interpolation in attribute', function(done) {
+  lab.test('nested interpolation in attribute', function(done) {
     var src = 'p id="${"abc${1+1}" + "("}" = this.hello_world';
 
     assert.deepEqual(
@@ -37,7 +35,7 @@ suite("Interpolate", function() {
     done();
   });
 
-  test('interpolation in text', function(done) {
+  lab.test('interpolation in text', function(done) {
     var src =
       'p\n' +
       '  . ${this.hello_world} with "quotes"\n' +
@@ -51,44 +49,44 @@ suite("Interpolate", function() {
     done();
   });
 
-  test('interpolation in tag', function(done) {
-    var src = 'p ${this.hello_world}'
+  lab.test('interpolation in tag', function(done) {
+    var src = 'p ${this.hello_world}';
     assert.deepEqual(
       template.eval(src, {hello_world: 'Hello'}),
       '<p>Hello</p>');
     done();
   });
 
-  test('escape interpolation', function(done) {
+  lab.test('escape interpolation', function(done) {
     var src =
       'p \\${this.hello_world}\n' +
-      'p text1 \\${this.hello_world} text2'
+      'p text1 \\${this.hello_world} text2';
     assert.deepEqual(
       template.eval(src, {hello_world: 'Hello'}),
       '<p>${this.hello_world}</p><p>text1 ${this.hello_world} text2</p>');
     done();
   });
 
-  test('interpolation with escaping', function(done) {
-    var src ='. ${this.evilMethod()}';
+  lab.test('interpolation with escaping', function(done) {
+    var src = '. ${this.evilMethod()}';
     assert.deepEqual(
-      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>'}}),
+      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
       '&lt;script&gt;do_something_evil();&lt;/script&gt; ');
     done();
   });
 
-  test('interpolation without escaping', function(done) {
-    var src ='| ${= this.evilMethod()}';
+  lab.test('interpolation without escaping', function(done) {
+    var src = '| ${= this.evilMethod()}';
     assert.deepEqual(
-      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>'}}),
+      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
       '<script>do_something_evil();</script>');
     done();
   });
 
-  test('interpolation with escaping and delimiter', function(done) {
-    var src ='| ${(this.evilMethod())}';
+  lab.test('interpolation with escaping and delimiter', function(done) {
+    var src = '| ${(this.evilMethod())}';
     assert.deepEqual(
-      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>'}}),
+      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
       '&lt;script&gt;do_something_evil();&lt;/script&gt;');
 
     done();

@@ -1,11 +1,13 @@
-var Lab   = require('lab'),
-    Runtime = require('../lib/runtime');
+var Lab = require('lab');
+var Runtime = require('../lib/runtime');
+var assert  = require('chai').assert;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
+var suite   = lab.experiment;
+var before  = lab.before;
+var after   = lab.after;
+var test    = lab.test;
+
 
 suite('Runtime', function() {
 
@@ -46,14 +48,14 @@ suite('Runtime', function() {
     assert.deepEqual(Runtime.escape('<javascript>alert("alert!")</javascript>'), '&lt;javascript&gt;alert(&quot;alert!&quot;)&lt;/javascript&gt;');
 
     done();
-  })
+  });
 
   test('.safe()', function(done) {
     assert.deepEqual(Runtime.escape(Runtime.safe('<javascript>alert("alert!")</javascript>')), '<javascript>alert("alert!")</javascript>');
     assert.deepEqual(Runtime.escape(Runtime.safe('')), '');
     assert.deepEqual(Runtime.escape(Runtime.safe()), '');
     assert.deepEqual(Runtime.escape(Runtime.safe(null)), '');
-    
+
     done();
   });
 });

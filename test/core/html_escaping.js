@@ -1,21 +1,18 @@
-var Lab = require('lab'),
-    Template = require('../../lib/template'),
-    assertHtml = require('../helper').assertHtml;
+var Lab = require('lab');
+var Template = require('../../lib/template');
+var assert  = require('chai').assert;
+var assertHtml = require('../helper').assertHtml;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite('Html escaping', function() {
+lab.experiment('Html escaping', function() {
   var template;
-  before(function(done) {
-    template = new Template
+  lab.before(function(done) {
+    template = new Template();
     done();
   });
 
-  test('html will not be escaped', function(done) {
+  lab.test('html will not be escaped', function(done) {
     assertHtml(template, [
       'p <Hello> World, meet "Slm".'
       ],
@@ -23,56 +20,56 @@ suite('Html escaping', function() {
       {}, done);
   });
 
-  test('html with newline will not be escaped', function(done) {
+  lab.test('html with newline will not be escaped', function(done) {
     assertHtml(template, [
       'p',
       '  |',
       '    <Hello> World,',
-      '     meet "Slim".',
+      '     meet "Slim".'
       ],
       '<p><Hello> World,\n meet "Slim".</p>',
       {}, done);
   });
 
-  test('html with escaped interpolation', function(done) {
+  lab.test('html with escaped interpolation', function(done) {
     assertHtml(template, [
-      "- var x = '\"'",
-      "- var content = '<x>'",
-      "p class=\"${x}\" test ${content}",
+      '- var x = \'"\'',
+      '- var content = \'<x>\'',
+      'p class="${x}" test ${content}'
       ],
       '<p class="&quot;">test &lt;x&gt;</p>',
       {}, done);
   });
 
-  test('html nested escaping', function(done) {
+  lab.test('html nested escaping', function(done) {
     assertHtml(template, [
       '= this.helloBlock(function())',
-      '  | escaped &',
+      '  | escaped &'
       ],
       'Hello World from @env escaped &amp; Hello World from @env',
       {}, done);
   });
 
-  test('html quoted attr escape', function(done) {
+  lab.test('html quoted attr escape', function(done) {
     assertHtml(template, [
-      'p id="&" class=="&amp;"',
+      'p id="&" class=="&amp;"'
       ],
       '<p class="&amp;" id="&amp;"></p>',
       {}, done);
   });
 
-  test('html quoted attr escape with interpolation', function(done) {
+  lab.test('html quoted attr escape with interpolation', function(done) {
     assertHtml(template, [
-      "p id=\"&${'\"'}\" class==\"&amp;${'\"'}\"",
-      "p id=\"&${='\"'}\" class==\"&amp;${='\"'}\"",
+      'p id="&${\'"\'}" class=="&amp;${\'"\'}"',
+      'p id="&${=\'"\'}" class=="&amp;${=\'"\'}"'
       ],
       '<p class="&amp;&quot;" id="&amp;&quot;"></p><p class="&amp;"" id="&amp;""></p>',
       {}, done);
   });
 
-  test('html js attr escape', function(done) {
+  lab.test('html js attr escape', function(done) {
     assertHtml(template, [
-      "p id=('&'.toString()) class==('&amp;'.toString())"
+      'p id=(\'&\'.toString()) class==(\'&amp;\'.toString())'
       ],
       '<p class="&amp;" id="&amp;"></p>',
       {}, done);

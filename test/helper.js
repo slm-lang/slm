@@ -1,6 +1,8 @@
-var Lab = require('lab'),
-    Runtime = require('../lib/runtime');
-var assert  = Lab.assert
+var Code = require('code');
+var Lab = require('lab');
+var Runtime = require('../lib/runtime');
+
+var assert  = require('chai').assert;
 
 exports.assertHtml = function(template, src, result, options, callback) {
   src = src.join('\n');
@@ -19,9 +21,8 @@ exports.assertHtml = function(template, src, result, options, callback) {
     message: function(m1, m2){
       if (!m2) {
         return m1;
-      } else {
-        return [m1, m2].join(' ')
       }
+      return [m1, m2].join(' ');
     },
     helloBlock: function(callback) {
       return this.helloWorld + ' ' + callback() + ' ' + this.helloWorld;
@@ -30,13 +31,13 @@ exports.assertHtml = function(template, src, result, options, callback) {
       return Runtime.safe(callback());
     },
     content: function() {
-      switch(arguments.length) {
+      switch (arguments.length) {
         case 0:
           return env[''];
         case 1:
           return env[arguments[0]];
         case 2:
-          var arg = arguments[0]
+          var arg = arguments[0];
           if (!arg) {
             return arguments[1]();
           }
@@ -51,7 +52,7 @@ exports.assertHtml = function(template, src, result, options, callback) {
   if (callback) {
     callback();
   }
-}
+};
 
 exports.assertSyntaxError = function(template, src, result, options, callback) {
   src = src.join('\n');
@@ -66,7 +67,7 @@ exports.assertSyntaxError = function(template, src, result, options, callback) {
       return false;
     },
     x: 0,
-    message: function(v){return v},
+    message: function(v){ return v; },
     helloBlock: function(callback) {
       return this.helloWorld + ' ' + callback() + ' ' + this.helloWorld;
     }
@@ -79,4 +80,4 @@ exports.assertSyntaxError = function(template, src, result, options, callback) {
     callback();
   }
 
-}
+};

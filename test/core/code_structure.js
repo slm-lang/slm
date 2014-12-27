@@ -1,21 +1,18 @@
-var Lab = require('lab'),
-    Template = require('../../lib/template'),
-    assertHtml = require('../helper').assertHtml;
+var Lab = require('lab');
+var Template = require('../../lib/template');
+var assert  = require('chai').assert;
+var assertHtml = require('../helper').assertHtml;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite('Code structure', function() {
+lab.experiment('Code structure', function() {
   var template;
-  before(function(done) {
-    template = new Template
+  lab.before(function(done) {
+    template = new Template();
     done();
   });
 
-  test('render with conditional', function(done) {
+  lab.test('render with conditional', function(done) {
     assertHtml(template, [
       'div',
       '  - if this.showFirst()',
@@ -28,7 +25,7 @@ suite('Code structure', function() {
   });
 
 
-  test('render with consecutive conditionals', function(done) {
+  lab.test('render with consecutive conditionals', function(done) {
     assertHtml(template, [
       'div',
       '  - if this.showFirst(true)',
@@ -40,7 +37,7 @@ suite('Code structure', function() {
       {}, done);
   });
 
-  test('render with when string in condition', function(done) {
+  lab.test('render with when string in condition', function(done) {
     assertHtml(template, [
       '- if true',
       '  | Hello',
@@ -52,19 +49,19 @@ suite('Code structure', function() {
       {}, done);
   });
 
-  test('render with conditional and following nonconditonal', function(done) {
+  lab.test('render with conditional and following nonconditonal', function(done) {
     assertHtml(template, [
       'div',
       '  - if true',
       '      p The first paragraph',
       '  - var x = 42',
-      '  = x',
+      '  = x'
       ],
       '<div><p>The first paragraph</p>42</div>',
       {}, done);
   });
 
-  test('render with case', function(done) {
+  lab.test('render with case', function(done) {
     assertHtml(template, [
       '- var url = require("url")',
       '- console.log(url.format({protocol: "http"}))',
@@ -103,13 +100,13 @@ suite('Code structure', function() {
       '    - case 42:',
       '      | 42',
       '      - break',
-      '  |  is the answer',
+      '  |  is the answer'
       ],
       '<p>42 is the answer</p><p>41 is the answer</p><p>42 is the answer</p><p>41 is the answer</p>',
       {}, done);
   });
 
-  test('render with slim comments', function(done) {
+  lab.test('render with slim comments', function(done) {
     assertHtml(template, [
       'p Hello',
       '/ This is a comment',
@@ -120,7 +117,7 @@ suite('Code structure', function() {
       {}, done);
   });
 
-  test('render with try catch', function(done) {
+  lab.test('render with try catch', function(done) {
     assertHtml(template, [
       '- try',
       '  p Try',
@@ -132,7 +129,7 @@ suite('Code structure', function() {
       {}, done);
   });
 
-  test('render with try catch exception', function(done) {
+  lab.test('render with try catch exception', function(done) {
     assertHtml(template, [
       '- try',
       '  p Try',
@@ -146,7 +143,7 @@ suite('Code structure', function() {
       {}, done);
   });
 
-  test('render with try catch finally', function(done) {
+  lab.test('render with try catch finally', function(done) {
     assertHtml(template, [
       '- try',
       '  p Try',
@@ -156,23 +153,23 @@ suite('Code structure', function() {
       '  p = ex',
       '- finally',
       '  p Finally',
-      'p After',
+      'p After'
       ],
       '<p>Try</p><p>Boom</p><p>Finally</p><p>After</p>',
       {}, done);
   });
 
-  test('injects callback arg', function(done) {
+  lab.test('injects callback arg', function(done) {
     assertHtml(template, [
       '= this.block()',
       '  p Block',
-      'p After',
+      'p After'
       ],
       '<p>Block</p><p>After</p>',
       {}, done);
   });
 
-  test('content', function(done) {
+  lab.test('content', function(done) {
     assertHtml(template, [
       '= content()',
       'p After 1',
@@ -184,7 +181,7 @@ suite('Code structure', function() {
       '= content("head")',
         'title title2',
       'p After 4',
-      '= content("head")',
+      '= content("head")'
       ],
       '<p>After 1</p><p>After 2</p><title>title1</title><p>After 3</p><title>title2</title><p>After 4</p>',
       {}, done);

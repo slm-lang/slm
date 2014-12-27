@@ -1,46 +1,43 @@
-var Lab = require('lab'),
-    MultiFlattener = require('../../lib/filters/multi_flattener');
+var Lab = require('lab');
+var MultiFlattener = require('../../lib/filters/multi_flattener');
+var assert  = require('chai').assert;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite("MultiFlattener", function() {
+lab.experiment('MultiFlattener', function() {
 
   var filter;
 
-  before(function(done) {
-    filter = new MultiFlattener;
+  lab.before(function(done) {
+    filter = new MultiFlattener();
     done();
   });
 
-  test('flatten nested multi expressions', function(done) {
+  lab.test('flatten nested multi expressions', function(done) {
     assert.deepEqual(
       filter.exec(
         [
           'multi',
-          ['static', "a"],
+          ['static', 'a'],
           [
             'multi',
-            ['dynamic', "aa"],
+            ['dynamic', 'aa'],
             [
               'multi',
-              ['static', "aaa"],
-              ['static', "aab"],
+              ['static', 'aaa'],
+              ['static', 'aab']
             ],
-            ['dynamic', "ab"],
+            ['dynamic', 'ab']
           ],
-          ['static', "b"],
+          ['static', 'b']
         ]
       ),  ['multi',
-        ['static', "a"],
-        ['dynamic', "aa"],
-        ['static', "aaa"],
-        ['static', "aab"],
-        ['dynamic', "ab"],
-        ['static', "b"],
+        ['static', 'a'],
+        ['dynamic', 'aa'],
+        ['static', 'aaa'],
+        ['static', 'aab'],
+        ['dynamic', 'ab'],
+        ['static', 'b']
       ]);
     done();
   });

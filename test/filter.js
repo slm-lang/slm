@@ -1,16 +1,13 @@
-var Lab = require('lab'),
-    Filter = require('../lib/filter');
+var Lab = require('lab');
+var Filter = require('../lib/filter');
+var assert  = require('chai').assert;
 
-var suite   = Lab.experiment;
-var before  = Lab.before;
-var after   = Lab.after;
-var test    = Lab.test
-var assert  = Lab.assert
+var lab = exports.lab = Lab.script();
 
-suite("Filter", function() {
+lab.experiment('Filter', function() {
 
-  function FilterWithOnA() {};
-  FilterWithOnA.prototype = new Filter;
+  function FilterWithOnA() {}
+  FilterWithOnA.prototype = new Filter();
   (function() {
     this.on_a = function() {
       return ['a'];
@@ -21,8 +18,8 @@ suite("Filter", function() {
     };
   }).apply(FilterWithOnA.prototype);
 
-  function TestFilter() {};
-  TestFilter.prototype = new Filter;
+  function TestFilter() {}
+  TestFilter.prototype = new Filter();
   (function() {
     this.on_test = function(exps) {
       return ['on_test'].concat(exps[1]);
@@ -51,22 +48,22 @@ suite("Filter", function() {
     };
   }).apply(TestFilter.prototype);
 
-  function InheritedTestFilter() {};
-  InheritedTestFilter.prototype = new TestFilter;
+  function InheritedTestFilter() {}
+  InheritedTestFilter.prototype = new TestFilter();
 
   InheritedTestFilter.prototype.on = function(args) {
     return ['on_zero'].concat(args);
-  }
+  };
 
   var filter;
 
-  before(function(done) {
-    filter = new TestFilter;
+  lab.before(function(done) {
+    filter = new TestFilter();
     done();
   });
 
-  test("#dispatchedMethods", function(done) {
-    var filter = new Filter;
+  lab.test('#dispatchedMethods', function(done) {
+    var filter = new Filter();
     assert.deepEqual(
       filter._dispatchedMethods(),
       [ 'on_multi',
@@ -77,7 +74,7 @@ suite("Filter", function() {
         'on_escape' ]
     );
 
-    var filterWithOnA = new FilterWithOnA;
+    var filterWithOnA = new FilterWithOnA();
 
     assert.deepEqual(
       filterWithOnA._dispatchedMethods(),
@@ -94,27 +91,27 @@ suite("Filter", function() {
     done();
   });
 
-  test('return unhandled expressions', function(done) {
+  lab.test('return unhandled expressions', function(done) {
     assert.deepEqual(filter.exec(['unhandled']), ['unhandled'] );
     done();
   });
 
-  test('dispatch first level', function(done) {
+  lab.test('dispatch first level', function(done) {
     assert.deepEqual(filter.exec(['test', 42]), ['on_test', 42]);
     done();
   });
 
-  test('dispatch second level', function(done) {
+  lab.test('dispatch second level', function(done) {
     assert.deepEqual(filter.exec(['second', 'test', 42]), ['on_second_test', 42]);
     done();
   });
 
-  test('dispatch second level if prefixed', function(done) {
+  lab.test('dispatch second level if prefixed', function(done) {
     assert.deepEqual(filter.exec(['test', 'check', 42]), ['on_check', 42]);
     done();
   });
 
-  test('dispatch parent level', function(done) {
+  lab.test('dispatch parent level', function(done) {
     assert.deepEqual(filter.exec(['a', 42]), ['a', 42]);
     assert.deepEqual(filter.exec(['a', 'b', 42]), ['on_ab', 42]);
     assert.deepEqual(filter.exec(['a', 'b', 'test', 42]), ['on_ab_test', 42]);
