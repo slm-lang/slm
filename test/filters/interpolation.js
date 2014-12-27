@@ -23,6 +23,16 @@ lab.experiment('Interpolate', function() {
     done();
   });
 
+  lab.test('interpolation in attribute', function(done) {
+    var src = 'p id="a${this.idHelper}b" = this.helloWorld';
+
+    assert.deepEqual(
+      template.eval(src, {idHelper: 'someid', helloWorld: 'hello world'}),
+      '<p id="asomeidb">hello world</p>'
+    );
+    done();
+  });
+
   // Not yet
   lab.test('nested interpolation in attribute', function(done) {
     var src = 'p id="${"abc${1+1}" + "("}" = this.helloWorld';
@@ -31,6 +41,16 @@ lab.experiment('Interpolate', function() {
       template.eval(src, {helloWorld: 'Hello World from @env'}),
       '<p id="abc${1+1}(">Hello World from @env</p>'
     );
+
+    done();
+  });
+
+  lab.test('Text interpolation: Expected closing }', function(done) {
+    var src = 'p ${abc';
+
+    assert.throw(function(){
+      template.eval(src, {})
+    }, 'Text interpolation: Expected closing }');
 
     done();
   });
