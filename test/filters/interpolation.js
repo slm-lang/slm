@@ -14,10 +14,10 @@ lab.experiment('Interpolate', function() {
   });
 
   lab.test('interpolation in attribute', function(done) {
-    var src = 'p id="a${this.id_helper}b" = this.hello_world';
+    var src = 'p id="a${this.idHelper}b" = this.helloWorld';
 
     assert.deepEqual(
-      template.eval(src, {id_helper: 'someid', hello_world: 'hello world'}),
+      template.eval(src, {idHelper: 'someid', helloWorld: 'hello world'}),
       '<p id="asomeidb">hello world</p>'
     );
     done();
@@ -25,10 +25,10 @@ lab.experiment('Interpolate', function() {
 
   // Not yet
   lab.test('nested interpolation in attribute', function(done) {
-    var src = 'p id="${"abc${1+1}" + "("}" = this.hello_world';
+    var src = 'p id="${"abc${1+1}" + "("}" = this.helloWorld';
 
     assert.deepEqual(
-      template.eval(src, {hello_world: 'Hello World from @env'}),
+      template.eval(src, {helloWorld: 'Hello World from @env'}),
       '<p id="abc${1+1}(">Hello World from @env</p>'
     );
 
@@ -38,32 +38,32 @@ lab.experiment('Interpolate', function() {
   lab.test('interpolation in text', function(done) {
     var src =
       'p\n' +
-      '  . ${this.hello_world} with "quotes"\n' +
+      '  . ${this.helloWorld} with "quotes"\n' +
       'p\n' +
       '  .\n' +
-      '    A message from the compiler: ${this.hello_world}\n';
+      '    A message from the compiler: ${this.helloWorld}\n';
 
     assert.deepEqual(
-      template.eval(src, {hello_world: 'Hello World from @env'}),
+      template.eval(src, {helloWorld: 'Hello World from @env'}),
       '<p>Hello World from @env with \"quotes\" </p><p>A message from the compiler: Hello World from @env </p>');
     done();
   });
 
   lab.test('interpolation in tag', function(done) {
-    var src = 'p ${this.hello_world}';
+    var src = 'p ${this.helloWorld}';
     assert.deepEqual(
-      template.eval(src, {hello_world: 'Hello'}),
+      template.eval(src, {helloWorld: 'Hello'}),
       '<p>Hello</p>');
     done();
   });
 
   lab.test('escape interpolation', function(done) {
     var src =
-      'p \\${this.hello_world}\n' +
-      'p text1 \\${this.hello_world} text2';
+      'p \\${this.helloWorld}\n' +
+      'p text1 \\${this.helloWorld} text2';
     assert.deepEqual(
-      template.eval(src, {hello_world: 'Hello'}),
-      '<p>${this.hello_world}</p><p>text1 ${this.hello_world} text2</p>');
+      template.eval(src, {helloWorld: 'Hello'}),
+      '<p>${this.helloWorld}</p><p>text1 ${this.helloWorld} text2</p>');
     done();
   });
 
