@@ -2,7 +2,7 @@ var Lab = require('lab');
 var Template = require('../../lib/template');
 var assert  = require('chai').assert;
 var assertHtml = require('../helper').assertHtml;
-var Ctx = require('../../lib/ctx');
+var Ctx = require('../../lib/context-node');
 
 var lab = exports.lab = Lab.script();
 

@@ -10,7 +10,7 @@ lab.experiment('Html structure', function() {
   var template;
 
   lab.before(function(done) {
-    template = new Template();
+    template = new Template(require('../../lib/context-node'));
     done();
   });
 
@@ -478,7 +478,7 @@ lab.experiment('Html structure', function() {
   });
 
   lab.test('test context', function(done) {
-    var Ctx = require('../../lib/ctx');
+    var Ctx = template.Ctx
     Ctx.cache = {};
 
     var ctx = new Ctx();

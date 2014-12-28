@@ -11,12 +11,12 @@ function safe(val) {
   }
 
   var res = new String(val);
-  res.htmlSafe = true
+  res.htmlSafe = true;
   return res;
 }
 
 function escape(str) {
-  if (typeof(str) !== 'string') {
+  if (typeof str !== 'string') {
     if (!str) {
       return '';
     }
@@ -27,10 +27,18 @@ function escape(str) {
   }
 
   if (escapeRe.test(str) ) {
-    if( str.indexOf('&') != -1 ) str = str.replace(ampRe, '&amp;');
-    if( str.indexOf('<') != -1 ) str = str.replace(ltRe, '&lt;');
-    if( str.indexOf('>') != -1 ) str = str.replace(gtRe, '&gt;');
-    if( str.indexOf('"') != -1 ) str = str.replace(quotRe, '&quot;');
+    if (str.indexOf('&') !== -1) {
+      str = str.replace(ampRe, '&amp;');
+    }
+    if (str.indexOf('<') !== -1) {
+      str = str.replace(ltRe, '&lt;');
+    }
+    if (str.indexOf('>') !== -1) {
+      str = str.replace(gtRe, '&gt;');
+    }
+    if (str.indexOf('"') !== -1) {
+      str = str.replace(quotRe, '&quot;');
+    }
   }
 
   return str;
@@ -41,7 +49,7 @@ function rejectEmpty(arr) {
 
   for (var i = 0, l = arr.length; i < l; i++) {
     var el = arr[i];
-    if (el != null && el.length) {
+    if (el !== null && el.length) {
       res.push(el);
     }
   }
@@ -51,11 +59,10 @@ function rejectEmpty(arr) {
 
 function flatten(arr) {
   return arr.reduce(function (acc, val) {
-    if (val == null) {
+    if (val === null) {
       return acc;
-    } else {
-      return acc.concat(val.constructor === Array ? flatten(val) : val.toString());
     }
+    return acc.concat(val.constructor === Array ? flatten(val) : val.toString());
   }, []);
 }
 
@@ -64,6 +71,6 @@ module.exports = {
   escape: escape,
   rejectEmpty: rejectEmpty,
   flatten: flatten
-}
+};
 
 },{}]},{},[1])

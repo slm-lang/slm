@@ -9,7 +9,7 @@ lab.experiment('Interpolate', function() {
 
   var template;
   lab.before(function(done) {
-    template = new Template();
+    template = new Template(require('../../lib/context-node'));
     done();
   });
 
