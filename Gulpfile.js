@@ -1,10 +1,5 @@
 var gulp = require('gulp');
-var browserify = require('gulp-browserify');
-var uglify = require('gulp-uglify');
-var gzip = require('gulp-gzip');
-var size = require('gulp-size');
-var replace = require('gulp-replace');
-var concat = require('gulp-concat');
+var $ = require('gulp-load-plugins')();
 
 gulp.task('default', ['test']);
 
@@ -16,9 +11,9 @@ gulp.task('test', function(cb) {
   });
 });
 
-gulp.task('build', ['full', 'runtime']);
+gulp.task('build', ['browser', 'runtime']);
 
-gulp.task('full', function() {
+gulp.task('browser', function() {
   var vars = [];
   var varsMap = {};
 
@@ -35,17 +30,17 @@ gulp.task('full', function() {
   };
 
   gulp.src('lib/slm-browser.js')
-  .pipe(browserify())
-  .pipe(concat('slm-browser.js'))
-  .pipe(size({showFiles: true}))
+  .pipe($.browserify())
+  .pipe($.concat('slm-browser.js'))
+  .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
-  .pipe(replace( /\._(\w+)/g, replacePrivate))
-  .pipe(uglify())
-  .pipe(concat('slm-browser.min.js'))
-  .pipe(size({showFiles: true}))
+  .pipe($.replace( /\._(\w+)/g, replacePrivate))
+  .pipe($.uglify())
+  .pipe($.concat('slm-browser.min.js'))
+  .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
-  .pipe(gzip())
-  .pipe(size({showFiles: true}))
+  .pipe($.gzip())
+  .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'));
 });
 
@@ -64,16 +59,16 @@ gulp.task('runtime', function() {
   };
 
   gulp.src('lib/runtime.js')
-  .pipe(browserify())
-  .pipe(concat('slm-runtime.js'))
-  .pipe(size({showFiles: true}))
+  .pipe($.browserify())
+  .pipe($.concat('slm-runtime.js'))
+  .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
-  .pipe(replace( /\._(\w+)/g, replacePrivate))
-  .pipe(uglify())
-  .pipe(concat('slm-runtime.min.js'))
-  .pipe(size({showFiles: true}))
+  .pipe($.replace( /\._(\w+)/g, replacePrivate))
+  .pipe($.uglify())
+  .pipe($.concat('slm-runtime.min.js'))
+  .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
-  .pipe(gzip())
-  .pipe(size({showFiles: true}))
+  .pipe($.gzip())
+  .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'));
 });

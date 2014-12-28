@@ -1802,10 +1802,10 @@ ParserProto._expectNextLine = function() {
 module.exports = Parser;
 
 },{}],24:[function(require,module,exports){
-var escapeRe = /[&<>"]/;
 var ampRe = /&/g;
-var ltRe = /</g;
+var escapeRe = /[&<>"]/;
 var gtRe = />/g;
+var ltRe = /</g;
 var quotRe = /"/g;
 
 function safe(val) {
@@ -1870,10 +1870,10 @@ function flatten(arr) {
 }
 
 module.exports = {
-  safe: safe,
   escape: escape,
+  flatten: flatten,
   rejectEmpty: rejectEmpty,
-  flatten: flatten
+  safe: safe
 };
 
 },{}],25:[function(require,module,exports){
