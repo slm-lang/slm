@@ -10,7 +10,7 @@ lab.experiment('Html structure', function() {
   var template;
 
   lab.before(function(done) {
-    template = new Template(require('../../lib/context-node'));
+    template = new Template(require('../../lib/runtime_node'));
     done();
   });
 

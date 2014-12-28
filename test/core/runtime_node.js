@@ -2,23 +2,22 @@ var Lab = require('lab');
 var Template = require('../../lib/template');
 var assert  = require('chai').assert;
 var assertHtml = require('../helper').assertHtml;
-var Ctx = require('../../lib/context-node');
 
 var lab = exports.lab = Lab.script();
 
 lab.experiment('Ctx', function() {
   var template;
   lab.before(function(done) {
-    template = new Template();
+    template = new Template(require('../../lib/runtime_node'));
     done();
   });
 
   lab.test('extend with same path', function(done) {
-      Ctx.cache = {};
-      var ctx = new Ctx();
+      template.rt.Ctx.cache = {};
+      var ctx = new template.rt.Ctx();
       ctx.filename = 'view.slm';
 
-      Ctx.cache['layout.slm'] = template.exec([
+      template.rt.Ctx.cache['layout.slm'] = template.exec([
         'html',
         '  head',
         '    = content("head")',
@@ -40,13 +39,13 @@ lab.experiment('Ctx', function() {
   });
 
   lab.test('extend with abs path', function(done) {
-      Ctx.cache = {};
+      template.rt.Ctx.cache = {};
 
-      var ctx = new Ctx();
+      var ctx = new template.rt.Ctx();
       ctx.filename = '/views/view';
       ctx.basePath = '/';
 
-      Ctx.cache['/layout.slm'] = template.exec([
+      template.rt.Ctx.cache['/layout.slm'] = template.exec([
         'html',
         '  head',
         '    = content("head")',
@@ -67,12 +66,12 @@ lab.experiment('Ctx', function() {
   });
 
   lab.test('extend with same nested path', function(done) {
-      Ctx.cache = {};
-      var ctx = new Ctx();
+      template.rt.Ctx.cache = {};
+      var ctx = new template.rt.Ctx();
       ctx.filename = '/views/view.slm';
       ctx.basePath = '/';
 
-      Ctx.cache['/views/layout.slm'] = template.exec([
+      template.rt.Ctx.cache['/views/layout.slm'] = template.exec([
         'html',
         '  head',
         '    = content("head")',
@@ -93,13 +92,13 @@ lab.experiment('Ctx', function() {
   });
 
   lab.test('extend with same nested path 2', function(done) {
-      Ctx.cache = {};
+      template.rt.Ctx.cache = {};
 
-      var ctx = new Ctx();
+      var ctx = new template.rt.Ctx();
       ctx.filename = '/views/products/new.slm';
       ctx.basePath = '/views';
 
-      Ctx.cache['/views/layouts/app.slm'] = template.exec([
+      template.rt.Ctx.cache['/views/layouts/app.slm'] = template.exec([
         'html',
         '  head',
         '    = content("head")',
@@ -107,7 +106,7 @@ lab.experiment('Ctx', function() {
         '    = content()'
         ].join('\n'), {}, ctx);
 
-      Ctx.cache['/views/products/form.slm'] = template.exec([
+      template.rt.Ctx.cache['/views/products/form.slm'] = template.exec([
         'form',
         '  input type="submit"'
         ].join('\n'), {}, ctx);

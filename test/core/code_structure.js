@@ -8,7 +8,7 @@ var lab = exports.lab = Lab.script();
 lab.experiment('Code structure', function() {
   var template;
   lab.before(function(done) {
-    template = new Template(require('../../lib/context-node'));
+    template = new Template(require('../../lib/runtime_node'));
     done();
   });
 

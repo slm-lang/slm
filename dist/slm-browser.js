@@ -1,90 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var Ctx = require('./context');
-
-function BrowserCtx() {};
-
-var CtxProto = BorwserCtx.prototype = new Ctx();
-
-module.exports = BrowserCtx;
-
-
-},{"./context":2}],2:[function(require,module,exports){
-function Ctx() {
-  this.reset();
-  this.template = this.basePath = null;
-}
-
-Ctx.cache = {};
-
-var CtxProto = Ctx.prototype;
-
-/*
-  Prepare ctx for next template rendering
-*/
-CtxProto.reset = function() {
-  this._contents = {};
-  this.res = '';
-  this.stack = [];
-  this.m = null;
-};
-
-/*
-  Pop stack to sp
-*/
-CtxProto.pop = function(sp) {
-  var l = this.stack.length;
-  var filename = this.filename;
-  while (sp < l--) {
-    var path = this._resolvePath(this.stack.pop());
-    var fn = this._load(path);
-    this.filename = path;
-    fn.call(this.m, this);
-  }
-  this.filename = filename;
-  return this.res;
-};
-
-CtxProto.partial = function(path, model, cb) {
-  if (cb) {
-    this.res = cb.call(this.m, this);
-  }
-
-  path = this._resolvePath(path);
-
-  var f = this._load(path), oldModel = this.m, filename = this.filename;
-  this.filename = path;
-  var res = this.rt.safe(f.call(this.m = model, this));
-  this.m = oldModel;
-  this.filename = filename;
-  return res;
-};
-
-CtxProto.extend = function(path) {
-  this.stack.push(path);
-};
-
-CtxProto.content = function() {
-  switch(arguments.length) {
-    case 0:
-      return this.rt.safe(this.res);
-    case 1:
-      return this._contents[arguments[0]] || '';
-    case 2:
-      var name = arguments[0], cb = arguments[1];
-      if (name) {
-        // capturing block
-        this._contents[name] = cb.call(this.m);
-        return '';
-      } else {
-        return cb.call(this.m);
-      }
-  }
-};
-
-
-module.exports = Ctx;
-
-},{}],3:[function(require,module,exports){
 function Node() {
   this._method = null;
   this._nodes = {};
@@ -160,7 +74,7 @@ DispatcherProto._replaceDispatcher = function(exp) {
 
 module.exports = Dispatcher;
 
-},{}],4:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 function Engine() {
   this._chain = [];
 }
@@ -182,10 +96,10 @@ EngineProto.exec = function(src, options) {
 
 module.exports = Engine;
 
-},{}],5:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var Template = require('./template');
 
-var template = new Template(require('./context-browser'));
+var template = new Template(require('./runtime'));
 
 exports.template = template;
 
@@ -193,7 +107,7 @@ exports.compile = function(src, options) {
   return template.compile(src, options);
 };
 
-},{"./context-browser":1,"./template":25}],6:[function(require,module,exports){
+},{"./runtime":22,"./template":23}],4:[function(require,module,exports){
 var Dispatcher = require('./dispatcher');
 
 function Filter() {}
@@ -278,7 +192,7 @@ FilterProto.on_escape = function(exps) {
 
 module.exports = Filter;
 
-},{"./dispatcher":3}],7:[function(require,module,exports){
+},{"./dispatcher":1}],5:[function(require,module,exports){
 var Slm = require('./slm');
 
 function AttrMerge() {
@@ -344,7 +258,7 @@ AttrMerge.prototype.on_html_attrs = function(exps) {
 
 module.exports = AttrMerge;
 
-},{"./slm":17}],8:[function(require,module,exports){
+},{"./slm":15}],6:[function(require,module,exports){
 var Slm = require('./slm');
 
 function AttrRemove() {
@@ -377,7 +291,7 @@ AttrRemove.prototype.on_html_attr = function(exps) {
 
 module.exports = AttrRemove;
 
-},{"./slm":17}],9:[function(require,module,exports){
+},{"./slm":15}],7:[function(require,module,exports){
 var Slm = require('./slm');
 
 function Brackets() {
@@ -438,7 +352,7 @@ BracketsProto._expandCallback = function(code, content) {
 
 module.exports = Brackets;
 
-},{"./slm":17}],10:[function(require,module,exports){
+},{"./slm":15}],8:[function(require,module,exports){
 var Slm = require('./slm');
 
 function CodeAttributes() {
@@ -501,7 +415,7 @@ CodeAttributesProto.on_slm_attrvalue = function(exps) {
 
 module.exports = CodeAttributes;
 
-},{"./slm":17}],11:[function(require,module,exports){
+},{"./slm":15}],9:[function(require,module,exports){
 var Slm = require('./slm');
 
 function ControlFlow() {}
@@ -540,7 +454,7 @@ FlowProto.on_block = function(exps) {
 
 module.exports = ControlFlow;
 
-},{"./slm":17}],12:[function(require,module,exports){
+},{"./slm":15}],10:[function(require,module,exports){
 var Slm = require('./slm');
 
 function Control() {
@@ -588,7 +502,7 @@ ControlProto.on_slm_text = function(exps) {
 
 module.exports = Control;
 
-},{"./slm":17}],13:[function(require,module,exports){
+},{"./slm":15}],11:[function(require,module,exports){
 var Slm = require('./slm');
 
 function TextCollector() {}
@@ -695,7 +609,7 @@ module.exports = {
   InterpolateEngine: InterpolateEngine
 };
 
-},{"./slm":17}],14:[function(require,module,exports){
+},{"./slm":15}],12:[function(require,module,exports){
 var Filter = require('../filter');
 var Runtime = require('../runtime');
 
@@ -731,7 +645,7 @@ EscapeProto.on_dynamic = function(exps) {
 
 module.exports = Escape;
 
-},{"../filter":6,"../runtime":24}],15:[function(require,module,exports){
+},{"../filter":4,"../runtime":22}],13:[function(require,module,exports){
 var Slm = require('./slm');
 
 function Interpolate() {
@@ -792,7 +706,7 @@ InterpolateProto._parseExpression = function(str) {
 
 module.exports = Interpolate;
 
-},{"./slm":17}],16:[function(require,module,exports){
+},{"./slm":15}],14:[function(require,module,exports){
 var Filter = require('../filter');
 
 // Flattens nested multi expressions
@@ -826,7 +740,7 @@ MultiFlattener.prototype.on_multi = function(exps) {
 
 module.exports = MultiFlattener;
 
-},{"../filter":6}],17:[function(require,module,exports){
+},{"../filter":4}],15:[function(require,module,exports){
 var Filter = require('../html/html');
 
 function Slm() {}
@@ -855,7 +769,7 @@ SlmProto.on_slm_output = function(exps) {
 
 module.exports = Slm;
 
-},{"../html/html":22}],18:[function(require,module,exports){
+},{"../html/html":20}],16:[function(require,module,exports){
 var Filter = require('../filter');
 
 /**
@@ -898,7 +812,7 @@ StaticMerger.prototype.on_multi = function(exps) {
 
 module.exports = StaticMerger;
 
-},{"../filter":6}],19:[function(require,module,exports){
+},{"../filter":4}],17:[function(require,module,exports){
 var Dispatcher = require('./dispatcher');
 
 function Generator() {
@@ -945,7 +859,7 @@ GeneratorProto.concat = function(str) {
 
 module.exports = Generator;
 
-},{"./dispatcher":3}],20:[function(require,module,exports){
+},{"./dispatcher":1}],18:[function(require,module,exports){
 var Generator = require('../generator');
 
 function StringGenerator(name, initializer) {
@@ -966,7 +880,7 @@ StringGeneratorProto.on_capture = function(exps) {
 
 module.exports = StringGenerator;
 
-},{"../generator":19}],21:[function(require,module,exports){
+},{"../generator":17}],19:[function(require,module,exports){
 var Html = require('./html');
 
 function Fast() {
@@ -1082,7 +996,7 @@ FastProto.on_html_js = function(exps) {
 
 module.exports = Fast;
 
-},{"./html":22}],22:[function(require,module,exports){
+},{"./html":20}],20:[function(require,module,exports){
 var Filter = require('../filter');
 
 function Html() {}
@@ -1131,7 +1045,7 @@ HtmlProto._isContainNonEmptyStatic = function(exp) {
 
 module.exports = Html;
 
-},{"../filter":6}],23:[function(require,module,exports){
+},{"../filter":4}],21:[function(require,module,exports){
 
 function Parser() {
   this._file = null;
@@ -1801,7 +1715,7 @@ ParserProto._expectNextLine = function() {
 
 module.exports = Parser;
 
-},{}],24:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var ampRe = /&/g;
 var escapeRe = /[&<>"]/;
 var gtRe = />/g;
@@ -1869,14 +1783,87 @@ function flatten(arr) {
   }, []);
 }
 
+function Ctx() {
+  this.reset();
+  this.template = this.basePath = null;
+}
+
+Ctx.cache = {};
+
+var CtxProto = Ctx.prototype;
+
+/*
+  Prepare ctx for next template rendering
+*/
+CtxProto.reset = function() {
+  this._contents = {};
+  this.res = '';
+  this.stack = [];
+  this.m = null;
+};
+
+/*
+  Pop stack to sp
+*/
+CtxProto.pop = function(sp) {
+  var l = this.stack.length;
+  var filename = this.filename;
+  while (sp < l--) {
+    var path = this._resolvePath(this.stack.pop());
+    var fn = this._load(path);
+    this.filename = path;
+    fn.call(this.m, this);
+  }
+  this.filename = filename;
+  return this.res;
+};
+
+CtxProto.partial = function(path, model, cb) {
+  if (cb) {
+    this.res = cb.call(this.m, this);
+  }
+
+  path = this._resolvePath(path);
+
+  var f = this._load(path), oldModel = this.m, filename = this.filename;
+  this.filename = path;
+  var res = safe(f.call(this.m = model, this));
+  this.m = oldModel;
+  this.filename = filename;
+  return res;
+};
+
+CtxProto.extend = function(path) {
+  this.stack.push(path);
+};
+
+CtxProto.content = function() {
+  switch(arguments.length) {
+    case 0:
+      return safe(this.res);
+    case 1:
+      return this._contents[arguments[0]] || '';
+    case 2:
+      var name = arguments[0], cb = arguments[1];
+      if (name) {
+        // capturing block
+        this._contents[name] = cb.call(this.m);
+        return '';
+      } else {
+        return cb.call(this.m);
+      }
+  }
+};
+
 module.exports = {
+  Ctx: Ctx,
   escape: escape,
   flatten: flatten,
   rejectEmpty: rejectEmpty,
   safe: safe
 };
 
-},{}],25:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var AttrMerge = require('./filters/attr_merge');
 var AttrRemove = require('./filters/attr_remove');
 var Brackets = require('./filters/brackets');
@@ -1890,12 +1877,12 @@ var FastHtml = require('./html/fast');
 var Interpolate = require('./filters/interpolate');
 var MultiFlattener = require('./filters/multi_flattener');
 var Parser = require('./parser');
-var Runtime = require('./runtime');
 var StaticMerger = require('./filters/static_merger');
 var StringGenerator = require('./generators/string');
 
-function Template(ctx) {
-  this.Ctx = ctx;
+function Template(runtime) {
+  this.rt = runtime;
+  this.Ctx = runtime.Ctx;
   this._engine = new Engine();
   this.Embeddeds = Embeddeds;
 
@@ -1945,8 +1932,7 @@ Template.prototype.eval = function(src, model, options, ctx) {
   ctx._content = ctx.content.bind(ctx);
   ctx._extend = ctx.extend.bind(ctx);
   ctx._partial = ctx.partial.bind(ctx);
-  var rt = Runtime;
-  ctx.rt = rt;
+  var rt = this.rt;
 
   var fn = eval(this.src(src, options))[0];
 
@@ -1957,10 +1943,11 @@ Template.prototype.exec = function(src, options, ctx) {
   ctx = ctx || new this.Ctx();
 
   /*jshint unused:false */
+
   var content = ctx.content.bind(ctx);
   var extend = ctx.extend.bind(ctx);
   var partial = ctx.partial.bind(ctx);
-  var rt = Runtime;
+  var rt = this.rt;
 
   /*jshint unused:true */
 
@@ -1992,7 +1979,6 @@ Template.prototype.compile = function(src, compileOptions) {
   ctx._content = ctx.content.bind(ctx);
   ctx._extend = ctx.extend.bind(ctx);
   ctx._partial = ctx.partial.bind(ctx);
-  ctx.rt = Runtime;
 
   var fn = eval(this.src(src, compileOptions))[0];
 
@@ -2006,4 +1992,4 @@ Template.prototype.compile = function(src, compileOptions) {
 
 module.exports = Template;
 
-},{"./engine":4,"./filters/attr_merge":7,"./filters/attr_remove":8,"./filters/brackets":9,"./filters/code_attributes":10,"./filters/control_flow":11,"./filters/controls":12,"./filters/embedded":13,"./filters/escape":14,"./filters/interpolate":15,"./filters/multi_flattener":16,"./filters/static_merger":18,"./generators/string":20,"./html/fast":21,"./parser":23,"./runtime":24}]},{},[5])
+},{"./engine":2,"./filters/attr_merge":5,"./filters/attr_remove":6,"./filters/brackets":7,"./filters/code_attributes":8,"./filters/control_flow":9,"./filters/controls":10,"./filters/embedded":11,"./filters/escape":12,"./filters/interpolate":13,"./filters/multi_flattener":14,"./filters/static_merger":16,"./generators/string":18,"./html/fast":19,"./parser":21}]},{},[3])

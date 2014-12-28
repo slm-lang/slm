@@ -14,8 +14,7 @@ gulp.task('test', function(cb) {
 gulp.task('build', ['browser', 'runtime']);
 
 gulp.task('browser', function() {
-  var vars = [];
-  var varsMap = {};
+  var vars = [], varsMap = {};
 
   var replacePrivate = function(name) {
     var map = varsMap[name];
@@ -29,7 +28,7 @@ gulp.task('browser', function() {
     return map;
   };
 
-  gulp.src('lib/slm-browser.js')
+  gulp.src('lib/slm_browser.js')
   .pipe($.browserify())
   .pipe($.concat('slm-browser.js'))
   .pipe($.size({showFiles: true}))
