@@ -99,7 +99,7 @@ module.exports = Engine;
 },{}],3:[function(require,module,exports){
 var Template = require('./template');
 
-var template = new Template(require('./runtime'));
+var template = new Template(require('./runtime_browser'));
 
 exports.template = template;
 
@@ -107,7 +107,7 @@ exports.compile = function(src, options) {
   return template.compile(src, options);
 };
 
-},{"./runtime":22,"./template":23}],4:[function(require,module,exports){
+},{"./runtime_browser":23,"./template":24}],4:[function(require,module,exports){
 var Dispatcher = require('./dispatcher');
 
 function Filter() {}
@@ -1864,6 +1864,55 @@ module.exports = {
 };
 
 },{}],23:[function(require,module,exports){
+var Runtime = require('./runtime');
+
+function BrowserCtx() {};
+
+var CtxProto = BrowserCtx.prototype = new Runtime.Ctx();
+
+CtxProto._loadWithCache = function(path) {
+  var fn = BrowserCtx.cache[path];
+  if (fn) {
+    return fn;
+  }
+
+  var result = Ctx.cache[path] = this._loadWithoutCache(path);
+  return result;
+};
+
+CtxProto._loadWithoutCache = function(path) {
+  var src = FS.readFileSync(path, 'utf8');
+  return this.template.exec(src, {}, this);
+};
+
+CtxProto._load = CtxProto._loadWithCache;
+
+CtxProto._resolvePath = function(path) {
+  var dirname  = Path.dirname,
+      basename = Path.basename,
+      join = Path.join;
+
+  if (path[0] !== '/' && !this.filename) {
+    throw new Error('the "filename" option is required to use with "relative" paths');
+  }
+
+  if (path[0] === '/' && !this.basePath) {
+    throw new Error('the "basePath" option is required to use with "absolute" paths');
+  }
+
+  path = join(path[0] === '/' ? this.basePath : dirname(this.filename), path);
+
+  if (basename(path).indexOf('.') === -1) {
+    path += '.slm';
+  }
+
+  return path;
+};
+
+module.exports = Runtime;
+module.exports.Ctx = BrowserCtx;
+
+},{"./runtime":22}],24:[function(require,module,exports){
 var AttrMerge = require('./filters/attr_merge');
 var AttrRemove = require('./filters/attr_remove');
 var Brackets = require('./filters/brackets');
