@@ -2,3 +2,4 @@
 node_modules
 dist/slm.min.js.gz
 v8.log
+*.gz
