@@ -137,7 +137,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this._defaultContent = this.defaultContent.bind(this);
 	  this._append = this.append.bind(this);
 	  this._prepend = this.prepend.bind(this);
-	  this._require = this.require.bind(this);
 	};
 
 	/*
@@ -204,7 +203,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	CtxProto.defaultContent = function(name, cb) {
-	  console.log('defaultContent');
 	  return this._contents[name] || cb.call(this.m);
 	};
 

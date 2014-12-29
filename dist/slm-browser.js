@@ -172,7 +172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return [
 	    '[function(c) {',
 	    'c.m = this;',
-	    'var sp = c.stack.length, require = c._require, content = c._content, extend = c._extend, partial = c._partial, defaultContent = c._defaultContent, append = c._append, prepend = c._prepend;',
+	    'var sp = c.stack.length, require = c.require, content = c._content, extend = c._extend, partial = c._partial, defaultContent = c._defaultContent, append = c._append, prepend = c._prepend;',
 	    this._engine.exec(src, compileOptions),
 	    'c.res=_b;return c.pop(sp);}]'
 	  ].join('');
@@ -1027,7 +1027,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this._defaultContent = this.defaultContent.bind(this);
 	  this._append = this.append.bind(this);
 	  this._prepend = this.prepend.bind(this);
-	  this._require = this.require.bind(this);
 	};
 
 	/*
@@ -1094,7 +1093,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	CtxProto.defaultContent = function(name, cb) {
-	  console.log('defaultContent');
 	  return this._contents[name] || cb.call(this.m);
 	};
 
