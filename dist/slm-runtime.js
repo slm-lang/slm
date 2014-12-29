@@ -130,6 +130,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var CtxProto = Ctx.prototype;
 
+	CtxProto.rebind = function() {
+	  this._content = this.content.bind(this);
+	  this._extend = this.extend.bind(this);
+	  this._partial = this.partial.bind(this);
+	  this._defaultContent = this.defaultContent.bind(this);
+	  this._append = this.append.bind(this);
+	  this._prepend = this.prepend.bind(this);
+	  this._require = this.require.bind(this);
+	};
+
 	/*
 	  Prepare ctx for next template rendering
 	*/
@@ -191,6 +201,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return cb.call(this.m);
 	      }
 	  }
+	};
+
+	CtxProto.defaultContent = function(name, cb) {
+	  console.log('defaultContent');
+	  return this._contents[name] || cb.call(this.m);
+	};
+
+	CtxProto.append = function(name, cb) {
+	  var contents = this._contents[name] || '';
+	  this._contents[name] = contents + cb.call(this.m);
+	  return '';
+	};
+
+	CtxProto.prepend = function(name, cb) {
+	  var contents = this._contents[name] || '';
+	  this._contents[name] = cb.call(this.m) + contents;
+	  return '';
 	};
 
 	module.exports = {

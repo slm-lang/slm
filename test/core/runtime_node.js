@@ -146,7 +146,89 @@ lab.experiment('Ctx', function() {
       done();
   });
 
-  lab.test('test default', function(done) {
+  lab.test('test require', function(done) {
+      template.rt.Ctx.cache = {};
+
+      var compileOptions = {
+        filename: '/views/layouts/app.slm',
+        basePath: '/views'
+      }
+
+      var ctx = new template.rt.Ctx();
+
+      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
+        'html',
+        '  head',
+        '    = defaultContent("title")',
+        '      title Default title',
+        '  body',
+        '    = content()'
+        ].join('\n'), compileOptions, ctx);
+
+      compileOptions.filename = '/views/forms/form.slm';
+
+      var src = [
+        '- extend("../layouts/app")',
+        'p Body from view'
+      ].join('\n');
+
+      var result = template.eval(src, {}, compileOptions, ctx);
+      assert.deepEqual(result, '<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
+
+      var src2 = [
+        '- extend("../layouts/app")',
+        '= content("title")',
+        '  title New title',
+        'p Body from view'
+      ].join('\n');
+
+      var result = template.eval(src2, {}, compileOptions, ctx);
+      assert.deepEqual(result, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
+      done();
+  });
+
+  lab.test('test defaultContent', function(done) {
+      template.rt.Ctx.cache = {};
+
+      var compileOptions = {
+        filename: '/views/layouts/app.slm',
+        basePath: '/views'
+      }
+
+      var ctx = new template.rt.Ctx();
+
+      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
+        'html',
+        '  head',
+        '    = defaultContent("title")',
+        '      title Default title',
+        '  body',
+        '    = content()'
+        ].join('\n'), compileOptions, ctx);
+
+      compileOptions.filename = '/views/forms/form.slm';
+
+      var src = [
+        '- extend("../layouts/app")',
+        'p Body from view'
+      ].join('\n');
+
+      var result = template.eval(src, {}, compileOptions, ctx);
+      assert.deepEqual(result, '<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
+
+      var src2 = [
+        '- extend("../layouts/app")',
+        '= content("title")',
+        '  title New title',
+        'p Body from view'
+      ].join('\n');
+
+      var result = template.eval(src2, {}, compileOptions, ctx);
+      assert.deepEqual(result, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
+      done();
+  });
+
+  lab.test('test defaultContent', function(done) {
       template.rt.Ctx.cache = {};
 
       var compileOptions = {
