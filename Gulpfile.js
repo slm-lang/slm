@@ -29,7 +29,13 @@ gulp.task('browser', function() {
   };
 
   gulp.src('lib/slm_browser.js')
-  .pipe($.browserify())
+  .pipe($.webpack({
+      output: {
+        filename: 'slm-borwser.js',
+        library: 'Slm',
+        libraryTarget: 'umd'
+      }
+  }))
   .pipe($.concat('slm-browser.js'))
   .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
@@ -58,7 +64,13 @@ gulp.task('runtime', function() {
   };
 
   gulp.src('lib/runtime.js')
-  .pipe($.browserify())
+  .pipe($.webpack({
+      output: {
+        filename: 'slm-runtime.js',
+        library: 'Ctx',
+        libraryTarget: 'umd'
+      }
+  }))
   .pipe($.concat('slm-runtime.js'))
   .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))

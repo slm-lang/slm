@@ -1,149 +1,207 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var ampRe = /&/g;
-var escapeRe = /[&<>"]/;
-var gtRe = />/g;
-var ltRe = /</g;
-var quotRe = /"/g;
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define(factory);
+	else if(typeof exports === 'object')
+		exports["Ctx"] = factory();
+	else
+		root["Ctx"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
 
-function safe(val) {
-  if (!val || val.htmlSafe) {
-    return val;
-  }
+	var ampRe = /&/g;
+	var escapeRe = /[&<>"]/;
+	var gtRe = />/g;
+	var ltRe = /</g;
+	var quotRe = /"/g;
 
-  var res = new String(val);
-  res.htmlSafe = true;
-  return res;
-}
+	function safe(val) {
+	  if (!val || val.htmlSafe) {
+	    return val;
+	  }
 
-function escape(str) {
-  if (typeof str !== 'string') {
-    if (!str) {
-      return '';
-    }
-    if (str.htmlSafe) {
-      return str.toString();
-    }
-    str = str.toString();
-  }
+	  var res = new String(val);
+	  res.htmlSafe = true;
+	  return res;
+	}
 
-  if (escapeRe.test(str) ) {
-    if (str.indexOf('&') !== -1) {
-      str = str.replace(ampRe, '&amp;');
-    }
-    if (str.indexOf('<') !== -1) {
-      str = str.replace(ltRe, '&lt;');
-    }
-    if (str.indexOf('>') !== -1) {
-      str = str.replace(gtRe, '&gt;');
-    }
-    if (str.indexOf('"') !== -1) {
-      str = str.replace(quotRe, '&quot;');
-    }
-  }
+	function escape(str) {
+	  if (typeof str !== 'string') {
+	    if (!str) {
+	      return '';
+	    }
+	    if (str.htmlSafe) {
+	      return str.toString();
+	    }
+	    str = str.toString();
+	  }
 
-  return str;
-}
+	  if (escapeRe.test(str) ) {
+	    if (str.indexOf('&') !== -1) {
+	      str = str.replace(ampRe, '&amp;');
+	    }
+	    if (str.indexOf('<') !== -1) {
+	      str = str.replace(ltRe, '&lt;');
+	    }
+	    if (str.indexOf('>') !== -1) {
+	      str = str.replace(gtRe, '&gt;');
+	    }
+	    if (str.indexOf('"') !== -1) {
+	      str = str.replace(quotRe, '&quot;');
+	    }
+	  }
 
-function rejectEmpty(arr) {
-  var res = [];
+	  return str;
+	}
 
-  for (var i = 0, l = arr.length; i < l; i++) {
-    var el = arr[i];
-    if (el !== null && el.length) {
-      res.push(el);
-    }
-  }
+	function rejectEmpty(arr) {
+	  var res = [];
 
-  return res;
-}
+	  for (var i = 0, l = arr.length; i < l; i++) {
+	    var el = arr[i];
+	    if (el !== null && el.length) {
+	      res.push(el);
+	    }
+	  }
 
-function flatten(arr) {
-  return arr.reduce(function (acc, val) {
-    if (val === null) {
-      return acc;
-    }
-    return acc.concat(val.constructor === Array ? flatten(val) : val.toString());
-  }, []);
-}
+	  return res;
+	}
 
-function Ctx() {
-  this.reset();
-  this.template = this.basePath = null;
-}
+	function flatten(arr) {
+	  return arr.reduce(function (acc, val) {
+	    if (val === null) {
+	      return acc;
+	    }
+	    return acc.concat(val.constructor === Array ? flatten(val) : val.toString());
+	  }, []);
+	}
 
-Ctx.cache = {};
+	function Ctx() {
+	  this.reset();
+	  this.template = this.basePath = null;
+	}
 
-var CtxProto = Ctx.prototype;
+	Ctx.cache = {};
 
-/*
-  Prepare ctx for next template rendering
-*/
-CtxProto.reset = function() {
-  this._contents = {};
-  this.res = '';
-  this.stack = [];
-  this.m = null;
-};
+	var CtxProto = Ctx.prototype;
 
-/*
-  Pop stack to sp
-*/
-CtxProto.pop = function(sp) {
-  var l = this.stack.length;
-  var filename = this.filename;
-  while (sp < l--) {
-    var path = this._resolvePath(this.stack.pop());
-    var fn = this._load(path);
-    this.filename = path;
-    fn.call(this.m, this);
-  }
-  this.filename = filename;
-  return this.res;
-};
+	/*
+	  Prepare ctx for next template rendering
+	*/
+	CtxProto.reset = function() {
+	  this._contents = {};
+	  this.res = '';
+	  this.stack = [];
+	  this.m = null;
+	};
 
-CtxProto.partial = function(path, model, cb) {
-  if (cb) {
-    this.res = cb.call(this.m, this);
-  }
+	/*
+	  Pop stack to sp
+	*/
+	CtxProto.pop = function(sp) {
+	  var l = this.stack.length;
+	  var filename = this.filename;
+	  while (sp < l--) {
+	    var path = this._resolvePath(this.stack.pop());
+	    var fn = this._load(path);
+	    this.filename = path;
+	    fn.call(this.m, this);
+	  }
+	  this.filename = filename;
+	  return this.res;
+	};
 
-  path = this._resolvePath(path);
+	CtxProto.partial = function(path, model, cb) {
+	  if (cb) {
+	    this.res = cb.call(this.m, this);
+	  }
 
-  var f = this._load(path), oldModel = this.m, filename = this.filename;
-  this.filename = path;
-  var res = safe(f.call(this.m = model, this));
-  this.m = oldModel;
-  this.filename = filename;
-  return res;
-};
+	  path = this._resolvePath(path);
 
-CtxProto.extend = function(path) {
-  this.stack.push(path);
-};
+	  var f = this._load(path), oldModel = this.m, filename = this.filename;
+	  this.filename = path;
+	  var res = safe(f.call(this.m = model, this));
+	  this.m = oldModel;
+	  this.filename = filename;
+	  return res;
+	};
 
-CtxProto.content = function() {
-  switch(arguments.length) {
-    case 0:
-      return safe(this.res);
-    case 1:
-      return this._contents[arguments[0]] || '';
-    case 2:
-      var name = arguments[0], cb = arguments[1];
-      if (name) {
-        // capturing block
-        this._contents[name] = cb.call(this.m);
-        return '';
-      } else {
-        return cb.call(this.m);
-      }
-  }
-};
+	CtxProto.extend = function(path) {
+	  this.stack.push(path);
+	};
 
-module.exports = {
-  Ctx: Ctx,
-  escape: escape,
-  flatten: flatten,
-  rejectEmpty: rejectEmpty,
-  safe: safe
-};
+	CtxProto.content = function() {
+	  switch(arguments.length) {
+	    case 0:
+	      return safe(this.res);
+	    case 1:
+	      return this._contents[arguments[0]] || '';
+	    case 2:
+	      var name = arguments[0], cb = arguments[1];
+	      if (name) {
+	        // capturing block
+	        this._contents[name] = cb.call(this.m);
+	        return '';
+	      } else {
+	        return cb.call(this.m);
+	      }
+	  }
+	};
 
-},{}]},{},[1])
+	module.exports = {
+	  Ctx: Ctx,
+	  escape: escape,
+	  flatten: flatten,
+	  rejectEmpty: rejectEmpty,
+	  safe: safe
+	};
+
+
+/***/ }
+/******/ ])
+});

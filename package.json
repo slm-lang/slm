@@ -3,6 +3,7 @@
   "version": "0.1.5",
   "description": "Slim/Jade like templating engine",
   "main": "lib/slm.js",
+  "browser": "lib/slm_browser.js",
   "scripts": {
     "test": "node_modules/lab/bin/lab -v -t 90 -l"
   },
@@ -14,7 +15,6 @@
   "author": "Yury Korolev",
   "license": "ISC",
   "devDependencies": {
-    "browserify": "^4.2.1",
     "chai": "^1.10.0",
     "codeclimate-test-reporter": "0.0.4",
     "gulp": "^3.8.10",
@@ -26,6 +26,7 @@
     "gulp-size": "^0.4.0",
     "gulp-uglify": "^0.3.1",
     "gulp-util": "^2.2.20",
+    "gulp-webpack": "^1.1.2",
     "lab": "^5.1.1"
   },
   "directories": {
