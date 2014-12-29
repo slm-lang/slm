@@ -342,7 +342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	ParserProto._reset = function(lines, stacks) {
 	  this._stacks = stacks || [];
 	  this._indents = [0];
-	  this._indents.last = this._stacks.last = function() {
+	  this._indents._last = this._stacks._last = function() {
 	    return this[this.length - 1];
 	  };
 	  this._lineno = 0;
@@ -351,7 +351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	ParserProto._pushOnTop = function(item) {
-	  this._stacks.last().push(item);
+	  this._stacks._last().push(item);
 	};
 
 	ParserProto._nextLine = function() {
@@ -404,7 +404,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // line is expecting this line to be indented.
 	  var expectingIndentation = this._stacks.length > this._indents.length;
 
-	  if (indent > this._indents.last()) {
+	  if (indent > this._indents._last()) {
 	    // This line was actually indented, so we'll have to check if it was
 	    // supposed to be indented or not.
 
@@ -423,7 +423,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // This line was deindented.
 	    // Now we're have to go through the all the indents and figure out
 	    // how many levels we've deindented.
-	    while(indent < this._indents.last()) {
+	    while(indent < this._indents._last()) {
 	      this._indents.pop();
 	      this._stacks.pop();
 	    }
@@ -435,7 +435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //       world
 	    //     this      # <- This should not be possible!
 
-	    if (indent !== this._indents.last()) {
+	    if (indent !== this._indents._last()) {
 	      this._syntaxError('Malformed indentation');
 	    }
 	  }
@@ -454,7 +454,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        [
 	          'slm', 'text',
 	          this._parseTextBlock(this._line.slice(m[0].length),
-	          this._indents.last() + m[1].length + 2)
+	          this._indents._last() + m[1].length + 2)
 	        ]
 	      ]);
 	      break;
@@ -493,7 +493,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this._pushOnTop([
 	        'slm', 'text',
 	        this._parseTextBlock(this._line.slice(m[0].length),
-	        this._indents.last() + space.length + 1)
+	        this._indents._last() + space.length + 1)
 	      ]);
 
 	      if (trailingWS) {
@@ -659,7 +659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var block = ['multi'];
 
 	      if (!leadingWS && leadingWS2) {
-	        var lastStack = this._stacks.last();
+	        var lastStack = this._stacks._last();
 	        lastStack.insert(lastStack.length - 2, 0, ['static', ' ']);
 	      }
 
@@ -795,7 +795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } else {
 	      var indent = this._getIndent(this._lines[0]);
 
-	      if (indent <= this._indents.last()) {
+	      if (indent <= this._indents._last()) {
 	        break;
 	      }
 
@@ -834,7 +834,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  while (this._lines.length) {
 	    var indent = this._emptyLineRe.test(this._lines[0]) ? 0 : this._getIndent(this._lines[0]);
 
-	    if (indent <= this._indents.last()) {
+	    if (indent <= this._indents._last()) {
 	      break;
 	    }
 
