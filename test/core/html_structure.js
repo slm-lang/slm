@@ -478,7 +478,7 @@ lab.experiment('Html structure', function() {
   });
 
   lab.test('test context', function(done) {
-    var Ctx = template.Ctx
+    var Ctx = template.rt.Ctx
     Ctx.cache = {};
 
     var ctx = new Ctx();
