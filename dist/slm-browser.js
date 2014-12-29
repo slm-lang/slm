@@ -55,16 +55,10 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var Template = __webpack_require__(1);
-
 	var template = new Template(__webpack_require__(2));
 
-	exports.template = template;
-	exports.compile = function(source, options) {
-	  return template.compile(source, options);
-	};
-	exports.eval = function(src, context) {
-	  return template.eval(src, context);
-	}
+	template.template = template;
+	module.exports = template;
 
 
 /***/ },
@@ -78,12 +72,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ControlFlow = __webpack_require__(10);
 	var Controls = __webpack_require__(11);
 	var Embeddeds = __webpack_require__(12);
-	var Engine = __webpack_require__(4);
+	var Engine = __webpack_require__(3);
 	var Escape = __webpack_require__(13);
 	var FastHtml = __webpack_require__(17);
 	var Interpolate = __webpack_require__(14);
 	var MultiFlattener = __webpack_require__(15);
-	var Parser = __webpack_require__(5);
+	var Parser = __webpack_require__(4);
 	var StaticMerger = __webpack_require__(16);
 	var StringGenerator = __webpack_require__(18);
 
@@ -187,7 +181,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Runtime = __webpack_require__(3);
+	var Runtime = __webpack_require__(5);
 
 	function BrowserCtx() {};
 
@@ -204,32 +198,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	CtxProto._loadWithoutCache = function(path) {
-	  var src = FS.readFileSync(path, 'utf8');
-	  return this.template.exec(src, {}, this);
 	};
 
 	CtxProto._load = CtxProto._loadWithCache;
 
 	CtxProto._resolvePath = function(path) {
-	  var dirname  = Path.dirname,
-	      basename = Path.basename,
-	      join = Path.join;
-
-	  if (path[0] !== '/' && !this.filename) {
-	    throw new Error('the "filename" option is required to use with "relative" paths');
-	  }
-
-	  if (path[0] === '/' && !this.basePath) {
-	    throw new Error('the "basePath" option is required to use with "absolute" paths');
-	  }
-
-	  path = join(path[0] === '/' ? this.basePath : dirname(this.filename), path);
-
-	  if (basename(path).indexOf('.') === -1) {
-	    path += '.slm';
-	  }
-
-	  return path;
 	};
 
 	module.exports = Runtime;
@@ -238,183 +211,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ampRe = /&/g;
-	var escapeRe = /[&<>"]/;
-	var gtRe = />/g;
-	var ltRe = /</g;
-	var quotRe = /"/g;
-
-	function safe(val) {
-	  if (!val || val.htmlSafe) {
-	    return val;
-	  }
-
-	  var res = new String(val);
-	  res.htmlSafe = true;
-	  return res;
-	}
-
-	function escape(str) {
-	  if (typeof str !== 'string') {
-	    if (!str) {
-	      return '';
-	    }
-	    if (str.htmlSafe) {
-	      return str.toString();
-	    }
-	    str = str.toString();
-	  }
-
-	  if (escapeRe.test(str) ) {
-	    if (str.indexOf('&') !== -1) {
-	      str = str.replace(ampRe, '&amp;');
-	    }
-	    if (str.indexOf('<') !== -1) {
-	      str = str.replace(ltRe, '&lt;');
-	    }
-	    if (str.indexOf('>') !== -1) {
-	      str = str.replace(gtRe, '&gt;');
-	    }
-	    if (str.indexOf('"') !== -1) {
-	      str = str.replace(quotRe, '&quot;');
-	    }
-	  }
-
-	  return str;
-	}
-
-	function rejectEmpty(arr) {
-	  var res = [];
-
-	  for (var i = 0, l = arr.length; i < l; i++) {
-	    var el = arr[i];
-	    if (el !== null && el.length) {
-	      res.push(el);
-	    }
-	  }
-
-	  return res;
-	}
-
-	function flatten(arr) {
-	  return arr.reduce(function (acc, val) {
-	    if (val === null) {
-	      return acc;
-	    }
-	    return acc.concat(val.constructor === Array ? flatten(val) : val.toString());
-	  }, []);
-	}
-
-	function Ctx() {
-	  this.reset();
-	  this.template = this.basePath = null;
-	}
-
-	Ctx.cache = {};
-
-	var CtxProto = Ctx.prototype;
-
-	CtxProto.rebind = function() {
-	  this._content = this.content.bind(this);
-	  this._extend = this.extend.bind(this);
-	  this._partial = this.partial.bind(this);
-	  this._defaultContent = this.defaultContent.bind(this);
-	  this._append = this.append.bind(this);
-	  this._prepend = this.prepend.bind(this);
-	};
-
-	/*
-	  Prepare ctx for next template rendering
-	*/
-	CtxProto.reset = function() {
-	  this._contents = {};
-	  this.res = '';
-	  this.stack = [];
-	  this.m = null;
-	};
-
-	/*
-	  Pop stack to sp
-	*/
-	CtxProto.pop = function(sp) {
-	  var l = this.stack.length;
-	  var filename = this.filename;
-	  while (sp < l--) {
-	    var path = this._resolvePath(this.stack.pop());
-	    var fn = this._load(path);
-	    this.filename = path;
-	    fn.call(this.m, this);
-	  }
-	  this.filename = filename;
-	  return this.res;
-	};
-
-	CtxProto.partial = function(path, model, cb) {
-	  if (cb) {
-	    this.res = cb.call(this.m, this);
-	  }
-
-	  path = this._resolvePath(path);
-
-	  var f = this._load(path), oldModel = this.m, filename = this.filename;
-	  this.filename = path;
-	  var res = safe(f.call(this.m = model, this));
-	  this.m = oldModel;
-	  this.filename = filename;
-	  return res;
-	};
-
-	CtxProto.extend = function(path) {
-	  this.stack.push(path);
-	};
-
-	CtxProto.content = function() {
-	  switch(arguments.length) {
-	    case 0:
-	      return safe(this.res);
-	    case 1:
-	      return this._contents[arguments[0]] || '';
-	    case 2:
-	      var name = arguments[0], cb = arguments[1];
-	      if (name) {
-	        // capturing block
-	        this._contents[name] = cb.call(this.m);
-	        return '';
-	      } else {
-	        return cb.call(this.m);
-	      }
-	  }
-	};
-
-	CtxProto.defaultContent = function(name, cb) {
-	  return this._contents[name] || cb.call(this.m);
-	};
-
-	CtxProto.append = function(name, cb) {
-	  var contents = this._contents[name] || '';
-	  this._contents[name] = contents + cb.call(this.m);
-	  return '';
-	};
-
-	CtxProto.prepend = function(name, cb) {
-	  var contents = this._contents[name] || '';
-	  this._contents[name] = cb.call(this.m) + contents;
-	  return '';
-	};
-
-	module.exports = {
-	  Ctx: Ctx,
-	  escape: escape,
-	  flatten: flatten,
-	  rejectEmpty: rejectEmpty,
-	  safe: safe
-	};
-
-
-/***/ },
-/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	function Engine() {
@@ -440,7 +236,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -1118,6 +914,192 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ampRe = /&/g;
+	var escapeRe = /[&<>"]/;
+	var gtRe = />/g;
+	var ltRe = /</g;
+	var quotRe = /"/g;
+
+	function SafeStr(val) {
+	  this.htmlSafe = true
+	  this._val = val;
+	}
+
+	SafeStr.prototype.toString = function() {
+	  return this._val;
+	}
+
+	function safe(val) {
+	  if (!val || val.htmlSafe) {
+	    return val;
+	  }
+
+	  return new SafeStr(val);
+	}
+
+	function escape(str) {
+	  if (typeof str !== 'string') {
+	    if (!str) {
+	      return '';
+	    }
+	    if (str.htmlSafe) {
+	      return str.toString();
+	    }
+	    str = str.toString();
+	  }
+
+	  if (escapeRe.test(str) ) {
+	    if (str.indexOf('&') !== -1) {
+	      str = str.replace(ampRe, '&amp;');
+	    }
+	    if (str.indexOf('<') !== -1) {
+	      str = str.replace(ltRe, '&lt;');
+	    }
+	    if (str.indexOf('>') !== -1) {
+	      str = str.replace(gtRe, '&gt;');
+	    }
+	    if (str.indexOf('"') !== -1) {
+	      str = str.replace(quotRe, '&quot;');
+	    }
+	  }
+
+	  return str;
+	}
+
+	function rejectEmpty(arr) {
+	  var res = [];
+
+	  for (var i = 0, l = arr.length; i < l; i++) {
+	    var el = arr[i];
+	    if (el !== null && el.length) {
+	      res.push(el);
+	    }
+	  }
+
+	  return res;
+	}
+
+	function flatten(arr) {
+	  return arr.reduce(function (acc, val) {
+	    if (val === null) {
+	      return acc;
+	    }
+	    return acc.concat(val.constructor === Array ? flatten(val) : val.toString());
+	  }, []);
+	}
+
+	function Ctx() {
+	  this.reset();
+	  this.template = this.basePath = null;
+	}
+
+	Ctx.cache = {};
+
+	var CtxProto = Ctx.prototype;
+
+	CtxProto.rebind = function() {
+	  this._content = this.content.bind(this);
+	  this._extend = this.extend.bind(this);
+	  this._partial = this.partial.bind(this);
+	  this._defaultContent = this.defaultContent.bind(this);
+	  this._append = this.append.bind(this);
+	  this._prepend = this.prepend.bind(this);
+	};
+
+	/*
+	  Prepare ctx for next template rendering
+	*/
+	CtxProto.reset = function() {
+	  this._contents = {};
+	  this.res = '';
+	  this.stack = [];
+	  this.m = null;
+	};
+
+	/*
+	  Pop stack to sp
+	*/
+	CtxProto.pop = function(sp) {
+	  var l = this.stack.length;
+	  var filename = this.filename;
+	  while (sp < l--) {
+	    this.filename = this.stack.pop();
+	    this._load(this.filename).call(this.m, this);
+	  }
+	  this.filename = filename;
+	  return this.res;
+	};
+
+	CtxProto.extend = function(path) {
+	  this.stack.push(this._resolvePath(path));
+	};
+
+	CtxProto.partial = function(path, model, cb) {
+	  if (cb) {
+	    this.res = cb.call(this.m, this);
+	  }
+
+	  path = this._resolvePath(path);
+
+	  var f = this._load(path), oldModel = this.m, filename = this.filename;
+	  this.filename = path;
+	  var res = safe(f.call(this.m = model, this));
+	  this.m = oldModel;
+	  this.filename = filename;
+	  return res;
+	};
+
+	CtxProto.content = function() {
+	  switch(arguments.length) {
+	    case 0:
+	      return safe(this.res);
+	    case 1:
+	      return this._contents[arguments[0]] || '';
+	    case 2:
+	      var name = arguments[0], cb = arguments[1];
+	      if (name) {
+	        // if content is already defined with return what we have
+	        //console.log(this._contents);
+	        //if (this._contents[name]) {
+	          //return this._contents[name];
+	        //}
+	        // capturing block
+	        this._contents[name] = cb.call(this.m);
+	        return '';
+	      }
+	      return cb.call(this.m);
+	  }
+	};
+
+	CtxProto.defaultContent = function(name, cb) {
+	  return this._contents[name] || cb.call(this.m);
+	};
+
+	CtxProto.append = function(name, cb) {
+	  var contents = this._contents[name] || '';
+	  this._contents[name] = contents + cb.call(this.m);
+	  return '';
+	};
+
+	CtxProto.prepend = function(name, cb) {
+	  var contents = this._contents[name] || '';
+	  this._contents[name] = cb.call(this.m) + contents;
+	  return '';
+	};
+
+	module.exports = {
+	  Ctx: Ctx,
+	  escape: escape,
+	  flatten: flatten,
+	  rejectEmpty: rejectEmpty,
+	  safe: safe
+	};
+
+
+/***/ },
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1567,7 +1549,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var Filter = __webpack_require__(21);
-	var Runtime = __webpack_require__(3);
+	var Runtime = __webpack_require__(5);
 
 	function Escape() {
 	  this._disableEscape = false;

@@ -33,7 +33,7 @@ lab.experiment('Ctx', function() {
 
       var src = [
         '- extend("layout")',
-        '= content("head");',
+        '= content("head")',
         '  meta name="keywords" content=this.who',
         'p Hello, ${this.who}'
       ].join('\n');

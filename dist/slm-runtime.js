@@ -60,14 +60,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ltRe = /</g;
 	var quotRe = /"/g;
 
+	function SafeStr(val) {
+	  this.htmlSafe = true
+	  this._val = val;
+	}
+
+	SafeStr.prototype.toString = function() {
+	  return this._val;
+	}
+
 	function safe(val) {
 	  if (!val || val.htmlSafe) {
 	    return val;
 	  }
 
-	  var res = new String(val);
-	  res.htmlSafe = true;
-	  return res;
+	  return new SafeStr(val);
 	}
 
 	function escape(str) {
@@ -156,13 +163,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var l = this.stack.length;
 	  var filename = this.filename;
 	  while (sp < l--) {
-	    var path = this._resolvePath(this.stack.pop());
-	    var fn = this._load(path);
-	    this.filename = path;
-	    fn.call(this.m, this);
+	    this.filename = this.stack.pop();
+	    this._load(this.filename).call(this.m, this);
 	  }
 	  this.filename = filename;
 	  return this.res;
+	};
+
+	CtxProto.extend = function(path) {
+	  this.stack.push(this._resolvePath(path));
 	};
 
 	CtxProto.partial = function(path, model, cb) {
@@ -180,10 +189,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return res;
 	};
 
-	CtxProto.extend = function(path) {
-	  this.stack.push(path);
-	};
-
 	CtxProto.content = function() {
 	  switch(arguments.length) {
 	    case 0:
@@ -193,12 +198,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case 2:
 	      var name = arguments[0], cb = arguments[1];
 	      if (name) {
+	        // if content is already defined with return what we have
+	        //console.log(this._contents);
+	        //if (this._contents[name]) {
+	          //return this._contents[name];
+	        //}
 	        // capturing block
 	        this._contents[name] = cb.call(this.m);
 	        return '';
-	      } else {
-	        return cb.call(this.m);
 	      }
+	      return cb.call(this.m);
 	  }
 	};
 
