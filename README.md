@@ -1,5 +1,7 @@
 # Slm
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/slm-lang/slm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Slm is a template language for js. Port of [Slim](http://slim-lang.com/) but slimmer :)
 
 [![Build Status](https://img.shields.io/travis/slm-lang/slm/master.svg)](https://travis-ci.org/slm-lang/slm)
