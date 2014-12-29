@@ -354,6 +354,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this._stacks._last().push(item);
 	};
 
+	ParserProto._sliceLine = function(beginSlice) {
+	  return this._line = this._line.slice(beginSlice);
+	};
+
 	ParserProto._nextLine = function() {
 	  if (this._lines.length) {
 	    this._origLine = this._lines.shift();
@@ -514,7 +518,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Code block.
 	    if (firstChar === '-') {
 	      // We expect the line to be broken or the next line to be indented.
-	      this._line = this._line.slice(1);
+	      this._sliceLine(1);
 	      var block = ['multi'];
 	      this._pushOnTop(['slm', 'control', this._parseBrokenLine(), block]);
 	      this._stacks.push(block);
@@ -525,7 +529,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    m = this._outputBlockRe.exec(this._line);
 	    if (m) {
 	      // We expect the line to be broken or the next line to be indented.
-	      this._line = this._line.slice(m[0].length);
+	      this._sliceLine(m[0].length);
 
 	      var trailingWS = m[2].indexOf('.') !== -1 || m[2].indexOf('>') !== -1;
 	      var block = ['multi'];
@@ -561,7 +565,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    m = this._tagRe.exec(this._line);
 	    if (m) {
 	      if (m[1]) {
-	        this._line = this._line.slice(m[0].length);
+	        this._sliceLine(m[0].length);
 	      }
 	      this._parseTag(m[0]);
 
@@ -580,7 +584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var m;
 	  if (this._tagShortcut[tag]) {
 	    if (!this._attrShortcut[tag]) {
-	      this._line = this._line.slice(0, tag.length);
+	      this._sliceLine(0, tag.length);
 	    }
 
 	    tag = this._tagShortcut[tag];
@@ -601,13 +605,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      attributes.push(['html', 'attr', a, ['static', m[2]]]);
 	    }
 
-	    this._line = this._line.slice(m[0].length);
+	    this._sliceLine(m[0].length);
 	  }
 
 	  var trailingWS, leadingWS;
 	  m = /^[<>.]+/.exec(this._line);
 	  if (m) {
-	    this._line = this._line.slice(m[0].length);
+	    this._sliceLine(m[0].length);
 	    trailingWS = m[0].indexOf('.') >= 0 || m[0].indexOf('>') >= 0;
 	    leadingWS = m[0].indexOf('<') >= 0;
 	  }
@@ -628,13 +632,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Block expansion
 	    m = this._blockExpressionRe.exec(this._line);
 	    if (m) {
-	      this._line = this._line.slice(m[0].length);
+	      this._sliceLine(m[0].length);
 	      if (!(m = this._tagRe.exec(this._line))) {
 	        this._syntaxError('Expected tag');
 	      }
 
 	      if (m[1]) {
-	        this._line = this._line.slice(m[0].length);
+	        this._sliceLine(m[0].length);
 	      }
 
 	      var content = ['multi'];
@@ -652,7 +656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    m = this._outputCodeRe.exec(this._line);
 	    if (m) {
 
-	      this._line = this._line.slice(m[0].length);
+	      this._sliceLine(m[0].length);
 	      var trailingWS2 = m[2].indexOf('.') >= 0 || m[2].indexOf('>') >= 0;
 	      var leadingWS2 = m[2].indexOf('<') >= 0;
 
@@ -674,7 +678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Closed tag. Do nothing
 	    m = this._closedTagRe.exec(this._line);
 	    if (m) {
-	      this._line = this._line.slice(m[0].length);
+	      this._sliceLine(m[0].length);
 	      if (this._line.length) {
 	        this._syntaxError('Unexpected text after closed tag');
 	      }
@@ -706,7 +710,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  m = this._attrDelimRe.exec(this._line);
 	  if (m) {
 	    delimiter = this._attrDelims[m[1]];
-	    this._line = this._line.slice(m[0].length);
+	    this._sliceLine(m[0].length);
 	  }
 
 	  var booleanAttrRe, endRe;
@@ -719,7 +723,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Value is quoted (static)
 	    m = this._quotedAttrRe.exec(this._line);
 	    if (m) {
-	      this._line = this._line.slice(m[0].length);
+	      this._sliceLine(m[0].length);
 	      attributes.push(['html', 'attr', m[1],
 	                      ['escape', !m[2].length, ['slm', 'interpolate', this._parseQuotedAttribute(m[3])]]]);
 	      continue;
@@ -728,7 +732,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Value is JS code
 	    m = this._codeAttrRe.exec(this._line);
 	    if (m) {
-	      this._line = this._line.slice(m[0].length);
+	      this._sliceLine(m[0].length);
 	      var name = m[1], escape = !m[2].length;
 	      var value = this._parseJSCode(delimiter);
 
@@ -746,14 +750,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Boolean attribute
 	    m = booleanAttrRe.exec(this._line);
 	    if (m) {
-	      this._line = this._line.slice(m[0].length);
+	      this._sliceLine(m[0].length);
 	      attributes.push(['html', 'attr', m[1], ['multi']]);
 	      continue;
 	    }
 	    // Find ending delimiter
 	    m = endRe.exec(this._line);
 	    if (m) {
-	      this._line = this._line.slice(m[0].length);
+	      this._sliceLine(m[0].length);
 	      break;
 	    }
 
@@ -880,7 +884,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      code += this._line[0];
-	      this._line = this._line.slice(1);
+	      this._sliceLine(1);
 	    }
 	  }
 
@@ -907,12 +911,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      } else if (/^\$\{/.test(this._line)) {
 	        value += firstChar;
-	        this._line = this._line.slice(1);
+	        this._sliceLine(1);
 	        count = 1;
 	      }
 
 	      value += this._line[0];
-	      this._line = this._line.slice(1);
+	      this._sliceLine(1);
 	    }
 	  }
 
@@ -924,7 +928,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._syntaxError('Expected closing quote ' + quote);
 	  }
 
-	  this._line = this._line.slice(1);
+	  this._sliceLine(1);
 
 	  return value;
 	};
@@ -1746,10 +1750,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Html = __webpack_require__(21);
 
 	function Fast() {
-
+	  this._autoclose  = 'base basefont bgsound link meta area br embed img keygen wbr input menuitem param source track hr col frame'.split(/\s/);
 	  this._format = 'xhtml';
 	  this._attrQuote = '"';
-	  this._autoclose  = 'base basefont bgsound link meta area br embed img keygen wbr input menuitem param source track hr col frame'.split(/\s/);
 	  this._jsWrapper = ['\n//<![CDATA[\n', '\n//]]>\n'];
 	}
 
@@ -1758,22 +1761,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	FastProto.on_html_doctype = function(exps) {
 	  var type = exps[2];
 
+	  var html = '<!DOCTYPE html>';
+
 	  var XHTML_DOCTYPES = {
 	    '1.1'          : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
-	    '5'            : '<!DOCTYPE html>',
-	    'html'         : '<!DOCTYPE html>',
-	    'strict'       : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
-	    'frameset'     : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
+	    '5'            : html,
+	    'html'         : html,
 	    'basic'        : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">',
-	    'transitional' : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-	    'svg'          : '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
+	    'frameset'     : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
+	    'strict'       : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
+	    'svg'          : '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
+	    'transitional' : '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
 	  };
 
 	  var HTML_DOCTYPES = {
-	    '5'            : '<!DOCTYPE html>',
-	    'html'         : '<!DOCTYPE html>',
-	    'strict'       : '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
+	    '5'            : html,
+	    'html'         : html,
 	    'frameset'     : '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">',
+	    'strict'       : '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
 	    'transitional' : '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
 	  };
 
