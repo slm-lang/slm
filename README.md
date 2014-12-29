@@ -1,13 +1,13 @@
 # Slm
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/slm-lang/slm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 Slm is a template language for js. Port of [Slim](http://slim-lang.com/) but slimmer :)
 
 [![Build Status](https://img.shields.io/travis/slm-lang/slm/master.svg)](https://travis-ci.org/slm-lang/slm)
 [![Dependency Status](https://img.shields.io/gemnasium/slm-lang/slm.svg)](https://gemnasium.com/slm-lang/slm)
 [![NPM version](https://badge.fury.io/js/slm.svg)](http://badge.fury.io/js/slm)
 [![Code Climate](https://codeclimate.com/github/slm-lang/slm/badges/gpa.svg)](https://codeclimate.com/github/slm-lang/slm)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/slm-lang/slm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 ## A little bit of history
 
@@ -150,7 +150,7 @@ The single dot tells Slm to copy the line (similar to `|`), but makes sure that 
 
 ### Inline html `<` (HTML style)
 
-You can write html tags directly in Slim which allows you to write your templates in a more html like style with closing tags or mix html and Slim style.
+You can write html tags directly in Slm which allows you to write your templates in a more html like style with closing tags or mix html and Slm style.
 
     <html>
       head
@@ -375,7 +375,7 @@ You may use spaces around the wrappers and assignments:
 
 Example:
 
-    a href="http://slm-lang.com" title='Slim Homepage' Goto the Slim homepage
+    a href="http://slm-lang.com" title='Slm Homepage' Goto the slm homepage
 
 You can use text interpolation in the quoted attributes:
 
@@ -432,7 +432,7 @@ This renders as
 
 You can also use an `Array` as attribute value and the array elements will be merged using the delimiter.
 
-    a class=["menu","highlight"]
+    a class=['menu','highlight']
     a class='menu','highlight'
 
 ## Text interpolation
