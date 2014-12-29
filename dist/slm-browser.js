@@ -355,7 +355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	ParserProto._sliceLine = function(beginSlice) {
-	  return this._line = this._line.slice(beginSlice);
+	  this._line = this._line.slice(beginSlice);
 	};
 
 	ParserProto._nextLine = function() {
