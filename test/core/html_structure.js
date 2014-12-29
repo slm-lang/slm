@@ -482,32 +482,40 @@ lab.experiment('Html structure', function() {
     Ctx.cache = {};
 
     var ctx = new Ctx();
-    ctx.filename = 'script';
+    var compileOptions = {
+      basePath: '/',
+      filename: '/layout.slm'
+    };
 
-    Ctx.cache['layout.slm'] = template.exec([
+    Ctx.cache[compileOptions.filename] = template.exec([
       'html',
       '  head',
       '    = content("head")',
       '  body',
       '    = content()'
-    ].join('\n'), {}, ctx);
+    ].join('\n'), compileOptions, ctx);
 
-    Ctx.cache['partialLayout.slm'] = template.exec([
+    compileOptions.filename = '/partialLayout.slm';
+    Ctx.cache[compileOptions.filename] = template.exec([
       'p Partial Layout',
       '= content()'
-    ].join('\n'), {}, ctx);
+    ].join('\n'), compileOptions, ctx);
 
-    Ctx.cache['partialWorld.slm'] = template.exec([
+    compileOptions.filename = '/partialWorld.slm';
+    Ctx.cache[compileOptions.filename] = template.exec([
       '- extend("partialLayout")',
       '- if this.what',
       '  strong The partial is ${this.what}',
       '= content("partial.override")',
       '= content()'
-    ].join('\n'), {}, ctx);
+    ].join('\n'), compileOptions, ctx);
+
+
+    compileOptions.filename = '/script';
 
     var src = [
       '- extend("layout")',
-      '= content("head");',
+      '= content("head")',
       '  meta name="keywords" content=this.who',
       'p Hello, ${this.who}',
       '= partial("partial" + this.who, {what: this.what})',
@@ -517,7 +525,7 @@ lab.experiment('Html structure', function() {
     ].join('\n');
 
 
-    var result = template.eval(src, {who: 'World', what: 'the best'}, {}, ctx);
+    var result = template.eval(src, {who: 'World', what: 'the best'}, compileOptions, ctx);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p><p>Partial Layout</p><strong>The partial is the best</strong><p>nice</p><strong>super!!! World</strong></body></html>');
     done();
   });

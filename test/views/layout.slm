@@ -1,0 +1,15 @@
+!doctype html
+html
+  head
+    = default 'head'
+      title Default Title
+  body
+    = default 'footer'
+      p This is default footer
+
+
+= append 'head'
+  title Nice
+
+= append 'footer'
+  p This is new footer
