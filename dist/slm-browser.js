@@ -89,7 +89,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function Template(runtime) {
 	  this.rt = runtime;
-	  this.Ctx = runtime.Ctx;
 	  this._engine = new Engine();
 	  this.Embeddeds = Embeddeds;
 

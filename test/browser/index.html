@@ -18,10 +18,8 @@
 <script>
 var input = document.getElementById('input');
 var output = document.getElementById('output');
-var js = document.getElementById('js');
 setInterval(function () {
   output.textContent = Slm.eval(input.value, {myName: 'Forbes Lindesay'});
-  js.textContent = Slm.compile(input.value).toStrong();
 }, 500);
 </script>
 </body>
