@@ -13,7 +13,7 @@ lab.experiment('VMNode', function() {
     fixture.template = new Template(require('../../lib/vm_node'));
     fixture.VM = fixture.template.VM;
     fixture.vm = new fixture.VM();
-    fixture.VM.cache = {};
+    fixture.vm.resetCache();
     done();
   });
 
@@ -23,13 +23,13 @@ lab.experiment('VMNode', function() {
       };
 
       compileOptions.filename = '/layout.slm';
-      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.vm.cache(compileOptions.filename, fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.vm);
+        ].join('\n'), compileOptions, fixture.vm));
 
       compileOptions.filename = '/view.slm';
       var src = [
@@ -51,13 +51,13 @@ lab.experiment('VMNode', function() {
       };
 
       compileOptions.filename = '/views/layout.slm';
-      fixture.VM.cache['/views/layout.slm'] = fixture.template.exec([
+      fixture.vm.cache('/views/layout.slm', fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.vm);
+        ].join('\n'), compileOptions, fixture.vm));
 
       compileOptions.filename = '/views/view';
       var src = [
@@ -78,13 +78,13 @@ lab.experiment('VMNode', function() {
       };
 
       compileOptions.filename = '/views/layout.slm';
-      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.vm.cache(compileOptions.filename, fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), {}, fixture.vm);
+        ].join('\n'), {}, fixture.vm));
 
       compileOptions.filename = '/views/view.slm';
 
@@ -105,19 +105,19 @@ lab.experiment('VMNode', function() {
         basePath: '/views'
       };
       compileOptions.filename = '/views/layouts/app.slm';
-      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.vm.cache(compileOptions.filename, fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.vm);
+        ].join('\n'), compileOptions, fixture.vm));
 
       compileOptions.filename = '/views/products/form.slm';
-      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.vm.cache(compileOptions.filename, fixture.template.exec([
         'form',
         '  input type="submit"'
-        ].join('\n'), compileOptions, fixture.vm);
+        ].join('\n'), compileOptions, fixture.vm));
 
       compileOptions.filename = '/views/products/new.slm';
 
@@ -151,7 +151,6 @@ lab.experiment('VMNode', function() {
       done();
   });
 
-
   lab.test('test content default', function(done) {
       var compileOptions = {
         basePath: '/views'
@@ -159,14 +158,14 @@ lab.experiment('VMNode', function() {
 
       compileOptions.filename = '/views/layouts/app.slm';
 
-      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.vm.cache(compileOptions.filename, fixture.template.exec([
         'html',
         '  head',
         '    = content("title", "default")',
         '      title Default title',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.vm);
+        ].join('\n'), compileOptions, fixture.vm));
 
       compileOptions.filename = '/views/forms/form.slm';
       var src = [
@@ -196,13 +195,13 @@ lab.experiment('VMNode', function() {
 
       compileOptions.filename = '/views/layouts/app.slm';
 
-      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.vm.cache(compileOptions.filename, fixture.template.exec([
         'html',
         '  head',
         '    = content("title")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.vm);
+        ].join('\n'), compileOptions, fixture.vm));
 
       compileOptions.filename = '/views/forms/form.slm';
       var src = [

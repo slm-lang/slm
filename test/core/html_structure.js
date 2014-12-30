@@ -496,36 +496,36 @@ lab.experiment('Html structure', function() {
 
   lab.test('test context', function(done) {
     var VM = template.VM;
-    VM.cache = {};
-
     var vm = new VM();
+    vm.resetCache();
+
     var compileOptions = {
       basePath: '/',
       filename: '/layout.slm'
     };
 
-    VM.cache[compileOptions.filename] = template.exec([
+    vm.cache(compileOptions.filename, template.exec([
       'html',
       '  head',
       '    = content("head")',
       '  body',
       '    = content()'
-    ].join('\n'), compileOptions, vm);
+    ].join('\n'), compileOptions, vm));
 
     compileOptions.filename = '/partialLayout.slm';
-    VM.cache[compileOptions.filename] = template.exec([
+    vm.cache(compileOptions.filename, template.exec([
       'p Partial Layout',
       '= content()'
-    ].join('\n'), compileOptions, vm);
+    ].join('\n'), compileOptions, vm));
 
     compileOptions.filename = '/partialWorld.slm';
-    VM.cache[compileOptions.filename] = template.exec([
+    vm.cache(compileOptions.filename, template.exec([
       '- extend("partialLayout")',
       '- if this.what',
       '  strong The partial is ${this.what}',
       '= content("partial.override")',
       '= content()'
-    ].join('\n'), compileOptions, vm);
+    ].join('\n'), compileOptions, vm));
 
 
     compileOptions.filename = '/script';

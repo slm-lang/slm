@@ -66,7 +66,7 @@ gulp.task('vm', function() {
   .pipe($.webpack({
       output: {
         filename: 'slm-vm-browser.js',
-        library: 'Ctx',
+        library: 'SlmVM',
         libraryTarget: 'umd'
       }
   }))
