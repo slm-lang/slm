@@ -26,18 +26,15 @@ lab.experiment('Ctx', function() {
       fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
-        '    - console.log(0)',
         '    = content("head")',
         '  body',
         '    = content()'
         ].join('\n'), compileOptions, fixture.ctx);
 
-      compileOptions.filename = "/view.slm";
+      compileOptions.filename = '/view.slm';
       var src = [
         '- extend("layout")',
-        '- console.log(1)',
         '= content("head")',
-        '  - console.log(2)',
         '  meta name="keywords" content=this.who',
         'p Hello, ${this.who}'
       ].join('\n');
@@ -107,10 +104,6 @@ lab.experiment('Ctx', function() {
       var compileOptions = {
         basePath: '/views'
       };
-
-      console.log('!!!!!!!!!!!!!!!!!!!!', fixture.ctx);
-
-
       compileOptions.filename = '/views/layouts/app.slm';
       fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'html',
