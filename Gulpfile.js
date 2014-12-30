@@ -11,7 +11,7 @@ gulp.task('test', function(cb) {
   });
 });
 
-gulp.task('build', ['browser', 'runtime']);
+gulp.task('build', ['browser', 'vm']);
 
 gulp.task('browser', function() {
   var vars = [], varsMap = {};
@@ -36,7 +36,6 @@ gulp.task('browser', function() {
         libraryTarget: 'umd'
       }
   }))
-  .pipe($.concat('slm-browser.js'))
   .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
   .pipe($.replace( /\._(\w+)/g, replacePrivate))
@@ -49,7 +48,7 @@ gulp.task('browser', function() {
   .pipe(gulp.dest('dist'));
 });
 
-gulp.task('runtime', function() {
+gulp.task('vm', function() {
   var vars = [];
   var varsMap = {};
 
@@ -63,20 +62,19 @@ gulp.task('runtime', function() {
     return map;
   };
 
-  gulp.src('lib/runtime.js')
+  gulp.src('lib/vm_browser.js')
   .pipe($.webpack({
       output: {
-        filename: 'slm-runtime.js',
+        filename: 'slm-vm-browser.js',
         library: 'Ctx',
         libraryTarget: 'umd'
       }
   }))
-  .pipe($.concat('slm-runtime.js'))
   .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
   .pipe($.replace( /\._(\w+)/g, replacePrivate))
   .pipe($.uglify())
-  .pipe($.concat('slm-runtime.min.js'))
+  .pipe($.concat('slm-vm-browser.min.js'))
   .pipe($.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
   .pipe($.gzip())
