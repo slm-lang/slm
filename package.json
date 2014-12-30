@@ -5,7 +5,7 @@
   "main": "lib/slm.js",
   "browser": "lib/slm_browser.js",
   "scripts": {
-    "test": "node_modules/lab/bin/lab -v -t 90 -l"
+    "test": "node_modules/lab/bin/lab -v -t 95 -l -L"
   },
   "keywords": [
     "template",

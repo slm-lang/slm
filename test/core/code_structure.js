@@ -190,7 +190,7 @@ lab.experiment('Code structure', function() {
       ].join('\n');
     assert.throw(function() {
       template.eval(src, {}, {});
-    }, "Missing open brace \"(\" in `this.block)`");
+    }, 'Missing open brace \"(\" in `this.block)`');
 
     done();
   });

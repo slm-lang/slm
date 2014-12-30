@@ -22,7 +22,7 @@ lab.experiment('Ctx', function() {
         basePath: '/'
       };
 
-      compileOptions.filename = '/layout.slm',
+      compileOptions.filename = '/layout.slm';
       fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
@@ -184,8 +184,8 @@ lab.experiment('Ctx', function() {
         'p Body from view'
       ].join('\n');
 
-      var result = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
-      assert.deepEqual(result, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
+      result2 = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
+      assert.deepEqual(result2, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
       done();
   });
 
@@ -222,8 +222,8 @@ lab.experiment('Ctx', function() {
         'p Body from view'
       ].join('\n');
 
-      var result = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
-      assert.deepEqual(result, '<html><head><title>2</title></head><body><p>Body from view</p></body></html>');
+      var result2 = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
+      assert.deepEqual(result2, '<html><head><title>2</title></head><body><p>Body from view</p></body></html>');
       done();
   });
 });

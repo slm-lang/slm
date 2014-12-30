@@ -480,7 +480,7 @@ lab.experiment('Html structure', function() {
 
   lab.test('leading whitespace indicator on tag', function(done) {
     assertHtml(template, [
-      'p< text',
+      'p< text'
     ],
     ' <p>text</p>',
     {}, done);
@@ -488,14 +488,14 @@ lab.experiment('Html structure', function() {
 
   lab.test('trailing whitespace indicator on tag', function(done) {
     assertHtml(template, [
-      'p> text',
+      'p> text'
     ],
     '<p>text</p> ',
     {}, done);
   });
 
   lab.test('test context', function(done) {
-    var Ctx = template.rt.Ctx
+    var Ctx = template.rt.Ctx;
     Ctx.cache = {};
 
     var ctx = new Ctx();
