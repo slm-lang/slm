@@ -27,6 +27,22 @@ lab.experiment('Code output', function() {
       '  =. this.helloWorld'
       ],
       '<p>Hello World from @env </p>',
+      {});
+
+    assertHtml(template, [
+      'p',
+      '  => this.helloWorld'
+      ],
+      '<p>Hello World from @env </p>',
+      {}, done);
+  });
+
+  lab.test('render with leading whitespace', function(done) {
+    assertHtml(template, [
+      'p',
+      '  =< this.helloWorld'
+      ],
+      '<p> Hello World from @env</p>',
       {}, done);
   });
 
