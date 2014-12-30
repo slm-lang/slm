@@ -5,15 +5,15 @@ var assertHtml = require('../helper').assertHtml;
 
 var lab = exports.lab = Lab.script();
 
-lab.experiment('Ctx', function() {
+lab.experiment('VMNode', function() {
   var fixture = {};
 
   lab.before(function(done) {
     fixture = {};
-    fixture.template = new Template(require('../../lib/runtime_node'));
-    fixture.Ctx = fixture.template.rt.Ctx;
-    fixture.ctx = new fixture.Ctx();
-    fixture.Ctx.cache = {};
+    fixture.template = new Template(require('../../lib/vm_node'));
+    fixture.VM = fixture.template.VM;
+    fixture.vm = new fixture.VM();
+    fixture.VM.cache = {};
     done();
   });
 
@@ -23,13 +23,13 @@ lab.experiment('Ctx', function() {
       };
 
       compileOptions.filename = '/layout.slm';
-      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.ctx);
+        ].join('\n'), compileOptions, fixture.vm);
 
       compileOptions.filename = '/view.slm';
       var src = [
@@ -40,7 +40,7 @@ lab.experiment('Ctx', function() {
       ].join('\n');
 
 
-      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.ctx);
+      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.vm);
       assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
       done();
   });
@@ -51,13 +51,13 @@ lab.experiment('Ctx', function() {
       };
 
       compileOptions.filename = '/views/layout.slm';
-      fixture.Ctx.cache['/views/layout.slm'] = fixture.template.exec([
+      fixture.VM.cache['/views/layout.slm'] = fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.ctx);
+        ].join('\n'), compileOptions, fixture.vm);
 
       compileOptions.filename = '/views/view';
       var src = [
@@ -67,7 +67,7 @@ lab.experiment('Ctx', function() {
         'p Hello, ${this.who}'
       ].join('\n');
 
-      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.ctx);
+      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.vm);
       assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
       done();
   });
@@ -78,13 +78,13 @@ lab.experiment('Ctx', function() {
       };
 
       compileOptions.filename = '/views/layout.slm';
-      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), {}, fixture.ctx);
+        ].join('\n'), {}, fixture.vm);
 
       compileOptions.filename = '/views/view.slm';
 
@@ -95,7 +95,7 @@ lab.experiment('Ctx', function() {
         'p Hello, ${this.who}'
       ].join('\n');
 
-      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.ctx);
+      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.vm);
       assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
       done();
   });
@@ -105,19 +105,19 @@ lab.experiment('Ctx', function() {
         basePath: '/views'
       };
       compileOptions.filename = '/views/layouts/app.slm';
-      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.ctx);
+        ].join('\n'), compileOptions, fixture.vm);
 
       compileOptions.filename = '/views/products/form.slm';
-      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
         'form',
         '  input type="submit"'
-        ].join('\n'), compileOptions, fixture.ctx);
+        ].join('\n'), compileOptions, fixture.vm);
 
       compileOptions.filename = '/views/products/new.slm';
 
@@ -128,7 +128,7 @@ lab.experiment('Ctx', function() {
         '= partial("form", this)'
       ].join('\n');
 
-      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.ctx);
+      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.vm);
       assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><form><input type="submit" /></form></body></html>');
       done();
   });
@@ -145,7 +145,7 @@ lab.experiment('Ctx', function() {
         'p = p.extname("super.slm")'
       ].join('\n');
 
-      var result = fixture.template.eval(src, {}, compileOptions, fixture.ctx);
+      var result = fixture.template.eval(src, {}, compileOptions, fixture.vm);
       assert.deepEqual(result, '<p>.slm</p>');
 
       done();
@@ -159,14 +159,14 @@ lab.experiment('Ctx', function() {
 
       compileOptions.filename = '/views/layouts/app.slm';
 
-      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
         '    = content("title", "default")',
         '      title Default title',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.ctx);
+        ].join('\n'), compileOptions, fixture.vm);
 
       compileOptions.filename = '/views/forms/form.slm';
       var src = [
@@ -174,7 +174,7 @@ lab.experiment('Ctx', function() {
         'p Body from view'
       ].join('\n');
 
-      var result = fixture.template.eval(src, {}, compileOptions, fixture.ctx);
+      var result = fixture.template.eval(src, {}, compileOptions, fixture.vm);
       assert.deepEqual(result, '<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
 
       var src2 = [
@@ -184,7 +184,7 @@ lab.experiment('Ctx', function() {
         'p Body from view'
       ].join('\n');
 
-      result2 = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
+      result2 = fixture.template.eval(src2, {}, compileOptions, fixture.vm);
       assert.deepEqual(result2, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
       done();
   });
@@ -196,13 +196,13 @@ lab.experiment('Ctx', function() {
 
       compileOptions.filename = '/views/layouts/app.slm';
 
-      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
+      fixture.VM.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
         '    = content("title")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, fixture.ctx);
+        ].join('\n'), compileOptions, fixture.vm);
 
       compileOptions.filename = '/views/forms/form.slm';
       var src = [
@@ -212,7 +212,7 @@ lab.experiment('Ctx', function() {
         'p Body from view'
       ].join('\n');
 
-      var result = fixture.template.eval(src, {}, compileOptions, fixture.ctx);
+      var result = fixture.template.eval(src, {}, compileOptions, fixture.vm);
       assert.deepEqual(result, '<html><head><title>1</title></head><body><p>Body from view</p></body></html>');
 
       var src2 = [
@@ -222,7 +222,7 @@ lab.experiment('Ctx', function() {
         'p Body from view'
       ].join('\n');
 
-      var result2 = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
+      var result2 = fixture.template.eval(src2, {}, compileOptions, fixture.vm);
       assert.deepEqual(result2, '<html><head><title>2</title></head><body><p>Body from view</p></body></html>');
       done();
   });

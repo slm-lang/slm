@@ -8,7 +8,7 @@ var lab = exports.lab = Lab.script();
 lab.experiment('Code structure', function() {
   var template;
   lab.before(function(done) {
-    template = new Template(require('../../lib/runtime_node'));
+    template = new Template(require('../../lib/vm_node'));
     done();
   });
 
@@ -77,7 +77,6 @@ lab.experiment('Code structure', function() {
   lab.test('render with case', function(done) {
     assertHtml(template, [
       '- var url = require("url")',
-      '- console.log(url.format({protocol: "http"}))',
       'p',
       '  - switch(42)',
       '    - case 41:',

@@ -10,7 +10,7 @@ lab.experiment('Html structure', function() {
   var template;
 
   lab.before(function(done) {
-    template = new Template(require('../../lib/runtime_node'));
+    template = new Template(require('../../lib/vm_node'));
     done();
   });
 
@@ -495,37 +495,37 @@ lab.experiment('Html structure', function() {
   });
 
   lab.test('test context', function(done) {
-    var Ctx = template.rt.Ctx;
-    Ctx.cache = {};
+    var VM = template.VM;
+    VM.cache = {};
 
-    var ctx = new Ctx();
+    var vm = new VM();
     var compileOptions = {
       basePath: '/',
       filename: '/layout.slm'
     };
 
-    Ctx.cache[compileOptions.filename] = template.exec([
+    VM.cache[compileOptions.filename] = template.exec([
       'html',
       '  head',
       '    = content("head")',
       '  body',
       '    = content()'
-    ].join('\n'), compileOptions, ctx);
+    ].join('\n'), compileOptions, vm);
 
     compileOptions.filename = '/partialLayout.slm';
-    Ctx.cache[compileOptions.filename] = template.exec([
+    VM.cache[compileOptions.filename] = template.exec([
       'p Partial Layout',
       '= content()'
-    ].join('\n'), compileOptions, ctx);
+    ].join('\n'), compileOptions, vm);
 
     compileOptions.filename = '/partialWorld.slm';
-    Ctx.cache[compileOptions.filename] = template.exec([
+    VM.cache[compileOptions.filename] = template.exec([
       '- extend("partialLayout")',
       '- if this.what',
       '  strong The partial is ${this.what}',
       '= content("partial.override")',
       '= content()'
-    ].join('\n'), compileOptions, ctx);
+    ].join('\n'), compileOptions, vm);
 
 
     compileOptions.filename = '/script';
@@ -542,7 +542,7 @@ lab.experiment('Html structure', function() {
     ].join('\n');
 
 
-    var result = template.eval(src, {who: 'World', what: 'the best'}, compileOptions, ctx);
+    var result = template.eval(src, {who: 'World', what: 'the best'}, compileOptions, vm);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p><p>Partial Layout</p><strong>The partial is the best</strong><p>nice</p><strong>super!!! World</strong></body></html>');
     done();
   });

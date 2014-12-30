@@ -1,5 +1,5 @@
 var Lab = require('lab');
-var Runtime = require('../lib/runtime');
+var VM = require('../lib/vm');
 
 var assert  = require('chai').assert;
 
@@ -27,7 +27,7 @@ exports.assertHtml = function(template, src, result, options, callback) {
       return this.helloWorld + ' ' + callback() + ' ' + this.helloWorld;
     },
     block: function(callback) {
-      return Runtime.safe(callback());
+      return VM.safe(callback());
     },
     content: function() {
       switch (arguments.length) {

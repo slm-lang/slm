@@ -8,7 +8,7 @@ var lab = exports.lab = Lab.script();
 lab.experiment('Embedded engines', function() {
   var template;
   lab.before(function(done) {
-    template = new Template(require('../../lib/runtime_node'));
+    template = new Template(require('../../lib/vm_node'));
     template.registerEmbeddedFunction('customEngine', function(body) {
       return '<pre>' + body + '</pre>';
     });

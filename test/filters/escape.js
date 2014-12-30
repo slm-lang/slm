@@ -23,7 +23,7 @@ lab.experiment('Escape', function() {
       ]),
       ['multi',
         ['static', 'a &lt; b'],
-        ['dynamic', 'rt.escape(this.jsMethod())']
+        ['dynamic', 'vm.escape(this.jsMethod())']
       ]
     );
     done();
