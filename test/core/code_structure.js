@@ -207,9 +207,11 @@ lab.experiment('Code structure', function() {
       '= content("head")',
         'title title2',
       'p After 4',
-      '= content("head")'
+      '= content("head")',
+      '= content(false)',
+      '  p Not captured'
       ],
-      '<p>After 1</p><p>After 2</p><title>title1</title><p>After 3</p><title>title2</title><p>After 4</p>',
+      '<p>After 1</p><p>After 2</p><title>title1</title><p>After 3</p><title>title2</title><p>After 4</p><p>Not captured</p>',
       {}, done);
   });
 });
