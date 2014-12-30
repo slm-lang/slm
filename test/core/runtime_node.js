@@ -6,64 +6,63 @@ var assertHtml = require('../helper').assertHtml;
 var lab = exports.lab = Lab.script();
 
 lab.experiment('Ctx', function() {
-  var template;
+  var fixture = {};
+
   lab.before(function(done) {
-    template = new Template(require('../../lib/runtime_node'));
+    fixture = {};
+    fixture.template = new Template(require('../../lib/runtime_node'));
+    fixture.Ctx = fixture.template.rt.Ctx;
+    fixture.ctx = new fixture.Ctx();
+    fixture.Ctx.cache = {};
     done();
   });
 
   lab.test('extend with same path', function(done) {
-      template.rt.Ctx.cache = {};
-      var ctx = new template.rt.Ctx();
-
       var compileOptions = {
-        filename: "/layout.slm",
-        basePath: "/"
+        basePath: '/'
       };
 
-      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
+      compileOptions.filename = '/layout.slm',
+      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
+        '    - console.log(0)',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, ctx);
+        ].join('\n'), compileOptions, fixture.ctx);
 
       compileOptions.filename = "/view.slm";
-
       var src = [
         '- extend("layout")',
+        '- console.log(1)',
         '= content("head")',
+        '  - console.log(2)',
         '  meta name="keywords" content=this.who',
         'p Hello, ${this.who}'
       ].join('\n');
 
 
-      var result = template.eval(src, {who: 'World', what: 'the best'}, compileOptions, ctx);
+      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.ctx);
       assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
       done();
   });
 
   lab.test('extend with abs path', function(done) {
-      template.rt.Ctx.cache = {};
-
       var compileOptions = {
-        filename: '/views/layout.slm',
         basePath: '/views'
-      }
+      };
 
-      var ctx = new template.rt.Ctx();
-
-      template.rt.Ctx.cache['/views/layout.slm'] = template.exec([
+      compileOptions.filename = '/views/layout.slm';
+      fixture.Ctx.cache['/views/layout.slm'] = fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, ctx);
+        ].join('\n'), compileOptions, fixture.ctx);
 
       compileOptions.filename = '/views/view';
-
       var src = [
         '- extend("/layout")',
         '= content("head");',
@@ -71,27 +70,24 @@ lab.experiment('Ctx', function() {
         'p Hello, ${this.who}'
       ].join('\n');
 
-      var result = template.eval(src, {who: 'World', what: 'the best'}, compileOptions, ctx);
+      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.ctx);
       assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
       done();
   });
 
   lab.test('extend with same nested path', function(done) {
-      template.rt.Ctx.cache = {};
-      var ctx = new template.rt.Ctx();
-
       var compileOptions = {
-        filename: '/views/layout.slm',
         basePath: '/'
       };
 
-      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
+      compileOptions.filename = '/views/layout.slm';
+      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), {}, ctx);
+        ].join('\n'), {}, fixture.ctx);
 
       compileOptions.filename = '/views/view.slm';
 
@@ -102,35 +98,33 @@ lab.experiment('Ctx', function() {
         'p Hello, ${this.who}'
       ].join('\n');
 
-      var result = template.eval(src, {who: 'World', what: 'the best'}, compileOptions, ctx);
+      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.ctx);
       assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
       done();
   });
 
   lab.test('extend with same nested path 2', function(done) {
-      template.rt.Ctx.cache = {};
-
       var compileOptions = {
-        filename: '/views/layouts/app.slm',
         basePath: '/views'
       };
 
-      var ctx = new template.rt.Ctx();
+      console.log('!!!!!!!!!!!!!!!!!!!!', fixture.ctx);
 
-      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
+
+      compileOptions.filename = '/views/layouts/app.slm';
+      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
         '    = content("head")',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, ctx);
+        ].join('\n'), compileOptions, fixture.ctx);
 
       compileOptions.filename = '/views/products/form.slm';
-
-      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
+      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'form',
         '  input type="submit"'
-        ].join('\n'), compileOptions, ctx);
+        ].join('\n'), compileOptions, fixture.ctx);
 
       compileOptions.filename = '/views/products/new.slm';
 
@@ -141,79 +135,53 @@ lab.experiment('Ctx', function() {
         '= partial("form", this)'
       ].join('\n');
 
-      var result = template.eval(src, {who: 'World', what: 'the best'}, compileOptions, ctx);
+      var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, compileOptions, fixture.ctx);
       assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><form><input type="submit" /></form></body></html>');
       done();
   });
 
   lab.test('test require', function(done) {
-      template.rt.Ctx.cache = {};
-
       var compileOptions = {
-        filename: '/views/layouts/app.slm',
-        basePath: '/views'
-      }
-
-      var ctx = new template.rt.Ctx();
-
-      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
-        'html',
-        '  head',
-        '    = defaultContent("title")',
-        '      title Default title',
-        '  body',
-        '    = content()'
-        ].join('\n'), compileOptions, ctx);
+        basePath: '/views',
+        require: module.require
+      };
 
       compileOptions.filename = '/views/forms/form.slm';
-
       var src = [
-        '- extend("../layouts/app")',
-        'p Body from view'
+        '- var p = require("path")',
+        'p = p.extname("super.slm")'
       ].join('\n');
 
-      var result = template.eval(src, {}, compileOptions, ctx);
-      assert.deepEqual(result, '<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
+      var result = fixture.template.eval(src, {}, compileOptions, fixture.ctx);
+      assert.deepEqual(result, '<p>.slm</p>');
 
-      var src2 = [
-        '- extend("../layouts/app")',
-        '= content("title")',
-        '  title New title',
-        'p Body from view'
-      ].join('\n');
-
-      var result = template.eval(src2, {}, compileOptions, ctx);
-      assert.deepEqual(result, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
       done();
   });
 
-  lab.test('test defaultContent', function(done) {
-      template.rt.Ctx.cache = {};
 
+  lab.test('test predefined', function(done) {
       var compileOptions = {
-        filename: '/views/layouts/app.slm',
         basePath: '/views'
-      }
+      };
 
-      var ctx = new template.rt.Ctx();
+      compileOptions.filename = '/views/layouts/app.slm';
 
-      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
+      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
-        '    = defaultContent("title")',
+        '    = predefined("title")',
         '      title Default title',
         '  body',
         '    = content()'
-        ].join('\n'), compileOptions, ctx);
+        ].join('\n'), compileOptions, fixture.ctx);
 
       compileOptions.filename = '/views/forms/form.slm';
-
       var src = [
         '- extend("../layouts/app")',
         'p Body from view'
       ].join('\n');
 
-      var result = template.eval(src, {}, compileOptions, ctx);
+      var result = fixture.template.eval(src, {}, compileOptions, fixture.ctx);
       assert.deepEqual(result, '<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
 
       var src2 = [
@@ -223,48 +191,7 @@ lab.experiment('Ctx', function() {
         'p Body from view'
       ].join('\n');
 
-      var result = template.eval(src2, {}, compileOptions, ctx);
-      assert.deepEqual(result, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
-      done();
-  });
-
-  lab.test('test defaultContent', function(done) {
-      template.rt.Ctx.cache = {};
-
-      var compileOptions = {
-        filename: '/views/layouts/app.slm',
-        basePath: '/views'
-      }
-
-      var ctx = new template.rt.Ctx();
-
-      template.rt.Ctx.cache[compileOptions.filename] = template.exec([
-        'html',
-        '  head',
-        '    = defaultContent("title")',
-        '      title Default title',
-        '  body',
-        '    = content()'
-        ].join('\n'), compileOptions, ctx);
-
-      compileOptions.filename = '/views/forms/form.slm';
-
-      var src = [
-        '- extend("../layouts/app")',
-        'p Body from view'
-      ].join('\n');
-
-      var result = template.eval(src, {}, compileOptions, ctx);
-      assert.deepEqual(result, '<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
-
-      var src2 = [
-        '- extend("../layouts/app")',
-        '= content("title")',
-        '  title New title',
-        'p Body from view'
-      ].join('\n');
-
-      var result = template.eval(src2, {}, compileOptions, ctx);
+      var result = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
       assert.deepEqual(result, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
       done();
   });
