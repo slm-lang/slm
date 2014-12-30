@@ -67,7 +67,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	SafeStr.prototype.toString = function() {
 	  return this._val;
-	}
+	};
 
 	function safe(val) {
 	  if (!val || val.htmlSafe) {
@@ -188,11 +188,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	CtxProto.content = function() {
 	  switch(arguments.length) {
-	    case 0:
+	    case 0: // return main content
 	      return safe(this.res);
-	    case 1:
+	    case 1: // return named content
 	      return safe(this._contents[arguments[0]] || '');
-	    case 2:
+	    case 2: // capture named content
 	      var name = arguments[0], cb = arguments[1];
 	      if (name) {
 	        // capturing block
@@ -200,7 +200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return '';
 	      }
 	      return cb.call(this.m);
-	    case 3:
+	    case 3: // content operations: default, append, prepend
 	      var name = arguments[0], mod = arguments[1], cb = arguments[2];
 	      var contents = this._contents[name] || '';
 	      switch (mod) {
