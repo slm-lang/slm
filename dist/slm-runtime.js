@@ -61,7 +61,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var quotRe = /"/g;
 
 	function SafeStr(val) {
-	  this.htmlSafe = true
+	  this.htmlSafe = true;
 	  this._val = val;
 	}
 
@@ -141,9 +141,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this._content = this.content.bind(this);
 	  this._extend = this.extend.bind(this);
 	  this._partial = this.partial.bind(this);
-	  this._defaultContent = this.defaultContent.bind(this);
-	  this._append = this.append.bind(this);
-	  this._prepend = this.prepend.bind(this);
 	};
 
 	/*
@@ -194,37 +191,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    case 0:
 	      return safe(this.res);
 	    case 1:
-	      return this._contents[arguments[0]] || '';
+	      return safe(this._contents[arguments[0]] || '');
 	    case 2:
 	      var name = arguments[0], cb = arguments[1];
 	      if (name) {
-	        // if content is already defined with return what we have
-	        //console.log(this._contents);
-	        //if (this._contents[name]) {
-	          //return this._contents[name];
-	        //}
 	        // capturing block
 	        this._contents[name] = cb.call(this.m);
 	        return '';
 	      }
 	      return cb.call(this.m);
+	    case 3:
+	      var name = arguments[0], mod = arguments[1], cb = arguments[2];
+	      var contents = this._contents[name] || '';
+	      switch (mod) {
+	        case 'default':
+	          return safe(contents || cb.call(this.m));
+	        case 'append':
+	          this._contents[name] = contents + cb.call(this.m);
+	          return '';
+	        case 'prepend':
+	          this._contents[name] = cb.call(this.m) + contents;
+	          return '';
+	      }
 	  }
-	};
-
-	CtxProto.defaultContent = function(name, cb) {
-	  return this._contents[name] || cb.call(this.m);
-	};
-
-	CtxProto.append = function(name, cb) {
-	  var contents = this._contents[name] || '';
-	  this._contents[name] = contents + cb.call(this.m);
-	  return '';
-	};
-
-	CtxProto.prepend = function(name, cb) {
-	  var contents = this._contents[name] || '';
-	  this._contents[name] = cb.call(this.m) + contents;
-	  return '';
 	};
 
 	module.exports = {

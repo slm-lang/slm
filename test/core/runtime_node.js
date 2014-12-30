@@ -159,7 +159,7 @@ lab.experiment('Ctx', function() {
   });
 
 
-  lab.test('test predefined', function(done) {
+  lab.test('test content default', function(done) {
       var compileOptions = {
         basePath: '/views'
       };
@@ -169,7 +169,7 @@ lab.experiment('Ctx', function() {
       fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
         'html',
         '  head',
-        '    = predefined("title")',
+        '    = content("title", "default")',
         '      title Default title',
         '  body',
         '    = content()'
@@ -193,6 +193,44 @@ lab.experiment('Ctx', function() {
 
       var result = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
       assert.deepEqual(result, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
+      done();
+  });
+
+  lab.test('test content append', function(done) {
+      var compileOptions = {
+        basePath: '/views'
+      };
+
+      compileOptions.filename = '/views/layouts/app.slm';
+
+      fixture.Ctx.cache[compileOptions.filename] = fixture.template.exec([
+        'html',
+        '  head',
+        '    = content("title")',
+        '  body',
+        '    = content()'
+        ].join('\n'), compileOptions, fixture.ctx);
+
+      compileOptions.filename = '/views/forms/form.slm';
+      var src = [
+        '- extend("../layouts/app")',
+        '= content("title", "append")',
+        '  title 1',
+        'p Body from view'
+      ].join('\n');
+
+      var result = fixture.template.eval(src, {}, compileOptions, fixture.ctx);
+      assert.deepEqual(result, '<html><head><title>1</title></head><body><p>Body from view</p></body></html>');
+
+      var src2 = [
+        '- extend("../layouts/app")',
+        '= content("title", "prepend")',
+        '  title 2',
+        'p Body from view'
+      ].join('\n');
+
+      var result = fixture.template.eval(src2, {}, compileOptions, fixture.ctx);
+      assert.deepEqual(result, '<html><head><title>2</title></head><body><p>Body from view</p></body></html>');
       done();
   });
 });
