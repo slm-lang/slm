@@ -20,6 +20,14 @@ lab.experiment('Text interpolation', function() {
       {}, done);
   });
 
+  lab.test('nested interpolation in attribute', function(done) {
+    assertHtml(template, [
+      'p id="${"abc${1+1}" + "("}" = this.helloWorld'
+      ],
+      '<p id="abc${1+1}(">Hello World from @env</p>',
+      {}, done);
+  });
+
   lab.test('interpolation in text', function(done) {
     assertHtml(template, [
       'p',

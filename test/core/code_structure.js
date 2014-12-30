@@ -182,6 +182,19 @@ lab.experiment('Code structure', function() {
       {}, done);
   });
 
+  lab.test('detects missing brace', function(done) {
+    var src = [
+      '= this.block)',
+      '  p Block',
+      'p After'
+      ].join('\n');
+    assert.throw(function() {
+      template.eval(src, {}, {});
+    }, "Missing open brace \"(\" in `this.block)`");
+
+    done();
+  });
+
   lab.test('content', function(done) {
     assertHtml(template, [
       '= content()',
