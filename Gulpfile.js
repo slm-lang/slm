@@ -31,7 +31,7 @@ gulp.task('browser', function() {
   gulp.src('lib/slm_browser.js')
   .pipe($.webpack({
       output: {
-        filename: 'slm-borwser.js',
+        filename: 'slm-browser.js',
         library: 'Slm',
         libraryTarget: 'umd'
       }
