@@ -14,9 +14,9 @@ lab.experiment('String generator', function() {
 
 
   lab.test('compiles simple expressions', function(done) {
-    assert.deepEqual(generator.exec(['static', 'test']), 'var _b=\'\';\n_b+="test";');
-    assert.deepEqual(generator.exec(['dynamic', 'test']), 'var _b=\'\';\n_b+=test;');
-    assert.deepEqual(generator.exec(['code', 'test']), 'var _b=\'\';\ntest');
+    assert.deepEqual(generator.exec(['static', 'test']), 'var _b=\'\';_b+="test";');
+    assert.deepEqual(generator.exec(['dynamic', 'test']), 'var _b=\'\';_b+=test;');
+    assert.deepEqual(generator.exec(['code', 'test']), 'var _b=\'\';test');
     done();
   });
 
@@ -25,7 +25,7 @@ lab.experiment('String generator', function() {
                                     ['static', 'static'],
                                     ['dynamic', 'dynamic'],
                                     ['code', 'code']])
-    , 'var _b=\'\';\n_b+="static";\n_b+=dynamic;\ncode');
+    , 'var _b=\'\';_b+="static";\n_b+=dynamic;\ncode');
     done();
   });
 

@@ -18,8 +18,14 @@
 <script>
 var input = document.getElementById('input');
 var output = document.getElementById('output');
+var options = {filename: 'textarea.slm'};
+var oldContent = '';
 setInterval(function () {
-  output.textContent = Slm.eval(input.value, {name: 'yury'});
+    if (input.value == oldContent) {
+      return;
+    }
+    oldContent = input.value;
+    output.textContent = Slm.eval(input.value, {name: 'yury'}, options);
 }, 500);
 </script>
 </body>

@@ -94,6 +94,17 @@ lab.experiment('Code output', function() {
       {}, done);
   });
 
+  lab.test('render multi line code', function(done) {
+    assertHtml(template, [
+      '-  var niceX = function(x) {',
+      '-     return x + \'nice\';',
+      '-  }',
+      'p = niceX("Very ")',
+      ],
+      '<p>Very nice</p>',
+      {}, done);
+  });
+
   lab.test('render with comma end', function(done) {
     assertHtml(template, [
       'p = this.message("Hello",',
