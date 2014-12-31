@@ -22,7 +22,7 @@ lab.experiment('Parser errors', function() {
       '  div Invalid'
       ],
       'Unexpected indentation\n  test.slm, Line 2, Column 3\n    div Invalid\n    ^\n',
-      {file: 'test.slm'}, done);
+      {filename: 'test.slm'}, done);
   });
 
   lab.test('unexpected indentation', function(done) {
