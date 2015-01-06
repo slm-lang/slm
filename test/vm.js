@@ -3,7 +3,6 @@ var VM = require('../lib/vm');
 var assert  = require('chai').assert;
 
 var lab = exports.lab = Lab.script();
-var suite   = lab.experiment;
 
 lab.experiment('VM', function() {
 
