@@ -24,13 +24,6 @@ lab.experiment('Code output', function() {
   lab.test('render with trailing whitespace', function(done) {
     assertHtml(template, [
       'p',
-      '  =. this.helloWorld'
-      ],
-      '<p>Hello World from @env </p>',
-      {});
-
-    assertHtml(template, [
-      'p',
       '  => this.helloWorld'
       ],
       '<p>Hello World from @env </p>',
@@ -48,7 +41,7 @@ lab.experiment('Code output', function() {
 
   lab.test('render with trailing whitespace after tag', function(done) {
     assertHtml(template, [
-      'p=. this.helloWorld'
+      'p=> this.helloWorld'
       ],
       '<p>Hello World from @env</p> ',
       {}, done);
@@ -57,7 +50,7 @@ lab.experiment('Code output', function() {
   lab.test('no escape render with trailing whitespace', function(done) {
     assertHtml(template, [
       'p',
-      '  ==. this.helloWorld'
+      '  ==> this.helloWorld'
       ],
       '<p>Hello World from @env </p>',
       {}, done);
@@ -65,7 +58,7 @@ lab.experiment('Code output', function() {
 
   lab.test('no escape render with trailing whitespace after tag', function(done) {
     assertHtml(template, [
-      'p==. this.helloWorld'
+      'p==> this.helloWorld'
       ],
       '<p>Hello World from @env</p> ',
       {}, done);
@@ -73,7 +66,7 @@ lab.experiment('Code output', function() {
 
   lab.test('no escape render with trailing whitespace after tag', function(done) {
     assertHtml(template, [
-      'p==. this.helloWorld'
+      'p==> this.helloWorld'
       ],
       '<p>Hello World from @env</p> ',
       {}, done);
