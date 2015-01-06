@@ -54,10 +54,31 @@ lab.experiment('Html attribtues', function() {
   });
 
   lab.test('id attribute merging', function(done) {
-    assertHtml(template, [
+    var tmpl = new Template(require('../../lib/vm_node'), {mergeAttrs: {'id': '-'}});
+    assertHtml(tmpl, [
       '#alpha id="beta" Test it'
       ],
       '<div id="alpha-beta">Test it</div>',
+      {}, done);
+  });
+
+  lab.test('throws multiple id merge by default', function(done) {
+    assert.throws(function() {
+      assertHtml(template, [
+        '#alpha id="beta" Test it'
+        ],
+        '<div id="alpha-beta">Test it</div>',
+        {});
+    }, 'Multiple id attributes specified');
+    done();
+  });
+
+  lab.test('id attribute merging with array', function(done) {
+    var tmpl = new Template(require('../../lib/vm_node'), {mergeAttrs: {'id': '_'}});
+    assertHtml(tmpl, [
+      '#alpha id=["beta", "gamma"] Test it'
+      ],
+      '<div id="alpha_beta_gamma">Test it</div>',
       {}, done);
   });
 

@@ -245,7 +245,6 @@ lab.experiment('VMNode', function() {
     options.useCache = false;
     var fn3 = compile(src, options);
     var res3 = fn3({});
-
     var expected = '<!DOCTYPE html><html><head><title>Nice</title><style type="text/css">body {background :red};</style></head><body><h1>Partial</h1><p>This is new footer</p></body><script>console.log(\'script\');</script><script type="text/javascript">console.log(\'javascript\');</script></html>';
     assert.deepEqual(res1, expected);
     assert.deepEqual(res2, expected);
