@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var $ = require('gulp-load-plugins')();
+var _ = require('gulp-load-plugins')();
 
 gulp.task('default', ['test']);
 
@@ -29,22 +29,22 @@ gulp.task('browser', function() {
   };
 
   gulp.src('lib/slm_browser.js')
-  .pipe($.webpack({
+  .pipe(_.webpack({
       output: {
         filename: 'slm-browser.js',
         library: 'Slm',
         libraryTarget: 'umd'
       }
   }))
-  .pipe($.size({showFiles: true}))
+  .pipe(_.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
-  .pipe($.replace( /\._(\w+)/g, replacePrivate))
-  .pipe($.uglify())
-  .pipe($.concat('slm-browser.min.js'))
-  .pipe($.size({showFiles: true}))
+  .pipe(_.replace( /\._(\w+)/g, replacePrivate))
+  .pipe(_.uglify())
+  .pipe(_.concat('slm-browser.min.js'))
+  .pipe(_.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
-  .pipe($.gzip())
-  .pipe($.size({showFiles: true}))
+  .pipe(_.gzip())
+  .pipe(_.size({showFiles: true}))
   .pipe(gulp.dest('dist'));
 });
 
@@ -63,21 +63,21 @@ gulp.task('vm', function() {
   };
 
   gulp.src('lib/vm_browser.js')
-  .pipe($.webpack({
+  .pipe(_.webpack({
       output: {
         filename: 'slm-vm-browser.js',
         library: 'SlmVM',
         libraryTarget: 'umd'
       }
   }))
-  .pipe($.size({showFiles: true}))
+  .pipe(_.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
-  .pipe($.replace( /\._(\w+)/g, replacePrivate))
-  .pipe($.uglify())
-  .pipe($.concat('slm-vm-browser.min.js'))
-  .pipe($.size({showFiles: true}))
+  .pipe(_.replace( /\._(\w+)/g, replacePrivate))
+  .pipe(_.uglify())
+  .pipe(_.concat('slm-vm-browser.min.js'))
+  .pipe(_.size({showFiles: true}))
   .pipe(gulp.dest('dist'))
-  .pipe($.gzip())
-  .pipe($.size({showFiles: true}))
+  .pipe(_.gzip())
+  .pipe(_.size({showFiles: true}))
   .pipe(gulp.dest('dist'));
 });
