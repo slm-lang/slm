@@ -191,7 +191,7 @@ If your line ends with comma `,` (e.g because of a method call) you don't need t
 
 Same as the single equal sign (`=`), but does not go through the `escapeHtml` method. For trailing or leading whitespace the modifiers `>` and `<` are supported.
 
-* Output without HTML escaping and trailing white space `==>`. Same as the double equal sign (`==`), except that it adds a trailing white space. The legacy syntax `=='` is also supported.
+* Output without HTML escaping and trailing white space `==>`. Same as the double equal sign (`==`), except that it adds a trailing white space.
 * Output without HTML escaping and leading white space `==<`. Same as the double equal sign (`==`), except that it adds a leading white space.
 
 ### Code comment `/`
