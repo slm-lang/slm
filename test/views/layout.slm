@@ -1,15 +1,19 @@
-!doctype html
+doctype html
 html
   head
-    = default 'head'
+    = content('title', 'default')
       title Default Title
+
+    = content('css', 'default')
+      css:
+        body {background :red};
+
   body
-    = default 'footer'
+    = content()
+    = content('footer', 'default')
       p This is default footer
+  script:
+    console.log('script');
+  javascript:
+    console.log('javascript');
 
-
-= append 'head'
-  title Nice
-
-= append 'footer'
-  p This is new footer

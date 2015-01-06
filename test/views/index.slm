@@ -1,0 +1,9 @@
+= extend('./layout');
+
+= content('title', 'append')
+  title Nice
+
+= content('footer', 'prepend')
+  p This is new footer
+
+= partial('/partial.slm')
