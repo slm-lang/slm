@@ -1,7 +1,6 @@
 var Lab = require('lab');
-var Template = require('../../lib/template');
+var Template = require('../lib/template');
 var assert  = require('chai').assert;
-var assertHtml = require('../helper').assertHtml;
 
 var lab = exports.lab = Lab.script();
 
@@ -10,7 +9,7 @@ lab.experiment('VMNode', function() {
 
   lab.before(function(done) {
     fixture = {};
-    fixture.template = new Template(require('../../lib/vm_node'));
+    fixture.template = new Template(require('../lib/vm_node'));
     fixture.VM = fixture.template.VM;
     fixture.vm = new fixture.VM();
     fixture.vm.resetCache();

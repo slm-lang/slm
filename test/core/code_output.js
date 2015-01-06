@@ -99,7 +99,7 @@ lab.experiment('Code output', function() {
       '-  var niceX = function(x) {',
       '-     return x + \'nice\';',
       '-  }',
-      'p = niceX("Very ")',
+      'p = niceX("Very ")'
       ],
       '<p>Very nice</p>',
       {}, done);
