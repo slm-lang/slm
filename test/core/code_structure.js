@@ -188,7 +188,7 @@ lab.experiment('Code structure', function() {
       'p After'
       ].join('\n');
     assert.throw(function() {
-      template.eval(src, {}, {});
+      template.render(src, {}, {});
     }, 'Missing open brace \"(\" in `this.block)`');
 
     done();

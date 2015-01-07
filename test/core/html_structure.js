@@ -542,7 +542,7 @@ lab.experiment('Html structure', function() {
     ].join('\n');
 
 
-    var result = template.eval(src, {who: 'World', what: 'the best'}, compileOptions, vm);
+    var result = template.render(src, {who: 'World', what: 'the best'}, compileOptions, vm);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p><p>Partial Layout</p><strong>The partial is the best</strong><p>nice</p><strong>super!!! World</strong></body></html>');
     done();
   });

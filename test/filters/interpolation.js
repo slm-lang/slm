@@ -17,7 +17,7 @@ lab.experiment('Interpolate', function() {
     var src = 'p id="a${this.idHelper}b" = this.helloWorld';
 
     assert.deepEqual(
-      template.eval(src, {idHelper: 'someid', helloWorld: 'hello world'}),
+      template.render(src, {idHelper: 'someid', helloWorld: 'hello world'}),
       '<p id="asomeidb">hello world</p>'
     );
     done();
@@ -27,7 +27,7 @@ lab.experiment('Interpolate', function() {
     var src = 'p id="a${this.idHelper}b" = this.helloWorld';
 
     assert.deepEqual(
-      template.eval(src, {idHelper: 'someid', helloWorld: 'hello world'}),
+      template.render(src, {idHelper: 'someid', helloWorld: 'hello world'}),
       '<p id="asomeidb">hello world</p>'
     );
     done();
@@ -38,7 +38,7 @@ lab.experiment('Interpolate', function() {
     var src = 'p id="${"abc${1+1}" + "("}" = this.helloWorld';
 
     assert.deepEqual(
-      template.eval(src, {helloWorld: 'Hello World from @env'}),
+      template.render(src, {helloWorld: 'Hello World from @env'}),
       '<p id="abc${1+1}(">Hello World from @env</p>'
     );
 
@@ -49,7 +49,7 @@ lab.experiment('Interpolate', function() {
     var src = 'p ${abc';
 
     assert.throw(function(){
-      template.eval(src, {});
+      template.render(src, {});
     }, 'Text interpolation: Expected closing }');
 
     done();
@@ -64,7 +64,7 @@ lab.experiment('Interpolate', function() {
       '    A message from the compiler: ${this.helloWorld}\n';
 
     assert.deepEqual(
-      template.eval(src, {helloWorld: 'Hello World from @env'}),
+      template.render(src, {helloWorld: 'Hello World from @env'}),
       '<p>Hello World from @env with \"quotes\" </p><p>A message from the compiler: Hello World from @env </p>');
     done();
   });
@@ -72,7 +72,7 @@ lab.experiment('Interpolate', function() {
   lab.test('interpolation in tag', function(done) {
     var src = 'p ${this.helloWorld}';
     assert.deepEqual(
-      template.eval(src, {helloWorld: 'Hello'}),
+      template.render(src, {helloWorld: 'Hello'}),
       '<p>Hello</p>');
     done();
   });
@@ -82,7 +82,7 @@ lab.experiment('Interpolate', function() {
       'p \\${this.helloWorld}\n' +
       'p text1 \\${this.helloWorld} text2';
     assert.deepEqual(
-      template.eval(src, {helloWorld: 'Hello'}),
+      template.render(src, {helloWorld: 'Hello'}),
       '<p>${this.helloWorld}</p><p>text1 ${this.helloWorld} text2</p>');
     done();
   });
@@ -90,7 +90,7 @@ lab.experiment('Interpolate', function() {
   lab.test('interpolation with escaping', function(done) {
     var src = '. ${this.evilMethod()}';
     assert.deepEqual(
-      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
+      template.render(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
       '&lt;script&gt;do_something_evil();&lt;/script&gt; ');
     done();
   });
@@ -98,7 +98,7 @@ lab.experiment('Interpolate', function() {
   lab.test('interpolation without escaping', function(done) {
     var src = '| ${= this.evilMethod()}';
     assert.deepEqual(
-      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
+      template.render(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
       '<script>do_something_evil();</script>');
     done();
   });
@@ -106,7 +106,7 @@ lab.experiment('Interpolate', function() {
   lab.test('interpolation with escaping and delimiter', function(done) {
     var src = '| ${(this.evilMethod())}';
     assert.deepEqual(
-      template.eval(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
+      template.render(src, {evilMethod: function() {return '<script>do_something_evil();</script>';}}),
       '&lt;script&gt;do_something_evil();&lt;/script&gt;');
 
     done();

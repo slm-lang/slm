@@ -47,7 +47,7 @@ exports.assertHtml = function(template, src, result, options, callback) {
       return '<script>do_something_evil();</script>';
     }
   };
-  assert.deepEqual(template.eval(src, context, options), result);
+  assert.deepEqual(template.render(src, context, options), result);
   if (callback) {
     callback();
   }
@@ -72,7 +72,7 @@ exports.assertSyntaxError = function(template, src, result, options, callback) {
     }
   };
   assert.throw(function() {
-    template.eval(src, context, options);
+    template.render(src, context, options);
   }, result);
 
   if (callback) {

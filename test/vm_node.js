@@ -40,7 +40,7 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
 
-    var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, options, fixture.vm);
+    var result = fixture.template.render(src, {who: 'World', what: 'the best'}, options, fixture.vm);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
     done();
   });
@@ -67,7 +67,7 @@ lab.experiment('VMNode', function() {
       'p Hello, ${this.who}'
     ].join('\n');
 
-    var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, options, fixture.vm);
+    var result = fixture.template.render(src, {who: 'World', what: 'the best'}, options, fixture.vm);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
     done();
   });
@@ -95,7 +95,7 @@ lab.experiment('VMNode', function() {
       'p Hello, ${this.who}'
     ].join('\n');
 
-    var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, options, fixture.vm);
+    var result = fixture.template.render(src, {who: 'World', what: 'the best'}, options, fixture.vm);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
     done();
   });
@@ -128,7 +128,7 @@ lab.experiment('VMNode', function() {
       '= partial("form", this)'
     ].join('\n');
 
-    var result = fixture.template.eval(src, {who: 'World', what: 'the best'}, options, fixture.vm);
+    var result = fixture.template.render(src, {who: 'World', what: 'the best'}, options, fixture.vm);
     assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><form><input type="submit" /></form></body></html>');
     done();
   });
@@ -145,7 +145,7 @@ lab.experiment('VMNode', function() {
       'p = p.extname("super.slm")'
     ].join('\n');
 
-    var result = fixture.template.eval(src, {}, options, fixture.vm);
+    var result = fixture.template.render(src, {}, options, fixture.vm);
     assert.deepEqual(result, '<p>.slm</p>');
 
     done();
@@ -173,7 +173,7 @@ lab.experiment('VMNode', function() {
       'p Body from view'
     ].join('\n');
 
-    var result = fixture.template.eval(src, {}, options, fixture.vm);
+    var result = fixture.template.render(src, {}, options, fixture.vm);
     assert.deepEqual(result, '<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
 
     var src2 = [
@@ -183,7 +183,7 @@ lab.experiment('VMNode', function() {
       'p Body from view'
     ].join('\n');
 
-    result2 = fixture.template.eval(src2, {}, options, fixture.vm);
+    result2 = fixture.template.render(src2, {}, options, fixture.vm);
     assert.deepEqual(result2, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
     done();
   });
@@ -211,7 +211,7 @@ lab.experiment('VMNode', function() {
       'p Body from view'
     ].join('\n');
 
-    var result = fixture.template.eval(src, {}, options, fixture.vm);
+    var result = fixture.template.render(src, {}, options, fixture.vm);
     assert.deepEqual(result, '<html><head><title>1</title></head><body><p>Body from view</p></body></html>');
 
     var src2 = [
@@ -221,7 +221,7 @@ lab.experiment('VMNode', function() {
       'p Body from view'
     ].join('\n');
 
-    var result2 = fixture.template.eval(src2, {}, options, fixture.vm);
+    var result2 = fixture.template.render(src2, {}, options, fixture.vm);
     assert.deepEqual(result2, '<html><head><title>2</title></head><body><p>Body from view</p></body></html>');
     done();
   });
