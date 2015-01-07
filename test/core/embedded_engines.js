@@ -69,4 +69,15 @@ lab.experiment('Embedded engines', function() {
       '<pre>text Hello World from @env\ntext Hello World from @env!</pre>',
       {}, done);
   });
+
+  lab.test('throws an error on unregistered engine', function(done) {
+    assert.throws(function() {
+      assertHtml(template, [
+        'unregistered:',
+        '  text'
+        ],
+        '', {});
+    }, 'Embedded engine unregistered is not registered.');
+    done();
+  });
 });
