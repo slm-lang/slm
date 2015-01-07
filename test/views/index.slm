@@ -1,4 +1,4 @@
-= extend('./layout');
+= extend('layout');
 
 = content('title', 'append')
   title Nice
