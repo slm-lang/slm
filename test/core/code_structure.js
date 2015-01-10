@@ -118,10 +118,22 @@ lab.experiment('Code structure', function() {
       {}, done);
   });
 
-  lab.test('render with slim comments', function(done) {
+  lab.test('render with slm comments', function(done) {
     assertHtml(template, [
       'p Hello',
       '/ This is a comment',
+      '  Another comment',
+      'p World'
+      ],
+      '<p>Hello</p><p>World</p>',
+      {}, done);
+  });
+
+  lab.test('render with slm comments and empty line', function(done) {
+    assertHtml(template, [
+      'p Hello',
+      '/ This is a comment',
+      '',
       '  Another comment',
       'p World'
       ],
