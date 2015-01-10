@@ -226,13 +226,27 @@ lab.experiment('Html structure', function() {
     {}, done);
   });
 
-  lab.test('output_code_with_leading_spaces', function(done) {
+  lab.test('output code with leading spaces', function(done) {
     assertHtml(template, [
       'p= this.helloWorld',
       'p = this.helloWorld',
       'p    = this.helloWorld'
     ],
     '<p>Hello World from @env</p><p>Hello World from @env</p><p>Hello World from @env</p>',
+    {}, done);
+  });
+
+  lab.test('output code with leading spaces 2', function(done) {
+    assertHtml(template, [
+      'p =< this.helloWorld'
+    ],
+    ' <p>Hello World from @env</p>',
+    {});
+
+    assertHtml(template, [
+      'p<= this.helloWorld'
+    ],
+    ' <p>Hello World from @env</p>',
     {}, done);
   });
 
@@ -498,6 +512,19 @@ lab.experiment('Html structure', function() {
   lab.test('trailing whitespace indicator on tag', function(done) {
     assertHtml(template, [
       'p> text'
+    ],
+    '<p>text</p> ',
+    {}, done);
+  });
+
+  lab.test('trailing whitespace with code', function(done) {
+    assertHtml(template, [
+      'p => "text"'
+    ],
+    '<p>text</p> ',
+    {});
+    assertHtml(template, [
+      'p> = "text"'
     ],
     '<p>text</p> ',
     {}, done);

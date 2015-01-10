@@ -100,12 +100,12 @@ lab.experiment('Parser errors', function() {
       {}, done);
   });
 
-  lab.test('expected closing quote', function(done) {
+  lab.test('missing quote unexpected end', function(done) {
     assertSyntaxError(template, [
       'p',
       '  img(src="img.jpg'
       ],
-      'Expected closing quote \"\n  (__TEMPLATE__), Line 2, Column 19\n    img(src=\"img.jpg\n                    ^\n',
+      'Unexpected end of file\n  (__TEMPLATE__), Line 2, Column 1\n  \n  ^\n',
       {}, done);
   });
 
