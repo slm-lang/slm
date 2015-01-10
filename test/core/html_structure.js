@@ -26,6 +26,15 @@ lab.experiment('Html structure', function() {
     {}, done);
   });
 
+  lab.test('relaxed indentation of first line', function(done) {
+    assertHtml(template, [
+      '  p',
+      '    .content'
+    ],
+    '<p><div class=\"content\"></div></p>',
+    {}, done);
+  });
+
   lab.test('html tag with text and empty line', function(done) {
     assertHtml(template, [
       'p Hello',

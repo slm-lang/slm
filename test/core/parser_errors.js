@@ -70,6 +70,15 @@ lab.experiment('Parser errors', function() {
       {}, done);
   });
 
+  lab.test('malformed indentation 2', function(done) {
+    assertSyntaxError(template, [
+      '  div Valid',
+      ' div Invalid'
+      ],
+      'Malformed indentation\n  (__TEMPLATE__), Line 2, Column 2\n   div Invalid\n   ^\n',
+      {}, done);
+  });
+
   lab.test('unknown line indicator', function(done) {
     assertSyntaxError(template, [
       'p',
