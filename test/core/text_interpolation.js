@@ -28,6 +28,14 @@ lab.experiment('Text interpolation', function() {
       {}, done);
   });
 
+  lab.test('expression in interpolation', function(done) {
+    assertHtml(template, [
+      'p ${this.helloWorld2 || "test"} other text',
+      ],
+      '<p>test other text</p>',
+      {}, done);
+  });
+
   lab.test('interpolation in text', function(done) {
     assertHtml(template, [
       'p',
