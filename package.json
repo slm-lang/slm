@@ -1,6 +1,6 @@
 {
   "name": "slm",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Slim/Jade like templating engine",
   "main": "lib/slm.js",
   "browser": "lib/slm_browser.js",
@@ -10,7 +10,8 @@
   "keywords": [
     "template",
     "slim",
-    "jade"
+    "jade",
+    "html"
   ],
   "author": "Yury Korolev",
   "license": "ISC",
