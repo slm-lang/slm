@@ -225,4 +225,14 @@ lab.experiment('Code structure', function() {
       '<p>After 1</p><p>After 2</p><title>title1</title><p>After 3</p><title>title2</title><p>After 4</p><p>Not captured</p>',
       {}, done);
   });
+
+  lab.test('render with forEach', function(done) {
+    assertHtml(template, [
+      'div',
+      '  - this.items.forEach(function(i))',
+      '      p = i',
+      ],
+      '<div><p>1</p><p>2</p><p>3</p></div>',
+      {}, done);
+  });
 });

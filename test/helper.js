@@ -7,6 +7,7 @@ exports.assertHtml = function(template, src, result, options, callback) {
   src = src.join('\n');
   var env = {};
   var context = {
+    items: [1,2,3],
     idHelper: 'notice',
     outputNumber: 1337,
     helloWorld: 'Hello World from @env',
