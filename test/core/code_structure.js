@@ -230,7 +230,7 @@ lab.experiment('Code structure', function() {
     assertHtml(template, [
       'div',
       '  - this.items.forEach(function(i))',
-      '      p = i',
+      '    p = i',
       ],
       '<div><p>1</p><p>2</p><p>3</p></div>',
       {}, done);
