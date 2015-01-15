@@ -583,4 +583,31 @@ lab.experiment('Html structure', function() {
     done();
   });
 
+  lab.test('test current context in partials by default', function(done) {
+    var VM = template.VM;
+    var vm = new VM();
+    vm.resetCache();
+
+    var compileOptions = {
+      basePath: '/',
+      filename: '/a.slm'
+    };
+
+    vm.cache(compileOptions.filename, template.exec([
+      'p Partial ${this.who}',
+    ].join('\n'), compileOptions, vm));
+
+
+    var src = [
+      'p Current ${this.who}',
+      '= partial("a")',
+      '- this.who = "Another"',
+      'p Current ${this.who}',
+      '= partial("a")',
+    ].join('\n');
+
+    var result = template.render(src, {who: 'World', what: 'the best'}, compileOptions, vm);
+    assert.deepEqual(result, '<p>Current World</p><p>Partial World</p><p>Current Another</p><p>Partial Another</p>');
+    done();
+  });
 });
