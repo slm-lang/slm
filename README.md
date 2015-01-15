@@ -2,8 +2,8 @@
 
 Slm is a template language for js. Port of [Slim](http://slim-lang.com/) but slimmer :)
 
-[![Build Status](https://img.shields.io/travis/slm-lang/slm/master.svg)](https://travis-ci.org/slm-lang/slm)
-[![Coverage Status](https://coveralls.io/repos/slm-lang/slm/badge.svg)](https://coveralls.io/r/slm-lang/slm)
+[![Build Status](https://img.shields.io/travis/slm-lang/slm/master.svg?style=flat)](https://travis-ci.org/slm-lang/slm)
+[![Coverage Status](https://coveralls.io/repos/slm-lang/slm/badge.svg?style=flat)](https://coveralls.io/r/slm-lang/slm)
 [![Dependency Status](https://img.shields.io/david/slm-lang/slm.svg?style=flat)](https://david-dm.org/slm-lang/slm)
 [![devDependencies Status](https://img.shields.io/david/dev/slm-lang/slm.svg?style=flat)](https://david-dm.org/slm-lang/slm#info=devDependencies)
 [![NPM version](https://badge.fury.io/js/slm.svg)](http://badge.fury.io/js/slm)
