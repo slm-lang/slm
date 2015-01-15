@@ -1,6 +1,12 @@
 language: node_js
 node_js:
   - "0.10"
+script: "npm test && npm run coverage"
+addons:
+  code_climate:
+    repo_token: 41485eb065394f389dc2ccd0f8d280e5acbf2218386f852209690c3dacada9b0
+after_script:
+  - cat lcov.info | node_modules/.bin/codeclimate
 notifications:
   webhooks:
     urls:

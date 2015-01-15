@@ -183,7 +183,7 @@ lab.experiment('VMNode', function() {
       'p Body from view'
     ].join('\n');
 
-    result2 = fixture.template.render(src2, {}, options, fixture.vm);
+    var result2 = fixture.template.render(src2, {}, options, fixture.vm);
     assert.deepEqual(result2, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
     done();
   });

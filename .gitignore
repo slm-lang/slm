@@ -3,3 +3,4 @@ node_modules
 dist/
 v8.log
 *.gz
+lcov.info
