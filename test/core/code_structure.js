@@ -235,7 +235,23 @@ lab.experiment('Code structure', function() {
       '<div><p>1</p><p>2</p><p>3</p></div>',
       {}, done);
   });
-  
+
+  lab.test('render with multiline attributes', function(done) {
+    assertHtml(template, [
+      'div class="test\\',
+      '    nice"'
+      ],
+      '<div class="test nice"></div>',
+      {});
+
+    assertHtml(template, [
+      'div class=[1,',
+      '  2].join("")'
+      ],
+      '<div class="12"></div>',
+      {}, done);
+  });
+
   lab.test('render with multiline attributes', function(done) {
     assertHtml(template, [
       'div class=(1 + \\',
