@@ -235,4 +235,20 @@ lab.experiment('Code structure', function() {
       '<div><p>1</p><p>2</p><p>3</p></div>',
       {}, done);
   });
+  
+  lab.test('render with multiline attributes', function(done) {
+    assertHtml(template, [
+      'div class=(1 + \\',
+      '  2)'
+      ],
+      '<div class="3"></div>',
+      {});
+
+    assertHtml(template, [
+      'div class=[1,',
+      '  2].join("")'
+      ],
+      '<div class="12"></div>',
+      {}, done);
+  });
 });
