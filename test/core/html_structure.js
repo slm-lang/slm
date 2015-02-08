@@ -500,6 +500,15 @@ lab.experiment('Html structure', function() {
     {}, done);
   });
 
+  lab.test('html line indicator issue #4', function(done) {
+    assertHtml(template, [
+      '<script>',
+      '  | var a=b;',
+      '</script>'
+    ],
+    '<script>var a=b;</script>',
+    {}, done);
+  });
 
   lab.test('leading whitespace indicator on tag', function(done) {
     assertHtml(template, [
