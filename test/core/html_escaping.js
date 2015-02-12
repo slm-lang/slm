@@ -74,4 +74,20 @@ lab.experiment('Html escaping', function() {
       '<p class="&amp;" id="&amp;"></p>',
       {}, done);
   });
+
+  lab.test('html json xss', function(done) {
+    assertHtml(template, [
+      'script:',
+      '  var x = ${= j()};'
+      ],
+      '<script>var x = undefined;</script>',
+      {});
+
+    assertHtml(template, [
+      'script:',
+      '  var x = ${= j(this.address)};'
+      ],
+      '<script>var x = undefined;</script>',
+      {address: '<script>alert("xss")</script>'}, done);
+  });
 });
