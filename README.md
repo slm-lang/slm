@@ -41,6 +41,7 @@ HAML -> Jade -> Slim -> Slm
 * Benchmark: <https://github.com/slm-lang/template-benchmark#results>
 * Gulp: <https://github.com/simnalamburt/gulp-slm>
 * Grunt: <https://github.com/MichaelDanilov/grunt-slm>
+* Karma: <https://github.com/looker/karma-slm-preprocessor>
 
 ### How to start?
 
