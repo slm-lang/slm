@@ -451,6 +451,9 @@ To escape the interpolation (i.e. render as is)
       h1 Welcome \${current_user.name} to the show.
 
 
+# License
+
+Slm is released under the [MIT license](http://www.opensource.org/licenses/MIT).
 
 
 # Special Thanks
