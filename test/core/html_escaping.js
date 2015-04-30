@@ -41,6 +41,18 @@ lab.experiment('Html escaping', function() {
       {}, done);
   });
 
+  lab.test('html with raw interpolation', function(done) {
+    assertHtml(template, [
+      '- var x = "text<br/>"',
+      'p ${=x}',
+      'p $y=1',
+      'p y$=x',
+      'p y$y=x'
+      ],
+      '<p>text<br/></p><p $y="1"></p><p y$="text&lt;br/&gt;"></p><p y$y="text&lt;br/&gt;"></p>',
+      {}, done);
+  });
+
   lab.test('html nested escaping', function(done) {
     assertHtml(template, [
       '= this.helloBlock(function())',
