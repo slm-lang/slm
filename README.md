@@ -48,6 +48,16 @@ HAML -> Jade -> Slim -> Slm
 Install Slm with npm:
 
     npm install slm --save
+    
+### Configure to work with ExpressJS
+
+```js
+// in app.js
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'slm');
+
+```
 
 ### Configure to work with hapijs
 
