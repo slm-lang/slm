@@ -7,8 +7,10 @@ var lab = exports.lab = Lab.script();
 
 lab.experiment('Html attribtues', function() {
   var template;
+  var htmlTemplate;
   lab.before(function(done) {
     template = new Template(require('../../lib/vm_node'));
+    htmlTemplate = new Template(require('../../lib/vm_node'), {mergeAttrs: { 'class': ' ' }, format: 'html' });
     done();
   });
 
@@ -82,7 +84,7 @@ lab.experiment('Html attribtues', function() {
       {}, done);
   });
 
-  lab.test('boolean attribute false', function(done) {
+  lab.test('xhtml boolean attribute false', function(done) {
     assertHtml(template, [
       '- var cond = false',
       'option selected=false Text',
@@ -93,7 +95,18 @@ lab.experiment('Html attribtues', function() {
       {}, done);
   });
 
-  lab.test('boolean attribute true', function(done) {
+  lab.test('html boolean attribute false', function(done) {
+    assertHtml(htmlTemplate, [
+      '- var cond = false',
+      'option selected=false Text',
+      'option selected=undefined Text2',
+      'option selected=cond Text3'
+      ],
+      '<option>Text</option><option>Text2</option><option>Text3</option>',
+      {}, done);
+  });
+
+  lab.test('xhtml boolean attribute true', function(done) {
     assertHtml(template, [
       '- var cond = true',
       'option selected=true Text',
@@ -104,8 +117,29 @@ lab.experiment('Html attribtues', function() {
       {}, done);
   });
 
-  lab.test('boolean attribute null', function(done) {
+  lab.test('html boolean attribute true', function(done) {
+    assertHtml(htmlTemplate, [
+      '- var cond = true',
+      'option selected=true Text',
+      'option selected=1 Text2',
+      'option selected=cond Text3'
+      ],
+      '<option selected>Text</option><option selected="1">Text2</option><option selected>Text3</option>',
+      {}, done);
+  });
+
+  lab.test('xhtml boolean attribute null', function(done) {
     assertHtml(template, [
+      '- var cond = null',
+      'option selected=null Text',
+      'option selected=cond Text2'
+      ],
+      '<option>Text</option><option>Text2</option>',
+      {}, done);
+  });
+
+  lab.test('html boolean attribute null', function(done) {
+    assertHtml(htmlTemplate, [
       '- var cond = null',
       'option selected=null Text',
       'option selected=cond Text2'
@@ -122,12 +156,21 @@ lab.experiment('Html attribtues', function() {
       {}, done);
   });
 
-  lab.test('boolean attribute shortcut', function(done) {
+  lab.test('xhtml boolean attribute shortcut', function(done) {
     assertHtml(template, [
       'option(class="clazz" selected) Text',
       'option(selected class="clazz") Text'
       ],
       '<option class="clazz" selected="">Text</option><option class="clazz" selected="">Text</option>',
+      {}, done);
+  });
+
+  lab.test('html boolean attribute shortcut', function(done) {
+    assertHtml(htmlTemplate, [
+      'option(class="clazz" selected) Text',
+      'option(selected class="clazz") Text'
+      ],
+      '<option class="clazz" selected>Text</option><option class="clazz" selected>Text</option>',
       {}, done);
   });
 
