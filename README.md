@@ -28,7 +28,7 @@ HAML -> Jade -> Slim -> Slm
 * High performance
     * Comparable speed to ECT and Hogan [see benchmakrs](https://github.com/slm-lang/template-benchmark#results)
 * Easy integration with hapijs
-* Embedded engines like [Markdown](https://github.com/slm-lang/slm-markdown) and Textile (TBD)
+* Embedded engines like [CoffeeScript](https://github.com/slm-coffee), [Markdown](https://github.com/slm-lang/slm-markdown) and Textile (TBD)
 
 ## Links
 
