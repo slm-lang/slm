@@ -42,6 +42,7 @@ HAML -> Jade -> Slim -> Slm
 * Gulp: <https://github.com/simnalamburt/gulp-slm>
 * Grunt: <https://github.com/MichaelDanilov/grunt-slm>
 * Karma: <https://github.com/looker/karma-slm-preprocessor>
+* Webpack: <https://github.com/wealthbar/slm-loader>
 
 ### How to start?
 
