@@ -10,7 +10,7 @@ lab.experiment('Html attribtues', function() {
   var htmlTemplate;
   lab.before(function(done) {
     template = new Template(require('../../lib/vm_node'));
-    htmlTemplate = new Template(require('../../lib/vm_node'), {mergeAttrs: { 'class': ' ' }, format: 'html' });
+    htmlTemplate = new Template(require('../../lib/vm_node'), {mergeAttrs: { 'class': ' ' }, attrDelims: { '(': ')' },  format: 'html' });
     done();
   });
 
@@ -81,6 +81,14 @@ lab.experiment('Html attribtues', function() {
       '#alpha id=["beta", "gamma"] Test it'
       ],
       '<div id="alpha_beta_gamma">Test it</div>',
+      {}, done);
+  });
+
+  lab.test('custom attribute delimiters', function(done) {
+    assertHtml(htmlTemplate, [
+      'div([value]="boundValue")',
+      ],
+      '<div [value]="boundValue"></div>',
       {}, done);
   });
 
