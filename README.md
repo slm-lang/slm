@@ -38,6 +38,7 @@ HAML -> Jade -> Slim -> Slm
   * Atom: <https://github.com/slm-lang/language-slm>
   * Sublime: <https://github.com/slm-lang/sublime-slm>
   * Vim: <https://github.com/slm-lang/vim-slm>
+  * VS Code: <https://github.com/mrmlnc/vscode-slm>
 * Benchmark: <https://github.com/slm-lang/template-benchmark#results>
 * Gulp: <https://github.com/simnalamburt/gulp-slm>
 * Grunt: <https://github.com/MichaelDanilov/grunt-slm>
