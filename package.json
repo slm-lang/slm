@@ -18,7 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.4.0",
-    "codeclimate-test-reporter": "0.1.1",
+    "codeclimate-test-reporter": "0.3.3",
     "gulp": "^3.8.11",
     "gulp-concat": "^2.5.2",
     "gulp-gzip": "^1.0.0",
