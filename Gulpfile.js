@@ -5,8 +5,8 @@ gulp.task('default', ['test']);
 
 gulp.task('test', function(cb) {
   var spawn = require('child_process').spawn;
-  var child = spawn('node_modules/.bin/lab', ['-v', '-t', 94], {stdio: 'inherit'});
-  child.on('exit', function(code) {
+  var child = spawn('npm', ['test'], {stdio: 'inherit'});
+  child.on('exit', function(code, signal) {
     cb(code ? new Error('Tests Failed') : null);
   });
 });
