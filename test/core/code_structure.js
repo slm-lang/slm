@@ -239,7 +239,7 @@ lab.experiment('Code structure', function() {
   lab.test('render with for', function(done) {
     assertHtml(template, [
       'ul',
-      '  - for item in this.items',
+      '  - for var item in this.items',
       '    li = item'
     ],
     '<ul><li>0</li><li>1</li><li>2</li></ul>',
