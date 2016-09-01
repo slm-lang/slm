@@ -209,6 +209,14 @@ Same as the single equal sign (`=`), but does not go through the `escapeHtml` me
 * Output without HTML escaping and trailing white space `==>`. Same as the double equal sign (`==`), except that it adds a trailing white space.
 * Output without HTML escaping and leading white space `==<`. Same as the double equal sign (`==`), except that it adds a leading white space.
 
+### Output in Javascript `j`
+To output data from the node side within Javascript there is a `j` function:
+````
+javascript:
+  window.data.user = ${=j(this.user)};
+````
+
+
 ### Code comment `/`
 
 Use the forward slash for code comments - anything after it won't get displayed in the final render. Use `/` for code comments and `/!` for html comments
