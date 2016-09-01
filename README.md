@@ -213,7 +213,7 @@ Same as the single equal sign (`=`), but does not go through the `escapeHtml` me
 To output data from the node side within Javascript there is a `j` function:
 ````
 javascript:
-  window.data.user = ${=j(this.user)};
+  var user = ${=j(this.user)};
 ````
 
 
