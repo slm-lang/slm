@@ -31,6 +31,8 @@ Some problems are possible if you wrap attributes with [] or (), and the first a
 
 There are also no validation of the brackets order for Angular2 attributes: so you can type [(ngModel]) and it will be rendered the same way without any warning. It is huge pain for me to make regexps which care of this without conditional groups (in JavaScript). Anyway, I don\`t think that this is problem.
 
+There is also no possibility of making code values for hash-attributes (like #localvar=alert('Hello world')). I think it is excessive functionality.
+
 ## Original Slm links
 
 * Source: <http://github.com/slm-lang/slm>
