@@ -1,7 +1,7 @@
 {
-  "name": "slm",
+  "name": "slm-angular2",
   "version": "0.5.1",
-  "description": "Slim/Jade like templating engine",
+  "description": "Slim/Jade like templating engine with Angular2 templates constructions support",
   "main": "lib/slm.js",
   "browser": "lib/slm_browser.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "jade",
     "html"
   ],
-  "author": "Yury Korolev",
+  "author": "Molodtsov Dmitriy (original plugin by Yury Korolev)",
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.4.0",
@@ -39,10 +39,10 @@
   "dependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/slm-lang/slm.git"
+    "url": "https://github.com/sintro/slm.git"
   },
   "bugs": {
-    "url": "https://github.com/slm-lang/slm/issues"
+    "url": "https://github.com/sintro/slm/issues"
   },
-  "homepage": "https://github.com/slm-lang/slm"
+  "homepage": "https://github.com/sintro/slm"
 }
