@@ -1,5 +1,7 @@
-# Slm 
-## with Angular 2 support
+# Slm-angular2
+
+With Angular 2 support
+------------------
 
 Slm is a template language for js. Port of [Slim](http://slim-lang.com/) but slimmer :)
 
@@ -17,14 +19,14 @@ There are some changes in parser regexps and functions, which make possible of u
 ## Conflicts and limitations
 
 These changes in parser can be the reason of strange behavior in some **rare** cases, which can be avoided by using different notations, for example:
-``
+```
 div #event
-``
+```
 This will be interpreted as `div` element with `#event` attribute. In original Slm `#event` would be the content of tag. So, if you need to start the content with hash symbol, you need to do something like:
-``
+```
 div 
   | #event
-``
+```
 Some problems are possible if you wrap attributes with [] or (), and the first attribute is one of Angular\`s attributes with brackets. If you faced with them, try to add whitespace after wrapper opening brackets, or just reorder the attributes so the first one will be some simple html one.
 
 There are also no validation of the brackets order for Angular2 attributes: so you can type [(ngModel]) and it will be rendered the same way without any warning. It is huge pain for me to make regexps which care of this without conditional groups (in JavaScript). Anyway, I don\`t think that this is problem.
