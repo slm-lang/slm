@@ -471,6 +471,42 @@ To escape the interpolation (i.e. render as is)
     body
       h1 Welcome \${current_user.name} to the show.
 
+## Mixins
+
+Mixins allow you to create reusable blocks of Slm.
+
+    = mixin('paragraph')
+      p Hello from mixin!
+
+    .say
+      = mixin('paragraph')
+
+They are compiled to functions and can take arguments:
+
+    = mixin('paragraph', 'name')
+      p Hello from ${this.name}!
+
+    .say
+      = mixin('paragraph', 'me')
+
+Even with default values:
+
+    = mixin('paragraph', 'name = me')
+      p Hello from ${this.name}!
+
+    .say
+      = mixin('paragraph')
+
+And from `partial`:
+
+    // mixins.slm
+    = mixin('paragraph', 'name = me')
+      p Hello from ${this.name}!
+
+    // index.slm
+    = partial('mixins')
+    .say
+      = mixin('paragraph')
 
 # License
 

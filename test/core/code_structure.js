@@ -226,6 +226,107 @@ lab.experiment('Code structure', function() {
       {}, done);
   });
 
+  lab.test('simple mixin', function(done) {
+    assertHtml(template, [
+      '= mixin("say", "a", "b")',
+      '  p Hello ${this.a} by ${this.b}',
+      '.hello',
+      '  = mixin("say", "Slm", "mixin")'
+      ],
+      '<div class="hello"><p>Hello Slm by mixin</p></div>',
+      {}, done);
+  });
+
+  lab.test('mixin with loop', function(done) {
+    assertHtml(template, [
+      '= mixin("say", "list")',
+      '  ul',
+      '    - this.list.forEach(function(item))',
+      '      li = item.name',
+      '.hello',
+      '  = mixin("say", [{ name: "a" }, { name: "b" }])'
+      ],
+      '<div class="hello"><ul><li>a</li><li>b</li></ul></div>',
+      {}, done);
+  });
+
+  lab.test('mixin with content', function(done) {
+    assertHtml(template, [
+      '= content("myContent")',
+      '  p Hello from mixin!',
+      '= mixin("say", "listOfItems")',
+      '  = content("myContent")',
+      '  ul',
+      '    - this.listOfItems.forEach(function(item))',
+      '      li = item.name',
+      '.hello',
+      '  = mixin("say", [{ name: "a" }, { name: "b" }])',
+      '  p ${this.items}'
+      ],
+      '<div class="hello"><p>Hello from mixin!</p><ul><li>a</li><li>b</li></ul><p>1,2,3</p></div>',
+      {}, done);
+  });
+
+  lab.test('mixin with all defaults values', function(done) {
+    assertHtml(template, [
+      '= mixin("say", "a = Slm", "b = mixin")',
+      '  p Hello ${this.a} by ${this.b}',
+      '.hello',
+      '  = mixin("say")'
+      ],
+      '<div class="hello"><p>Hello Slm by mixin</p></div>',
+      {}, done);
+  });
+
+
+  lab.test('mixin with first default value', function(done) {
+    assertHtml(template, [
+      '= mixin("say", "a = Slm", "b")',
+      '  p Hello ${this.a} by ${this.b}',
+      '.hello',
+      '  = mixin("say", "Mom")'
+      ],
+      '<div class="hello"></div>',
+      {}, done);
+  });
+
+  lab.test('mixin with second default value', function(done) {
+    assertHtml(template, [
+      '= mixin("say", "a", "b= mixin")',
+      '  p Hello ${this.a} by ${this.b}',
+      '.hello',
+      '  = mixin("say", "Mom")'
+      ],
+      '<div class="hello"><p>Hello Mom by mixin</p></div>',
+      {}, done);
+  });
+
+  lab.test('mixin with contexts', function(done) {
+    var VM = template.VM;
+    var vm = new VM();
+    vm.resetCache();
+
+    var compileOptions = {
+      basePath: '/',
+      filename: 'mixins.slm'
+    };
+
+    vm.cache(compileOptions.filename, template.exec([
+      '= mixin("say", "a", "b")',
+      '  p Hello ${this.a} by ${this.b}'
+    ].join('\n'), compileOptions, vm));
+
+    var src = [
+      '= partial("mixins.slm")',
+      '.hello',
+      '  = mixin("say", "Slm", "mixin")'
+    ].join('\n');
+
+    var result = template.render(src, {}, compileOptions, vm);
+    assert.deepEqual(result, '<div class="hello"><p>Hello Slm by mixin</p></div>');
+    done();
+  });
+
   lab.test('render with forEach', function(done) {
     assertHtml(template, [
       'div',
