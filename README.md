@@ -497,6 +497,17 @@ Even with default values:
     .say
       = mixin('paragraph')
 
+And from `partial`:
+
+    // mixins.slm
+    = mixin('paragraph', 'name = me')
+      p Hello from ${this.name}!
+
+    // index.slm
+    = partial('mixins')
+    .say
+      = mixin('paragraph')
+
 # License
 
 Slm is released under the [MIT license](http://www.opensource.org/licenses/MIT).
