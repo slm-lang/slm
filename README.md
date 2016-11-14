@@ -95,36 +95,38 @@ server.start(function () {
 
 Here's a quick example to demonstrate what a Slm template looks like:
 
-    doctype html
-    html
-      head
-        title Slm Examples
-        meta name="keywords" content="template language"
-        meta name="author" content=this.author
-        javascript:
-          alert('Slm supports embedded javascript!')
+```slim
+doctype html
+html
+  head
+    title Slm Examples
+    meta name="keywords" content="template language"
+    meta name="author" content=this.author
+    javascript:
+      alert('Slm supports embedded javascript!')
 
-      body
-        h1 Markup examples
+  body
+    h1 Markup examples
 
-        #content
-          p This example shows you how a basic Slm file looks.
+    #content
+      p This example shows you how a basic Slm file looks.
 
-        == content()
+    == content()
 
-        - if this.items.length
-          table#items
-            - for item in this.items
-              tr
-                td.name = item.name
-                td.price = item.price
-        - else
-          p No items found Please add some inventory.
-            Thank you!
+    - if this.items.length
+      table#items
+        - for item in this.items
+          tr
+            td.name = item.name
+            td.price = item.price
+    - else
+      p No items found Please add some inventory.
+        Thank you!
 
-        div id="footer"
-          == partial('footer')
-          | Copyright &copy; ${this.year} ${this.author}
+    div id="footer"
+      == partial('footer')
+      | Copyright &copy; ${this.year} ${this.author}
+```
 
 Indentation matters, but the indentation depth can be chosen as you like. If you want to first indent 2 spaces, then 5 spaces, it's your choice. To nest markup you only need to indent by one space, the rest is gravy.
 
@@ -135,29 +137,37 @@ Indentation matters, but the indentation depth can be chosen as you like. If you
 The pipe tells Slm to just copy the line. It essentially escapes any processing.
 Each following line that is indented greater than the pipe is copied over.
 
-    body
-      p
-        |
-          This is a test of the text block.
+```slim
+body
+  p
+    |
+      This is a test of the text block.
+```
 
-  The parsed result of the above:
+The parsed result of the above:
 
-    <body><p>This is a test of the text block.</p></body>
+```slim
+<body><p>This is a test of the text block.</p></body>
+```
 
   The left margin is set at the indent of the pipe + one space.
   Any additional spaces will be copied over.
 
-    body
-      p
-        | This line is on the left margin.
-           This line will have one space in front of it.
-             This line will have two spaces in front of it.
-               And so on...
+```slim
+body
+  p
+    | This line is on the left margin.
+       This line will have one space in front of it.
+         This line will have two spaces in front of it.
+           And so on...
+```
 
 You can also embed html in the text line
 
-    - for (var a in this.articles)
-      | <tr><td>${a.name}</td><td>${a.description}</td></tr>
+```slim
+- for (var a in this.articles)
+  | <tr><td>${a.name}</td><td>${a.description}</td></tr>
+```
 
 ### Text with trailing white space `.`
 
@@ -167,16 +177,18 @@ The single dot tells Slm to copy the line (similar to `|`), but makes sure that 
 
 You can write html tags directly in Slm which allows you to write your templates in a more html like style with closing tags or mix html and Slm style.
 
-    <html>
-      head
-        title Example
-      <body>
-        - if this.articles.length
-          table
-            - for (var a in this.articles)
-              <tr><td>${a.name}</td><td>${a.description}</td></tr>
-      </body>
-    </html>
+```slim
+<html>
+  head
+    title Example
+  <body>
+    - if this.articles.length
+      table
+        - for (var a in this.articles)
+          <tr><td>${a.name}</td><td>${a.description}</td></tr>
+  </body>
+</html>
+```
 
 ### Control code `-`
 
@@ -184,17 +196,21 @@ The dash denotes control code. Examples of control code are loops and conditiona
 If your js code needs to use multiple lines, append a backslash `\` at the end of the lines. If your line ends with comma `,` (e.g because of a method call) you don't need the additional backslash before the linebreak.
 Slm inserts `(` and `)` for `if`, `for`, `else if` automatically. So you JS code is more readable.
 
-    body
-      - if !this.articles.length
-        | No inventory
+```slim
+body
+  - if !this.articles.length
+    | No inventory
+```
 
 ### Output `=`
 
 The equal sign tells Slm it's a JS call that produces output to add to the buffer. If your JS code needs to use multiple lines, append a backslash `\` at the end of the lines, for example:
 
-    = javascript_include_tag(\
-       "jquery",
-       "application")
+```slim
+= javascript_include_tag(\
+   "jquery",
+   "application")
+```
 
 If your line ends with comma `,` (e.g because of a method call) you don't need the additional backslash before the linebreak. For trailing or leading whitespace the modifiers `>` and `<` are supported.
 
@@ -211,25 +227,30 @@ Same as the single equal sign (`=`), but does not go through the `escapeHtml` me
 
 ### Output in Javascript `j`
 To output data from the node side within Javascript there is a `j` function:
-````
+
+```slim
 javascript:
   var user = ${=j(this.user)};
-````
+```
 
 
 ### Code comment `/`
 
 Use the forward slash for code comments - anything after it won't get displayed in the final render. Use `/` for code comments and `/!` for html comments
 
-    body
-      p
-        / This line won't get displayed.
-          Neither does this line.
-        /! This will get displayed as html comments.
+```slim
+body
+  p
+    / This line won't get displayed.
+      Neither does this line.
+    /! This will get displayed as html comments.
+```
 
   The parsed result of the above:
 
-    <body><p><!--This will get displayed as html comments.--></p></body>
+```slim
+<body><p><!--This will get displayed as html comments.--></p></body>
+```
 
 ### HTML comment `/!`
 
@@ -237,12 +258,16 @@ Use the forward slash immediately followed by an exclamation mark for html comme
 
 ### IE conditional comment `/[...]`
 
-    /[if IE]
-        p Get a better browser.
+```slim
+/[if IE]
+    p Get a better browser.
+```
 
 renders as
 
-    <!--[if IE]><p>Get a better browser.</p><![endif]-->
+```html
+<!--[if IE]><p>Get a better browser.</p><![endif]-->
+```
 
 
 ## HTML tags
@@ -305,7 +330,9 @@ HTML 4 DOCTYPES
 
 You can close tags explicitly by appending a trailing `/`.
 
-    img src="image.png"/
+```slim
+img src="image.png"/
+```
 
 Note, that this is usually not necessary since the standard html
 tags (img, br, ...) are closed automatically.
@@ -314,63 +341,83 @@ tags (img, br, ...) are closed automatically.
 
 You can force Slm to add a trailing whitespace after a tag by adding a >.
 
-    a> href='url1' Link1
-    a> href='url2' Link2
+```slim
+a> href='url1' Link1
+a> href='url2' Link2
+```
 
 You can add a leading whitespace by adding <.
 
-    a< href='url1' Link1
-    a< href='url2' Link2
+```slim
+a< href='url1' Link1
+a< href='url2' Link2
+```
 
 You can also combine both.
 
-    a<> href='url1' Link1
+```slim
+a<> href='url1' Link1
+```
 
 ### Inline tags
 
 Sometimes you may want to be a little more compact and inline the tags.
 
-    ul
-      li.first: a href="/a" A link
-      li: a href="/b" B link
+```slim
+ul
+  li.first: a href="/a" A link
+  li: a href="/b" B link
+```
 
 For readability, don't forget you can wrap the attributes.
 
-    ul
-      li.first: a[href="/a"] A link
-      li: a[href="/b"] B link
+```slim
+ul
+  li.first: a[href="/a"] A link
+  li: a[href="/b"] B link
+```
 
 ### Text content
 
 Either start on the same line as the tag
 
-    body
-      h1 id="headline" Welcome to my site.
+```slim
+body
+  h1 id="headline" Welcome to my site.
+```
 
 Or nest it.  You must use a pipe or an apostrophe to escape processing
 
-    body
-      h1 id="headline"
-        | Welcome to my site.
+```slim
+body
+  h1 id="headline"
+    | Welcome to my site.
+```
 
 ### Dynamic content (`=` and `==`)
 
 Can make the call on the same line
 
-    body
-      h1 id="headline" = this.pageHeadline
+```slim
+body
+  h1 id="headline" = this.pageHeadline
+```
 
 Or nest it.
 
-    body
-      h1 id="headline"
-        = this.pageHeadline
+```slim
+body
+  h1 id="headline"
+    = this.pageHeadline
+```
 
 ### Attributes
 
 You write attributes directly after the tag. For normal text attributes you must use double `"` or single quotes `'` (Quoted attributes).
 
-    a href="http://slm-lang.com" title='Slm Homepage' Goto the Slm homepage
+```slim
+a href="http://slm-lang.com" title='Slm Homepage' Goto the Slm homepage
+```
 
 You can use text interpolation in the quoted attributes.
 
@@ -380,33 +427,45 @@ If a delimiter makes the syntax more readable for you,
 you can use the characters `(...)`, `[...]` to wrap the attributes.
 You can configure these symbols.
 
-    body
-      h1(id="logo") = this.pageLogo
-      h2[id="tagline" class="small tagline"] = this.pageTagline
+```slim
+body
+  h1(id="logo") = this.pageLogo
+  h2[id="tagline" class="small tagline"] = this.pageTagline
+```
 
 If you wrap the attributes, you can spread them across multiple lines:
 
-    h2[id="tagline"
-       class="small tagline"] = this.pageTagline
+```slim
+h2[id="tagline"
+   class="small tagline"] = this.pageTagline
+```
 
 You may use spaces around the wrappers and assignments:
 
-    h1 id = "logo" = page_logo
-    h2 [ id = "tagline" ] = this.pageTagline
+```slim
+h1 id = "logo" = page_logo
+h2 [ id = "tagline" ] = this.pageTagline
+```
 
 #### Quoted attributes
 
 Example:
 
-    a href="http://slm-lang.com" title='Slm Homepage' Goto the slm homepage
+```slim
+a href="http://slm-lang.com" title='Slm Homepage' Goto the slm homepage
+```
 
 You can use text interpolation in the quoted attributes:
 
-    a href="http://${url}" Goto the ${url}
+```slim
+a href="http://${url}" Goto the ${url}
+```
 
 The attribute value will be escaped by default. Use == if you want to disable escaping in the attribute.
 
+```slim
     a href=="&amp;"
+```
 
 You can break quoted attributes with backslash `\`
 
@@ -421,7 +480,7 @@ the code into parentheses `(...)`. You can also directly write hashes `{...}` an
     body
       table
         - for var user in this.users
-          td id="user-#{user.id}" class=user.role
+          td id="user-${user.id}" class=user.role
             a href=userAction(user, 'edit') Edit ${user.name}
             a href=pathToUser(user) = user.name
 
@@ -436,27 +495,35 @@ You can also break javascript attributes with backslash `\` or trailing `,` as d
 The attribute values `true`, `false`, `null` and `undefinded` are interpreted
 as booleans. If you use the attribute wrapper you can omit the attribute assigment.
 
-    input type="text" disabled="disabled"
-    input type="text" disabled=true
-    input(type="text" disabled)
+```slim
+input type="text" disabled="disabled"
+input type="text" disabled=true
+input(type="text" disabled)
 
-    input type="text"
-    input type="text" disabled=false
-    input type="text" disabled=null
+input type="text"
+input type="text" disabled=false
+input type="text" disabled=null
+```
 
 
 #### Attribute merging
 
-    a.menu class="highlight" href="http://slm-lang.com/" Slm-lang.com
+```slim
+a.menu class="highlight" href="http://slm-lang.com/" Slm-lang.com
+```
 
 This renders as
 
-    <a class="menu highlight" href="http://slm-lang.com/">Slm-lang.com</a>
+```html
+<a class="menu highlight" href="http://slm-lang.com/">Slm-lang.com</a>
+```
 
 You can also use an `Array` as attribute value and the array elements will be merged using the delimiter.
 
-    a class=['menu','highlight']
-    a class='menu','highlight'
+```slim
+a class=['menu','highlight']
+a class='menu','highlight'
+```
 
 ## Text interpolation
 
@@ -475,38 +542,46 @@ To escape the interpolation (i.e. render as is)
 
 Mixins allow you to create reusable blocks of Slm.
 
-    = mixin('paragraph')
-      p Hello from mixin!
+```slim
+= mixin('paragraph')
+  p Hello from mixin!
 
-    .say
-      = mixin('paragraph')
+.say
+  = mixin('paragraph')
+```
 
 They are compiled to functions and can take arguments:
 
-    = mixin('paragraph', 'name')
-      p Hello from ${this.name}!
+```slim
+= mixin('paragraph', 'name')
+  p Hello from ${this.name}!
 
-    .say
-      = mixin('paragraph', 'me')
+.say
+  = mixin('paragraph', 'me')
+```
 
 Even with default values:
 
-    = mixin('paragraph', 'name = me')
-      p Hello from ${this.name}!
+```slim
+= mixin('paragraph', 'name = me')
+  p Hello from ${this.name}!
 
-    .say
-      = mixin('paragraph')
+.say
+  = mixin('paragraph')
+```
 
 And from `partial`:
 
-    // mixins.slm
-    = mixin('paragraph', 'name = me')
-      p Hello from ${this.name}!
+```slim
+\ mixins.slm
+= mixin('paragraph', 'name = me')
+  p Hello from ${this.name}!
 
-    // index.slm
-    = partial('mixins')
-    .say
-      = mixin('paragraph')
+\ index.slm
+= partial('mixins')
+.say
+  = mixin('paragraph')
+```
 
 # License
 
