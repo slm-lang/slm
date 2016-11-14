@@ -573,11 +573,11 @@ Even with default values:
 And from `partial`:
 
 ```slim
-\ mixins.slm
+// mixins.slm
 = mixin('paragraph', 'name = me')
   p Hello from ${this.name}!
 
-\ index.slm
+// index.slm
 = partial('mixins')
 .say
   = mixin('paragraph')
