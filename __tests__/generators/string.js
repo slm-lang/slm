@@ -1,40 +1,34 @@
-var Lab = require('lab');
 var Generator = require('../../lib/generators/string');
-var assert  = require('chai').assert;
 
-var lab = exports.lab = Lab.script();
-
-lab.experiment('String generator', function() {
+describe('String generator', function() {
   var generator = null;
 
-  lab.before(function(done) {
+  beforeEach(function() {
     generator = new Generator();
-    done();
   });
 
 
-  lab.test('compiles simple expressions', function(done) {
-    assert.deepEqual(generator.exec(['static', 'test']), 'var _b=\'\';_b+="test";');
-    assert.deepEqual(generator.exec(['dynamic', 'test']), 'var _b=\'\';_b+=test;');
-    assert.deepEqual(generator.exec(['code', 'test']), 'var _b=\'\';test');
-    done();
+  it('compiles simple expressions', function() {
+    expect(generator.exec(['static', 'test'])).toEqual('var _b=\'\';_b+="test";');
+    expect(generator.exec(['dynamic', 'test'])).toEqual('var _b=\'\';_b+=test;');
+    expect(generator.exec(['code', 'test'])).toEqual('var _b=\'\';test');
   });
 
-  lab.test('compiles multi expression', function(done) {
-    assert.deepEqual(generator.exec(['multi',
+  it('compiles multi expression', function() {
+    expect(generator.exec(['multi',
                                     ['static', 'static'],
                                     ['dynamic', 'dynamic'],
                                     ['code', 'code']])
-    , 'var _b=\'\';_b+="static";\n_b+=dynamic;\ncode');
-    done();
+    ,).toEqual(
+      'var _b=\'\';_b+="static";\n_b+=dynamic;\ncode'
+    );
   });
 
-  lab.test('throws an error on unknown expression', function(done) {
-    assert.throw(function() {
+  expect('throws an error on unknown expression', function() {
+    expect(function() {
       generator.exec(['multi',
         ['unknown', 'static'],
         ['code', 'code']]);
-    }, 'Generator supports only core expressions - found ["unknown","static"]');
-    done();
+    }).toThrowError('Generator supports only core expressions - found ["unknown","static"]');
   });
 });
