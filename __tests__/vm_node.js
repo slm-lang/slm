@@ -1,23 +1,18 @@
-var Lab = require('lab');
 var Template = require('../lib/template');
-var assert  = require('chai').assert;
 var FS = require('fs');
 
-var lab = exports.lab = Lab.script();
-
-lab.experiment('VMNode', function() {
+describe('VMNode', function() {
   var fixture = {};
 
-  lab.before(function(done) {
+  beforeEach(function() {
     fixture = {};
     fixture.template = new Template(require('../lib/vm_node'));
     fixture.VM = fixture.template.VM;
     fixture.vm = new fixture.VM();
     fixture.vm.resetCache();
-    done();
   });
 
-  lab.test('extend with same path', function(done) {
+  it('extend with same path', function() {
     var options = {
       basePath: '/'
     };
@@ -41,11 +36,10 @@ lab.experiment('VMNode', function() {
 
 
     var result = fixture.template.render(src, {who: 'World', what: 'the best'}, options, fixture.vm);
-    assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
-    done();
+    expect(result).toEqual('<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
   });
 
-  lab.test('extend with abs path', function(done) {
+  it('extend with abs path', function() {
     var options = {
       basePath: '/views'
     };
@@ -68,11 +62,10 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
     var result = fixture.template.render(src, {who: 'World', what: 'the best'}, options, fixture.vm);
-    assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
-    done();
+    expect(result).toEqual('<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
   });
 
-  lab.test('extend with same nested path', function(done) {
+  expect('extend with same nested path', function() {
     var options = {
       basePath: '/'
     };
@@ -96,11 +89,10 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
     var result = fixture.template.render(src, {who: 'World', what: 'the best'}, options, fixture.vm);
-    assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
-    done();
+    expect(result).toEqual('<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
   });
 
-  lab.test('extend with same nested path 2', function(done) {
+  it('extend with same nested path 2', function() {
     var options = {
       basePath: '/views'
     };
@@ -129,11 +121,10 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
     var result = fixture.template.render(src, {who: 'World', what: 'the best'}, options, fixture.vm);
-    assert.deepEqual(result, '<html><head><meta content="World" name="keywords" /></head><body><form><input type="submit" /></form></body></html>');
-    done();
+    expect(result).toEqual('<html><head><meta content="World" name="keywords" /></head><body><form><input type="submit" /></form></body></html>');
   });
 
-  lab.test('test require', function(done) {
+  it('test require', function() {
     var options = {
       basePath: '/views',
       require: module.require
@@ -146,12 +137,10 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
     var result = fixture.template.render(src, {}, options, fixture.vm);
-    assert.deepEqual(result, '<p>.slm</p>');
-
-    done();
+    expect(result).toEqual('<p>.slm</p>');
   });
 
-  lab.test('test content default', function(done) {
+  it('test content default', function() {
     var options = {
       basePath: '/views'
     };
@@ -174,7 +163,7 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
     var result = fixture.template.render(src, {}, options, fixture.vm);
-    assert.deepEqual(result, '<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
+    expect(result).toEqual('<html><head><title>Default title</title></head><body><p>Body from view</p></body></html>');
 
     var src2 = [
       '- extend("../layouts/app")',
@@ -184,11 +173,10 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
     var result2 = fixture.template.render(src2, {}, options, fixture.vm);
-    assert.deepEqual(result2, '<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
-    done();
+    expect(result2).toEqual('<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
   });
 
-  lab.test('test content append', function(done) {
+  it('test content append', function() {
     var options = {
       basePath: '/views'
     };
@@ -212,7 +200,7 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
     var result = fixture.template.render(src, {}, options, fixture.vm);
-    assert.deepEqual(result, '<html><head><title>1</title></head><body><p>Body from view</p></body></html>');
+    expect(result).toEqual('<html><head><title>1</title></head><body><p>Body from view</p></body></html>');
 
     var src2 = [
       '- extend("../layouts/app")',
@@ -222,12 +210,11 @@ lab.experiment('VMNode', function() {
     ].join('\n');
 
     var result2 = fixture.template.render(src2, {}, options, fixture.vm);
-    assert.deepEqual(result2, '<html><head><title>2</title></head><body><p>Body from view</p></body></html>');
-    done();
+    expect(result2).toEqual('<html><head><title>2</title></head><body><p>Body from view</p></body></html>');
   });
 
 
-  lab.test('test view loading', function(done) {
+  it('test view loading', function() {
     var options = {
       basePath: __dirname + '/views',
       filename: __dirname + '/views/index.slm'
@@ -246,14 +233,12 @@ lab.experiment('VMNode', function() {
     var fn3 = compile(src, options);
     var res3 = fn3({});
     var expected = '<!DOCTYPE html><html><head><title>Nice</title><style type="text/css">body {background :red};</style></head><body><h1>Partial</h1><p>This is new footer</p></body><script>console.log(\'script\');</script><script type="text/javascript">console.log(\'javascript\');</script></html>';
-    assert.deepEqual(res1, expected);
-    assert.deepEqual(res2, expected);
-    assert.deepEqual(res3, expected);
-
-    done();
+    expect(res1).toEqual(expected);
+    expect(res2).toEqual(expected);
+    expect(res3).toEqual(expected);
   });
 
-  lab.test('test resolvePath', function(done) {
+  it('test resolvePath', function() {
     var options = {
       filename: __dirname + '/views/index.slm'
     };
@@ -263,15 +248,11 @@ lab.experiment('VMNode', function() {
     var compile = require('../lib/slm').compile;
 
     var fn1 = compile(src, options);
-    assert.throw(function() {
-      fn1({});
-    }, 'the "basePath" option is required to use with "absolute" paths');
+    expect(function() { fn1({}); })
+      .toThrowError('the "basePath" option is required to use with "absolute" paths');
 
     var fn2 = compile(src, {});
-    assert.throw(function() {
-      fn2({});
-    }, 'the "filename" option is required to use with "relative" paths');
-
-    done();
+    expect(function() { fn2({}); })
+      .toThrowError('the "filename" option is required to use with "relative" paths');
   });
 });
