@@ -1,21 +1,15 @@
-var Lab = require('lab');
 var Brackets = require('../../lib/filters/brackets');
-var assert  = require('chai').assert;
 
-var lab = exports.lab = Lab.script();
-
-
-lab.experiment('Brackets', function() {
+describe('Brackets', function() {
 
   var filter;
 
-  lab.before(function(done) {
+  beforeEach(function() {
     filter = new Brackets();
-    done();
   });
 
-  lab.test('wraps if statement', function(done) {
-    assert.deepEqual(
+  it('wraps if statement', function() {
+    expect(
       filter.exec(['multi', ['slm', 'control', 'if this.x > 0',
                       ['multi',
                         ['newline'],
@@ -24,7 +18,7 @@ lab.experiment('Brackets', function() {
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ],
                         ['newline']]]
-      ]),
+      ])).toEqual(
       ['multi', ['slm', 'control', 'if (this.x > 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
@@ -33,18 +27,17 @@ lab.experiment('Brackets', function() {
                         ], ['newline'], ['code', '}']]]
       ]
     );
-    done();
   });
 
-  lab.test('wraps if statement with spaces', function(done) {
-    assert.deepEqual(
+  it('wraps if statement with spaces', function() {
+    expect(
       filter.exec(['multi', ['slm', 'control', 'if   this.x > 0  ',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
-      ]),
+      ])).toEqual(
       ['multi', ['slm', 'control', 'if   (this.x > 0)  {',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
@@ -53,18 +46,17 @@ lab.experiment('Brackets', function() {
                         ], ['newline'], ['code', '}']]]
       ]
     );
-    done();
   });
 
-  lab.test('not wraps wrapped if statement', function(done) {
-    assert.deepEqual(
+  it('not wraps wrapped if statement', function() {
+    expect(
       filter.exec(['multi', ['slm', 'control', 'if (this.x > 0)',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
-      ]),
+      ])).toEqual(
       ['multi', ['slm', 'control', 'if (this.x > 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
@@ -73,11 +65,10 @@ lab.experiment('Brackets', function() {
                         ], ['newline'], ['code', '}']]]
       ]
     );
-    done();
   });
 
-  lab.test('wraps if and else statements', function(done) {
-    assert.deepEqual(
+  it('wraps if and else statements', function() {
+    expect(
       filter.exec(['multi',
                     ['slm', 'control', 'if this.x > 0',
                       ['multi', ['newline'],
@@ -91,7 +82,7 @@ lab.experiment('Brackets', function() {
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text2']]]
                         ], ['newline']]]
-      ]),
+      ])).toEqual(
       ['multi', ['slm', 'control', 'if (this.x > 0){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
@@ -106,18 +97,17 @@ lab.experiment('Brackets', function() {
                         ], ['newline'], ['code', '}']]]
       ]
     );
-    done();
   });
 
-  lab.test('wraps for loop', function(done) {
-    assert.deepEqual(
+  it('wraps for loop', function() {
+    expect(
       filter.exec(['multi', ['slm', 'control', 'for i = 0; i < items.length; i++',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
-      ]),
+      ])).toEqual(
       ['multi', ['slm', 'control', 'for (i = 0; i < items.length; i++){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
@@ -126,18 +116,17 @@ lab.experiment('Brackets', function() {
                         ], ['newline'], ['code', '}']]]
       ]
     );
-    done();
   });
 
-  lab.test('wraps while loop', function(done) {
-    assert.deepEqual(
+  it('wraps while loop', function() {
+    expect(
       filter.exec(['multi', ['slm', 'control', 'while i < 10',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
                           ['html', 'attrs'],
                           ['slm', 'text', ['multi', ['slm', 'interpolate', 'Text']]]
                         ], ['newline']]]
-      ]),
+      ])).toEqual(
       ['multi', ['slm', 'control', 'while (i < 10){',
                       ['multi', ['newline'],
                         ['html', 'tag', 'p',
@@ -146,6 +135,5 @@ lab.experiment('Brackets', function() {
                         ], ['newline'], ['code', '}']]]
       ]
     );
-    done();
   });
 });

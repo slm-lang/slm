@@ -1,20 +1,15 @@
-var Lab = require('lab');
 var MultiFlattener = require('../../lib/filters/multi_flattener');
-var assert  = require('chai').assert;
 
-var lab = exports.lab = Lab.script();
-
-lab.experiment('MultiFlattener', function() {
+describe('MultiFlattener', function() {
 
   var filter;
 
-  lab.before(function(done) {
+  beforeEach(function() {
     filter = new MultiFlattener();
-    done();
   });
 
-  lab.test('flatten nested multi expressions', function(done) {
-    assert.deepEqual(
+  it('flatten nested multi expressions', function() {
+    expect(
       filter.exec(
         [
           'multi',
@@ -31,7 +26,7 @@ lab.experiment('MultiFlattener', function() {
           ],
           ['static', 'b']
         ]
-      ),  ['multi',
+      )).toEqual(['multi',
         ['static', 'a'],
         ['dynamic', 'aa'],
         ['static', 'aaa'],
@@ -39,6 +34,5 @@ lab.experiment('MultiFlattener', function() {
         ['dynamic', 'ab'],
         ['static', 'b']
       ]);
-    done();
   });
 });

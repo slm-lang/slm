@@ -5,7 +5,7 @@
   "main": "lib/slm.js",
   "browser": "lib/slm_browser.js",
   "scripts": {
-    "test": "lab -p -t 96 -l",
+    "test": "jest",
     "coverage": "lab -t 96 -r lcov -o lcov.info"
   },
   "keywords": [
@@ -28,6 +28,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.4",
     "gulp-webpack": "^1.3.0",
+    "jest": "^18.0.0",
     "lab": "^11.0.0"
   },
   "directories": {
