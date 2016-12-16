@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "6.4.0"
-script: "npm test -- --coverage"
+script: "yarn test -- --coverage"
 addons:
   code_climate:
     repo_token: 41485eb065394f389dc2ccd0f8d280e5acbf2218386f852209690c3dacada9b0
