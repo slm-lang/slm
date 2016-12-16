@@ -1,9 +1,6 @@
-var Lab = require('lab');
 var VM = require('../lib/vm');
 
-var assert  = require('chai').assert;
-
-exports.assertHtml = function(template, src, result, options, callback) {
+exports.assertHtml = function(template, src, result, options) {
   src = src.join('\n');
   var env = {};
   var context = {
@@ -48,13 +45,10 @@ exports.assertHtml = function(template, src, result, options, callback) {
       return '<script>do_something_evil();</script>';
     }
   };
-  assert.deepEqual(template.render(src, context, options), result);
-  if (callback) {
-    callback();
-  }
+  expect(template.render(src, context, options)).toEqual(result);
 };
 
-exports.assertSyntaxError = function(template, src, result, options, callback) {
+exports.assertSyntaxError = function(template, src, result, options) {
   src = src.join('\n');
   var context = {
     idHelper: 'notice',
@@ -72,12 +66,7 @@ exports.assertSyntaxError = function(template, src, result, options, callback) {
       return this.helloWorld + ' ' + callback() + ' ' + this.helloWorld;
     }
   };
-  assert.throw(function() {
+  expect(function() {
     template.render(src, context, options);
-  }, result);
-
-  if (callback) {
-    callback();
-  }
-
+  }).toThrowError(result);
 };

@@ -1,10 +1,7 @@
-var Lab = require('lab');
 var Filter = require('../lib/filter');
-var assert  = require('chai').assert;
 
-var lab = exports.lab = Lab.script();
 
-lab.experiment('Filter', function() {
+describe('Filter', function() {
 
   function FilterWithOnA() {}
   FilterWithOnA.prototype = new Filter();
@@ -57,15 +54,13 @@ lab.experiment('Filter', function() {
 
   var filter;
 
-  lab.before(function(done) {
+  beforeEach(function() {
     filter = new TestFilter();
-    done();
   });
 
-  lab.test('#dispatchedMethods', function(done) {
+  it('#dispatchedMethods', function() {
     var filter = new Filter();
-    assert.deepEqual(
-      filter._dispatchedMethods(),
+    expect(filter._dispatchedMethods()).toEqual(
       [ 'on_multi',
         'on_capture',
         'on_if',
@@ -76,8 +71,7 @@ lab.experiment('Filter', function() {
 
     var filterWithOnA = new FilterWithOnA();
 
-    assert.deepEqual(
-      filterWithOnA._dispatchedMethods(),
+    expect(filterWithOnA._dispatchedMethods()).toEqual(
       [ 'on_a',
         'on_a_b',
         'on_multi',
@@ -87,37 +81,30 @@ lab.experiment('Filter', function() {
         'on_block',
         'on_escape' ]
     );
-
-    done();
   });
 
-  lab.test('return unhandled expressions', function(done) {
-    assert.deepEqual(filter.exec(['unhandled']), ['unhandled'] );
-    done();
+  it('return unhandled expressions', function() {
+    expect(filter.exec(['unhandled'])).toEqual(['unhandled']);
   });
 
-  lab.test('dispatch first level', function(done) {
-    assert.deepEqual(filter.exec(['test', 42]), ['on_test', 42]);
-    done();
+  it('dispatch first level', function() {
+    expect(filter.exec(['test', 42])).toEqual(['on_test', 42]);
   });
 
-  lab.test('dispatch second level', function(done) {
-    assert.deepEqual(filter.exec(['second', 'test', 42]), ['on_second_test', 42]);
-    done();
+  it('dispatch second level', function() {
+    expect(filter.exec(['second', 'test', 42])).toEqual(['on_second_test', 42]);
   });
 
-  lab.test('dispatch second level if prefixed', function(done) {
-    assert.deepEqual(filter.exec(['test', 'check', 42]), ['on_check', 42]);
-    done();
+  it('dispatch second level if prefixed', function() {
+    expect(filter.exec(['test', 'check', 42])).toEqual(['on_check', 42]);
   });
 
-  lab.test('dispatch parent level', function(done) {
-    assert.deepEqual(filter.exec(['a', 42]), ['a', 42]);
-    assert.deepEqual(filter.exec(['a', 'b', 42]), ['on_ab', 42]);
-    assert.deepEqual(filter.exec(['a', 'b', 'test', 42]), ['on_ab_test', 42]);
-    assert.deepEqual(filter.exec(['a', 'b', 'c', 42]), ['on_ab', 'c', 42]);
-    assert.deepEqual(filter.exec(['a', 'b', 'c', 'd', 42]), ['on_ab', 'c', 'd', 42]);
-    assert.deepEqual(filter.exec(['a', 'b', 'c', 'd', 'test', 42]), ['on_abcd_test', 42]);
-    done();
+  it('dispatch parent level', function() {
+    expect(filter.exec(['a', 42])).toEqual(['a', 42]);
+    expect(filter.exec(['a', 'b', 42])).toEqual(['on_ab', 42]);
+    expect(filter.exec(['a', 'b', 'test', 42])).toEqual(['on_ab_test', 42]);
+    expect(filter.exec(['a', 'b', 'c', 42])).toEqual(['on_ab', 'c', 42]);
+    expect(filter.exec(['a', 'b', 'c', 'd', 42])).toEqual(['on_ab', 'c', 'd', 42]);
+    expect(filter.exec(['a', 'b', 'c', 'd', 'test', 42])).toEqual(['on_abcd_test', 42]);
   });
 });

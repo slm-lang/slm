@@ -1,53 +1,37 @@
-var Lab = require('lab');
 var Parser = require('../lib/parser');
-var assert  = require('chai').assert;
-
-var lab = exports.lab = Lab.script();
 
 
-lab.experiment('Parser', function() {
+describe('Parser', function() {
 
-  lab.test('._getIndent()', function(done) {
+  it('._getIndent()', function() {
     var parser = new Parser();
 
-    assert.equal(parser._getIndent(' '), 1);
-    assert.equal(parser._getIndent(' '), 1);
-    assert.equal(parser._getIndent(' . text'), 1);
+    expect(parser._getIndent(' ')).toEqual(1);
+    expect(parser._getIndent(' ')).toEqual(1);
+    expect(parser._getIndent(' . text')).toEqual(1);
 
-    assert.equal(parser._getIndent('  bold'), 2);
-    assert.equal(parser._getIndent('\t  strong'), 3);
+    expect(parser._getIndent('  bold')).toEqual(2);
+    expect(parser._getIndent('\t  strong')).toEqual(3);
 
-    done();
   });
 
-  lab.test('.exec()', function(done) {
+  it('.exec()', function() {
     var parser = new Parser();
 
-    assert.deepEqual(
-      parser.exec(' '),
-      [ 'multi', [ 'newline' ] ]
-    );
+    expect(parser.exec(' ')).toEqual([ 'multi', [ 'newline' ] ]);
 
-    assert.deepEqual(
-      parser.exec('/ text'),
-      ['multi', ['newline']]
-    );
+    expect(parser.exec('/ text')).toEqual(['multi', ['newline']]);
 
-    assert.deepEqual(
-      parser.exec('/ line 1\n   line 2'),
-      ['multi', ['newline'], ['newline']]
-    );
+    expect(parser.exec('/ line 1\n   line 2')).toEqual(['multi', ['newline'], ['newline']]);
 
-    assert.deepEqual(
-      parser.exec('== 5'),
+    expect(parser.exec('== 5')).toEqual(
       [
         'multi',
         ['slm', 'output', false, '5', ['multi', ['newline']]]
       ]
     );
 
-    assert.deepEqual(
-      parser.exec('p nice'),
+    expect(parser.exec('p nice')).toEqual(
       [
         'multi',
         [
@@ -58,9 +42,7 @@ lab.experiment('Parser', function() {
       ]
     );
 
-    assert.deepEqual(
-      parser.exec('. text'),
-      [
+    expect(parser.exec('. text')).toEqual([
         'multi',
         [
           'slm', 'text',
@@ -70,8 +52,7 @@ lab.experiment('Parser', function() {
       ]
     );
 
-    assert.deepEqual(
-      parser.exec('p.alert'),
+    expect(parser.exec('p.alert')).toEqual(
       [
         'multi',
         [
@@ -85,8 +66,9 @@ lab.experiment('Parser', function() {
       ]
     );
 
-    assert.deepEqual(
-      parser.exec('a href="http://anjlab.ru" AnjLab'),
+    expect(
+      parser.exec('a href="http://anjlab.ru" AnjLab')
+    ).toEqual(
       [
         'multi',
         [
@@ -113,8 +95,9 @@ lab.experiment('Parser', function() {
       ]
     );
 
-    assert.deepEqual(
-      parser.exec('/[if IE]\n    p Get a better browser.'),
+    expect(
+      parser.exec('/[if IE]\n    p Get a better browser.')
+    ).toEqual(
       [
         'multi',
         ['html', 'condcomment', 'if IE',
@@ -130,8 +113,7 @@ lab.experiment('Parser', function() {
       ]
     );
 
-    assert.deepEqual(
-      parser.exec('p = 10'),
+    expect(parser.exec('p = 10')).toEqual(
       [
         'multi',
         [
@@ -147,8 +129,7 @@ lab.experiment('Parser', function() {
       '  p = x\n' +
       'p nice';
 
-    assert.deepEqual(
-      parser.exec(code),
+    expect(parser.exec(code)).toEqual(
       [
         'multi',
         [
@@ -166,7 +147,5 @@ lab.experiment('Parser', function() {
         ['html', 'tag', 'p', ['html', 'attrs'], ['slm', 'text', ['multi', ['slm', 'interpolate', 'nice']]]], ['newline']
       ]
     );
-
-    done();
   });
 });
