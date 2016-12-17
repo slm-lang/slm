@@ -6,7 +6,7 @@ addons:
   code_climate:
     repo_token: 41485eb065394f389dc2ccd0f8d280e5acbf2218386f852209690c3dacada9b0
 after_script:
-  - node_modules/.bin/codeclimate < coverage/lcov.info
+  - node_modules/.bin/codeclimate-test-reporter < coverage/lcov.info
 notifications:
   webhooks:
     urls:
