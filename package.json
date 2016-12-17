@@ -8,10 +8,11 @@
     "test": "jest"
   },
   "keywords": [
-    "template",
-    "slim",
+    "html",
     "jade",
-    "html"
+    "pug",
+    "slim",
+    "template"
   ],
   "author": "Yury Korolev",
   "license": "ISC",
