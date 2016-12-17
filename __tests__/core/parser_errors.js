@@ -6,11 +6,9 @@ describe('Parser errors', function() {
 
   var template;
 
-  beforeEach(function() {
-    template = new Template(require('../../lib/vm_node'));
-  });
+  beforeEach(function() { template = new Template(require('../../lib/vm_node')); });
 
-  it('correct filename', function() {
+  test('correct filename', function() {
     assertSyntaxError(template, [
       'doctype 5',
       '  div Invalid'
@@ -19,7 +17,7 @@ describe('Parser errors', function() {
       {filename: 'test.slm'});
   });
 
-  it('unexpected indentation', function() {
+  test('unexpected indentation', function() {
     assertSyntaxError(template, [
       'doctype 5',
       '  div Invalid'
@@ -28,7 +26,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('unexpected text indentation', function() {
+  test('unexpected text indentation', function() {
     assertSyntaxError(template, [
       'p',
       '  | text block',
@@ -38,7 +36,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('unexpected text indentation in tag', function() {
+  test('unexpected text indentation in tag', function() {
     assertSyntaxError(template, [
       'ul',
       '  li List1',
@@ -54,7 +52,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('malformed indentation', function() {
+  test('malformed indentation', function() {
     assertSyntaxError(template, [
       'p',
       '  div Valid',
@@ -64,7 +62,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('malformed indentation 2', function() {
+  test('malformed indentation 2', function() {
     assertSyntaxError(template, [
       '  div Valid',
       ' div Invalid'
@@ -73,7 +71,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('unknown line indicator', function() {
+  test('unknown line indicator', function() {
     assertSyntaxError(template, [
       'p',
       '  div Valid',
@@ -85,7 +83,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('expected closing delimiter', function() {
+  test('expected closing delimiter', function() {
     assertSyntaxError(template, [
       'p',
       '  img(src="img.jpg" title=(title)'
@@ -94,7 +92,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('missing quote unexpected end', function() {
+  test('missing quote unexpected end', function() {
     assertSyntaxError(template, [
       'p',
       '  img(src="img.jpg'
@@ -103,7 +101,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('expected closing attribute delimiter', function() {
+  test('expected closing attribute delimiter', function() {
     assertSyntaxError(template, [
       'p',
       '  img src=[hash[1] + hash[2]'
@@ -112,7 +110,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('invalid empty attribute', function() {
+  test('invalid empty attribute', function() {
     assertSyntaxError(template, [
       'p',
       '  img[src= ]'
@@ -121,7 +119,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('invalid empty attribute 2', function() {
+  test('invalid empty attribute 2', function() {
     assertSyntaxError(template, [
       'p',
       '  img[src=]'
@@ -130,7 +128,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('invalid empty attribute 3', function() {
+  test('invalid empty attribute 3', function() {
     assertSyntaxError(template, [
       'p',
       '  img src='
@@ -139,7 +137,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('missing tag in block expansion', function() {
+  test('missing tag in block expansion', function() {
     assertSyntaxError(template, [
       'html: body:'
       ],
@@ -147,7 +145,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('invalid tag in block expansion', function() {
+  test('invalid tag in block expansion', function() {
     assertSyntaxError(template, [
       'html: body: /comment'
       ],
@@ -161,7 +159,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('unexpected text after closed', function() {
+  test('unexpected text after closed', function() {
     assertSyntaxError(template, [
       'img / text'
       ],
@@ -169,7 +167,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('illegal shortcuts', function() {
+  test('illegal shortcuts', function() {
     assertSyntaxError(template, [
       '.#test'
       ],
@@ -177,7 +175,7 @@ describe('Parser errors', function() {
       {});
   });
 
-  it('illegal shortcuts', function() {
+  test('illegal shortcuts', function() {
     assertSyntaxError(template, [
       '.#test'
       ],

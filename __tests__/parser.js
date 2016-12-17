@@ -3,7 +3,7 @@ var Parser = require('../lib/parser');
 
 describe('Parser', function() {
 
-  it('._getIndent()', function() {
+  test('._getIndent()', function() {
     var parser = new Parser();
 
     expect(parser._getIndent(' ')).toEqual(1);
@@ -15,7 +15,7 @@ describe('Parser', function() {
 
   });
 
-  it('.exec()', function() {
+  test('.exec()', function() {
     var parser = new Parser();
 
     expect(parser.exec(' ')).toEqual([ 'multi', [ 'newline' ] ]);

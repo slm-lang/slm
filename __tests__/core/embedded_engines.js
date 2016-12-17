@@ -3,6 +3,7 @@ var assertHtml = require('../helper').assertHtml;
 
 describe('Embedded engines', function() {
   var template;
+
   beforeEach(function() {
     template = new Template(require('../../lib/vm_node'));
     template.registerEmbeddedFunction('customEngine', function(body) {
@@ -10,7 +11,7 @@ describe('Embedded engines', function() {
     });
   });
 
-  it('render with javascript', function() {
+  test('render with javascript', function() {
     assertHtml(template, [
       'javascript:   ',
       '  $(function() {});',
@@ -23,7 +24,7 @@ describe('Embedded engines', function() {
       {});
   });
 
-  it('render with script', function() {
+  test('render with script', function() {
     assertHtml(template, [
       'script:   ',
       '  $(function() {});',
@@ -36,7 +37,7 @@ describe('Embedded engines', function() {
       {});
   });
 
-  it('render with javascript including variable', function() {
+  test('render with javascript including variable', function() {
     assertHtml(template, [
       '- var func = "alert(\'hello\');"',
       'javascript:   ',
@@ -46,7 +47,7 @@ describe('Embedded engines', function() {
       {});
   });
 
-  it('render with css', function() {
+  test('render with css', function() {
     assertHtml(template, [
       'css:',
       '  body { color: red; }'
@@ -55,7 +56,7 @@ describe('Embedded engines', function() {
       {});
   });
 
-  it('render with custom engine', function() {
+  test('render with custom engine', function() {
     assertHtml(template, [
       'customEngine:',
       '  text ${this.helloWorld}',
@@ -65,7 +66,7 @@ describe('Embedded engines', function() {
       {});
   });
 
-  it('throws an error on unregistered engine', function() {
+  test('throws an error on unregistered engine', function() {
     expect(function() {
       assertHtml(template, [
         'unregistered:',

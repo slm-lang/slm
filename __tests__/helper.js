@@ -1,7 +1,11 @@
 var VM = require('../lib/vm');
 
 exports.assertHtml = function(template, src, result, options) {
-  src = src.join('\n');
+
+  if (Array.isArray(src)) {
+    src = src.join('\n');
+  }
+
   var env = {};
   var context = {
     items: [1,2,3],

@@ -9,7 +9,7 @@ describe('Html structure', function() {
     template = new Template(require('../../lib/vm_node'));
   });
 
-  it('simple render', function() {
+  test('simple render', function() {
     assertHtml(template, [
       'html',
       '  head',
@@ -21,7 +21,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('relaxed indentation of first line', function() {
+  test('relaxed indentation of first line', function() {
     assertHtml(template, [
       '  p',
       '    .content'
@@ -30,7 +30,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('html tag with text and empty line', function() {
+  test('html tag with text and empty line', function() {
     assertHtml(template, [
       'p Hello',
       '',
@@ -40,7 +40,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('html namespaces', function() {
+  test('html namespaces', function() {
     assertHtml(template, [
       'html:body',
       '  html:p html:id="test" Text'
@@ -49,7 +49,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('doctype', function() {
+  test('doctype', function() {
     assertHtml(template, [
       'doctype 1.1',
       'html'
@@ -58,7 +58,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with shortcut attributes', function() {
+  test('render with shortcut attributes', function() {
     assertHtml(template, [
       'h1#title This is my title',
       '#notice.hello.world',
@@ -68,7 +68,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with text block', function() {
+  test('render with text block', function() {
     assertHtml(template, [
       'p',
       '  |',
@@ -78,7 +78,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with text block with subsequent markup', function() {
+  test('render with text block with subsequent markup', function() {
     assertHtml(template, [
       'p',
       '  |',
@@ -89,7 +89,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with text block with subsequent markup', function() {
+  test('render with text block with subsequent markup', function() {
     assertHtml(template, [
       'p',
       '  |',
@@ -100,7 +100,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with text block with trailing whitespace', function() {
+  test('render with text block with trailing whitespace', function() {
     assertHtml(template, [
       '. this is',
       '  a link to',
@@ -110,7 +110,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with text block with trailing whitespace', function() {
+  test('render with text block with trailing whitespace', function() {
     assertHtml(template, [
       'p',
       ' |',
@@ -124,7 +124,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('nested text with nested html one same line', function() {
+  test('nested text with nested html one same line', function() {
     assertHtml(template, [
       'p',
       ' | This is line one.',
@@ -136,7 +136,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('nested text with nested html one same line 2', function() {
+  test('nested text with nested html one same line 2', function() {
     assertHtml(template, [
       'p',
       ' |This is line one.',
@@ -148,7 +148,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('nested text with nested html', function() {
+  test('nested text with nested html', function() {
     assertHtml(template, [
       'p',
       ' |',
@@ -163,7 +163,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('simple paragraph with padding', function() {
+  test('simple paragraph with padding', function() {
     assertHtml(template, [
       'p    There will be 3 spaces in front of this line.'
     ],
@@ -171,7 +171,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('paragraph with nested text', function() {
+  test('paragraph with nested text', function() {
     assertHtml(template, [
       'p This is line one.',
       '   This is line two.'
@@ -180,7 +180,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('paragraph with padded nested text', function() {
+  test('paragraph with padded nested text', function() {
     assertHtml(template, [
       'p  This is line one.',
       '   This is line two.'
@@ -189,7 +189,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('labels with with br', function() {
+  test('labels with with br', function() {
     assertHtml(template, [
       'label',
       '  . Название',
@@ -204,7 +204,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('with inline mustashe', function() {
+  test('with inline mustashe', function() {
     assertHtml(template, [
       'label {{title}}'
     ],
@@ -212,7 +212,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('paragraph with attributes and nested text', function() {
+  test('paragraph with attributes and nested text', function() {
     assertHtml(template, [
       'p#test class="paragraph" This is line one.',
       '                         This is line two.'
@@ -221,7 +221,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('output code with leading spaces', function() {
+  test('output code with leading spaces', function() {
     assertHtml(template, [
       'p= this.helloWorld',
       'p = this.helloWorld',
@@ -231,7 +231,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('output code with leading spaces 2', function() {
+  test('output code with leading spaces 2', function() {
     assertHtml(template, [
       'p =< this.helloWorld'
     ],
@@ -245,7 +245,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('single quoted attributes', function() {
+  test('single quoted attributes', function() {
     assertHtml(template, [
       'p class=\'underscored_class_name\' = this.outputNumber'
     ],
@@ -253,7 +253,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('nonstandard shortcut attributes', function() {
+  test('nonstandard shortcut attributes', function() {
     assertHtml(template, [
       'p#dashed-id.underscored_class_name = this.outputNumber'
     ],
@@ -261,7 +261,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('dashed attributes', function() {
+  test('dashed attributes', function() {
     assertHtml(template, [
       'p data-info="Illudium Q-36" = this.outputNumber'
     ],
@@ -269,7 +269,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('dashed attributes with shortcuts', function() {
+  test('dashed attributes with shortcuts', function() {
     assertHtml(template, [
       'p#marvin.martian data-info="Illudium Q-36" = this.outputNumber'
     ],
@@ -277,7 +277,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('parens around attributes', function() {
+  test('parens around attributes', function() {
     assertHtml(template, [
       'p(id="marvin" class="martian" data-info="Illudium Q-36") = this.outputNumber'
     ],
@@ -285,7 +285,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('square brackets around attributes', function() {
+  test('square brackets around attributes', function() {
     assertHtml(template, [
       'p[id="marvin" class="martian" data-info="Illudium Q-36"] = this.outputNumber'
     ],
@@ -293,7 +293,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('parens around attributes with equal sign snug to right paren', function() {
+  test('parens around attributes with equal sign snug to right paren', function() {
     assertHtml(template, [
       'p(id="marvin" class="martian" data-info="Illudium Q-36")= this.outputNumber'
     ],
@@ -301,7 +301,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('closed tag', function() {
+  test('closed tag', function() {
     assertHtml(template, [
       'closed/'
     ],
@@ -309,7 +309,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('attributes with parens and spaces', function() {
+  test('attributes with parens and spaces', function() {
     assertHtml(template, [
       'label[ for=\'filter\' ]= this.helloWorld'
     ],
@@ -317,7 +317,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('attributes with parens and spaces 2', function() {
+  test('attributes with parens and spaces 2', function() {
     assertHtml(template, [
       'label[ for=\'filter\' ] = this.helloWorld'
     ],
@@ -325,7 +325,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('attributes with multiple spaces', function() {
+  test('attributes with multiple spaces', function() {
     assertHtml(template, [
       'label  for=\'filter\'  class="test" = this.helloWorld'
     ],
@@ -333,7 +333,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('closed tag with attributes', function() {
+  test('closed tag with attributes', function() {
     assertHtml(template, [
       'closed id="test" /'
     ],
@@ -341,7 +341,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('closed tag with attributes and parens', function() {
+  test('closed tag with attributes and parens', function() {
     assertHtml(template, [
       'closed(id="test")/'
     ],
@@ -349,7 +349,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with html comments', function() {
+  test('render with html comments', function() {
     assertHtml(template, [
       'p Hello',
       '/! This is a comment',
@@ -361,7 +361,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with html conditional and tag', function() {
+  test('render with html conditional and tag', function() {
     assertHtml(template, [
       '/[ if IE ]',
       ' p Get a better browser.'
@@ -370,7 +370,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('render with html conditional and method output', function() {
+  test('render with html conditional and method output', function() {
     assertHtml(template, [
       '/[ if IE ]',
       ' = this.message(\'hello\')'
@@ -379,7 +379,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('multiline attributes with method', function() {
+  test('multiline attributes with method', function() {
     assertHtml(template, [
       'p(id="marvin"',
       'class="martian"',
@@ -389,7 +389,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('multiline attributes with text on same line', function() {
+  test('multiline attributes with text on same line', function() {
     assertHtml(template, [
       'p[id="marvin"',
       '  class="martian"',
@@ -399,7 +399,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('multiline attributes with nested text', function() {
+  test('multiline attributes with nested text', function() {
     assertHtml(template, [
       'p(id="marvin"',
       '  class="martian"',
@@ -410,7 +410,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('multiline attributes with dynamic attr', function() {
+  test('multiline attributes with dynamic attr', function() {
     assertHtml(template, [
       'p[id=this.idHelper',
       '  class="martian"',
@@ -421,7 +421,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('multiline attributes with nested tag', function() {
+  test('multiline attributes with nested tag', function() {
     assertHtml(template, [
       'p(id=this.idHelper',
       '  class="martian"',
@@ -433,7 +433,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('multiline attributes with nested text and extra indentation', function() {
+  test('multiline attributes with nested text and extra indentation', function() {
     assertHtml(template, [
       'li( id="myid"',
       '    class="myclass"',
@@ -444,7 +444,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('block expansion support', function() {
+  test('block expansion support', function() {
     assertHtml(template, [
       'ul',
       '  li.first: a href=\'a\' foo',
@@ -455,7 +455,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('block expansion class attributes', function() {
+  test('block expansion class attributes', function() {
     assertHtml(template, [
       '.a: .b: #c d'
     ],
@@ -463,7 +463,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('block expansion nesting', function() {
+  test('block expansion nesting', function() {
     assertHtml(template, [
       'html: body: .content',
       '  | Text'
@@ -472,7 +472,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('eval attributes once', function() {
+  test('eval attributes once', function() {
     assertHtml(template, [
       'input[value=++this.x]',
       'input[value=++this.x]'
@@ -481,7 +481,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('html line indicator', function() {
+  test('html line indicator', function() {
     assertHtml(template, [
       '<html>',
       '  head',
@@ -495,7 +495,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('html line indicator issue #4', function() {
+  test('html line indicator issue #4', function() {
     assertHtml(template, [
       '<script>',
       '  | var a=b;',
@@ -505,7 +505,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('leading whitespace indicator on tag', function() {
+  test('leading whitespace indicator on tag', function() {
     assertHtml(template, [
       'p< text'
     ],
@@ -513,7 +513,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('trailing whitespace indicator on tag', function() {
+  test('trailing whitespace indicator on tag', function() {
     assertHtml(template, [
       'p> text'
     ],
@@ -521,7 +521,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('trailing whitespace with code', function() {
+  test('trailing whitespace with code', function() {
     assertHtml(template, [
       'p => "text"'
     ],
@@ -534,7 +534,7 @@ describe('Html structure', function() {
     {});
   });
 
-  it('test context', function() {
+  test('test context', function() {
     var VM = template.VM;
     var vm = new VM();
     vm.resetCache();
@@ -586,7 +586,7 @@ describe('Html structure', function() {
     expect(result).toEqual('<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p><p>Partial Layout</p><strong>The partial is the best</strong><p>nice</p><strong>super!!! World</strong></body></html>');
   });
 
-  it('test current context in partials by default', function() {
+  test('test current context in partials by default', function() {
     var VM = template.VM;
     var vm = new VM();
     vm.resetCache();

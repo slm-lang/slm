@@ -12,7 +12,7 @@ describe('VMNode', function() {
     fixture.vm.resetCache();
   });
 
-  it('extend with same path', function() {
+  test('extend with same path', function() {
     var options = {
       basePath: '/'
     };
@@ -39,7 +39,7 @@ describe('VMNode', function() {
     expect(result).toEqual('<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
   });
 
-  it('extend with abs path', function() {
+  test('extend with abs path', function() {
     var options = {
       basePath: '/views'
     };
@@ -92,7 +92,7 @@ describe('VMNode', function() {
     expect(result).toEqual('<html><head><meta content="World" name="keywords" /></head><body><p>Hello, World</p></body></html>');
   });
 
-  it('extend with same nested path 2', function() {
+  test('extend with same nested path 2', function() {
     var options = {
       basePath: '/views'
     };
@@ -124,7 +124,7 @@ describe('VMNode', function() {
     expect(result).toEqual('<html><head><meta content="World" name="keywords" /></head><body><form><input type="submit" /></form></body></html>');
   });
 
-  it('test require', function() {
+  test('test require', function() {
     var options = {
       basePath: '/views',
       require: module.require
@@ -140,7 +140,7 @@ describe('VMNode', function() {
     expect(result).toEqual('<p>.slm</p>');
   });
 
-  it('test content default', function() {
+  test('test content default', function() {
     var options = {
       basePath: '/views'
     };
@@ -176,7 +176,7 @@ describe('VMNode', function() {
     expect(result2).toEqual('<html><head><title>New title</title></head><body><p>Body from view</p></body></html>');
   });
 
-  it('test content append', function() {
+  test('test content append', function() {
     var options = {
       basePath: '/views'
     };
@@ -214,7 +214,7 @@ describe('VMNode', function() {
   });
 
 
-  it('test view loading', function() {
+  test('test view loading', function() {
     var options = {
       basePath: __dirname + '/views',
       filename: __dirname + '/views/index.slm'
@@ -238,7 +238,7 @@ describe('VMNode', function() {
     expect(res3).toEqual(expected);
   });
 
-  it('test resolvePath', function() {
+  test('test resolvePath', function() {
     var options = {
       filename: __dirname + '/views/index.slm'
     };

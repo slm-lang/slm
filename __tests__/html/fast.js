@@ -8,7 +8,7 @@ describe('Fast', function() {
     filter = new Filter();
   });
 
-  it('compile html doctype', function() {
+  test('compile html doctype', function() {
     expect(filter.exec(['multi', ['html', 'doctype', 'html']]))
     .toEqual(['multi', ['static', '<!DOCTYPE html>']]);
 
@@ -23,24 +23,24 @@ describe('Fast', function() {
     );
   });
 
-  it('compile xml encoding', function() {
+  test('compile xml encoding', function() {
     expect(filter.exec(['html', 'doctype', 'xml latin1']))
     .toEqual(['static', '<?xml version="1.0" encoding="latin1" ?>']);
   });
 
-  it('compile html comment', function() {
+  test('compile html comment', function() {
     expect(filter.exec(['html', 'comment', ['static', 'test']]))
     .toEqual(['multi', ['static', '<!--'], ['static', 'test'], ['static', '-->']]);
   });
 
-  it('compile js wrapped in comments', function() {
+  test('compile js wrapped in comments', function() {
     expect(filter.exec(['html', 'js', ['static', 'test']]))
       .toEqual(
       ['multi', ['static', '\n//<![CDATA[\n'], ['static', 'test'], ['static', '\n//]]>\n']]
     );
   });
 
-  it('compile autoclosed html tag', function() {
+  test('compile autoclosed html tag', function() {
     expect(
       filter.exec(['html', 'tag',
         'img', ['attrs'],
@@ -54,7 +54,7 @@ describe('Fast', function() {
     );
   });
 
-  it('compile explicitly closed html tag', function() {
+  test('compile explicitly closed html tag', function() {
     expect(
       filter.exec(['html', 'tag', 'closed', ['attrs']])
     ).toEqual(
@@ -66,7 +66,7 @@ describe('Fast', function() {
     );
   });
 
-  it('compile html with content', function() {
+  test('compile html with content', function() {
     expect(
       filter.exec(['html', 'tag',
       'div', ['attrs'], ['content']]),
@@ -81,7 +81,7 @@ describe('Fast', function() {
     );
   });
 
-  it('compile html with attrs', function() {
+  test('compile html with attrs', function() {
     expect(
       filter.exec(['html', 'tag', 'div',
         ['html', 'attrs',
@@ -101,15 +101,15 @@ describe('Fast', function() {
       ]);
   });
 
-  it('keep codes intact', function() {
+  test('keep codes intact', function() {
     expect(filter.exec(['multi', ['code', 'foo']])).toEqual(['multi', ['code', 'foo']]);
   });
 
-  it('should keep statics intact', function() {
+  test('should keep statics intact', function() {
     expect(filter.exec(['multi', ['static', '<']])).toEqual(['multi', ['static', '<']]);
   });
 
-  it('should keep dynamic intact', function() {
+  test('should keep dynamic intact', function() {
     expect(filter.exec(['multi', ['dynamic', 'foo']])).toEqual(['multi', ['dynamic', 'foo']]);
   });
 

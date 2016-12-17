@@ -8,7 +8,7 @@ describe('Escape', function() {
     filter = new Escape();
   });
 
-  it('handle escape expressions', function(){
+  test('handle escape expressions', function(){
     expect(
       filter.exec(['escape', true,
                     ['multi',
@@ -22,19 +22,19 @@ describe('Escape', function() {
     );
   });
 
-  it('keep codes intact', function() {
+  test('keep codes intact', function() {
     expect(filter.exec(['multi', ['code', 'foo']])).toEqual(['multi', ['code', 'foo']]);
   });
 
-  it('keep statics intact', function() {
+  test('keep statics intact', function() {
     expect(filter.exec(['multi', ['static', '<']])).toEqual(['multi', ['static', '<']]);
   });
 
-  it('keep dynamic intact', function() {
+  test('keep dynamic intact', function() {
     expect(filter.exec(['multi', ['dynamic', 'foo']])).toEqual(['multi', ['dynamic', 'foo']]);
   });
 
-  it('use htmlSafe flag', function() {
+  test('use htmlSafe flag', function() {
     var src = new String('a < b');
     src.htmlSafe = true;
     expect(

@@ -8,7 +8,7 @@ describe('MultiFlattener', function() {
     filter = new MultiFlattener();
   });
 
-  it('flatten nested multi expressions', function() {
+  test('flatten nested multi expressions', function() {
     expect(
       filter.exec(
         [
