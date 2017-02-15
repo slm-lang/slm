@@ -34,6 +34,14 @@ describe('Html attribtues', function() {
       {});
   });
 
+  test('vue syntax 4', function() {
+    assertHtml(template, [
+      'form Hello.'
+      ],
+      '<form>Hello.</form>',
+      {});
+  });
+
   test('ternary operation in attribute', function() {
     assertHtml(template, [
       'p id="${(false ? \'notshown\' : \'shown\')}" = this.outputNumber'
