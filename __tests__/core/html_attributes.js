@@ -10,6 +10,30 @@ describe('Html attribtues', function() {
     htmlTemplate = new Template(require('../../lib/vm_node'), {mergeAttrs: { 'class': ' ' }, attrDelims: { '(': ')' },  format: 'html' });
   });
 
+  test('vue syntax 1', function() {
+    assertHtml(template, [
+      'form @submit.prevent="createdProject"'
+      ],
+      '<form @submit.prevent="createdProject"></form>',
+      {});
+  });
+
+  test('vue syntax 2', function() {
+    assertHtml(template, [
+      'form(@submit.prevent="createdProject")'
+      ],
+      '<form @submit.prevent="createdProject"></form>',
+      {});
+  });
+
+  test('vue syntax 3', function() {
+    assertHtml(template, [
+      'form v-on:submit="something"'
+      ],
+      '<form v-on:submit="something"></form>',
+      {});
+  });
+
   test('ternary operation in attribute', function() {
     assertHtml(template, [
       'p id="${(false ? \'notshown\' : \'shown\')}" = this.outputNumber'
@@ -17,7 +41,6 @@ describe('Html attribtues', function() {
       '<p id="shown">1337</p>',
       {});
   });
-
 
   test('ternary operation in attribute 2', function() {
     assertHtml(template, [
