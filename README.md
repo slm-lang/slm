@@ -217,6 +217,14 @@ If your line ends with comma `,` (e.g because of a method call) you don't need t
 * Output with trailing white space `=>`. Same as the single equal sign (`=`), except that it adds a trailing white space. The legacy syntax `='` is also supported.
 * Output with leading white space `=<`. Same as the single equal sign (`=`), except that it adds a leading white space.
 
+If you use Slm as express view engine, you have to make the function available to the view render, eg:
+```
+res.render('viewname', { items: some.result.data, foofunc: foofunc })
+```
+Then in your slm file you can call foofunc:
+```
+p = this.foofunc()
+```
 
 ### Output without HTML escaping `==`
 
