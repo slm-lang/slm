@@ -39,6 +39,7 @@ HAML -> Jade -> Slim -> Slm
   * Sublime: <https://github.com/slm-lang/sublime-slm>
   * Vim: <https://github.com/slm-lang/vim-slm>
   * VS Code: <https://github.com/mrmlnc/vscode-slm>
+  * Vetur (Vue tooling for VSCode): <https://github.com/vuejs/vetur>
 * Benchmark: <https://github.com/slm-lang/template-benchmark#results>
 * Gulp: <https://github.com/simnalamburt/gulp-slm>
 * Grunt: <https://github.com/MichaelDanilov/grunt-slm>
