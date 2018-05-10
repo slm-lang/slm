@@ -116,7 +116,7 @@ html
 
     - if this.items.length
       table#items
-        - for item in this.items
+        - for item of this.items
           tr
             td.name = item.name
             td.price = item.price
@@ -185,7 +185,7 @@ You can write html tags directly in Slm which allows you to write your templates
   <body>
     - if this.articles.length
       table
-        - for (var a in this.articles)
+        - for (var a of this.articles)
           <tr><td>${a.name}</td><td>${a.description}</td></tr>
   </body>
 </html>
@@ -488,7 +488,7 @@ the code into parentheses `(...)`. You can also directly write hashes `{...}` an
 
     body
       table
-        - for var user in this.users
+        - for var user of this.users
           td id="user-${user.id}" class=user.role
             a href=userAction(user, 'edit') Edit ${user.name}
             a href=pathToUser(user) = user.name
